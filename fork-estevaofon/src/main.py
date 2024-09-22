@@ -8,11 +8,16 @@ import pymunk as pm
 from characters import Bird
 from level import Level
 from Game_Network import game_network
+import numpy as np
+
+def normalize_array(a):
+    normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
+    return normalized
 
 # Pig positions for level 1
 #[980, 72], [974, 178]
 network = game_network()
-ai_guess = network.move([980, 72, 974, 178])
+ai_guess = network.move(normalize_array(np.array([980, 72, 974, 178])))
 
 ai_guess = [0.01, 0.25]
 

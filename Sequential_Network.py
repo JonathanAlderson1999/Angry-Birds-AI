@@ -1,8 +1,12 @@
+import math
 import random
 import numpy as np
 
 def relu(x):
     return max(0, x)
+
+def tanh(x):
+    return math.tanh(x)
 
 class layer:
 
@@ -191,5 +195,9 @@ class sequential_network:
 
             prev_activations = self.layers[i].activations
             prev_dimension = self.layers[i - 1].dimension
+
+        # final tanh
+        for activation in self.layers[-1].activations:
+            activation = tanh(activation)
 
         return (self.layers[-1])
