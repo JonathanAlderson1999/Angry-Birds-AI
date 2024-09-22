@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>fd613621-4936-44fd-acb3-d6f77a2aeae1</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Angry_Birds_AI.py</StartupFile>
+    <StartupFile>fork-estevaofon\src\main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +22,55 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Angry_Birds_AI.py" />
+    <Compile Include="fork-estevaofon\src\characters.py" />
+    <Compile Include="fork-estevaofon\src\level.py" />
+    <Compile Include="fork-estevaofon\src\main.py" />
+    <Compile Include="fork-estevaofon\src\polygon.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="fork-estevaofon\" />
+    <Folder Include="fork-estevaofon\resources\" />
+    <Folder Include="fork-estevaofon\resources\images\" />
+    <Folder Include="fork-estevaofon\resources\sounds\" />
+    <Folder Include="fork-estevaofon\src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fork-estevaofon\.gitignore" />
+    <Content Include="fork-estevaofon\LICENSE" />
+    <Content Include="fork-estevaofon\Pipfile" />
+    <Content Include="fork-estevaofon\Pipfile.lock" />
+    <Content Include="fork-estevaofon\README.md" />
+    <Content Include="fork-estevaofon\requirements.txt" />
+    <Content Include="fork-estevaofon\resources\images\angry-birds-image.png" />
+    <Content Include="fork-estevaofon\resources\images\angry_birds.png" />
+    <Content Include="fork-estevaofon\resources\images\angry_birds_chrome_pigs_by_chinzapep-d5bnxdz.png" />
+    <Content Include="fork-estevaofon\resources\images\angry_birds_toons_sprites_by_jared33-d64u29w.png" />
+    <Content Include="fork-estevaofon\resources\images\background.png" />
+    <Content Include="fork-estevaofon\resources\images\background1.jpg" />
+    <Content Include="fork-estevaofon\resources\images\background2.jpg" />
+    <Content Include="fork-estevaofon\resources\images\background3.png" />
+    <Content Include="fork-estevaofon\resources\images\background4.png" />
+    <Content Include="fork-estevaofon\resources\images\buttons-image.png" />
+    <Content Include="fork-estevaofon\resources\images\Buttons.png" />
+    <Content Include="fork-estevaofon\resources\images\column.png" />
+    <Content Include="fork-estevaofon\resources\images\full-sprite.png" />
+    <Content Include="fork-estevaofon\resources\images\gravity-zero.png" />
+    <Content Include="fork-estevaofon\resources\images\latest.png" />
+    <Content Include="fork-estevaofon\resources\images\pig_failed.png" />
+    <Content Include="fork-estevaofon\resources\images\red-bird.png" />
+    <Content Include="fork-estevaofon\resources\images\red-bird2.png" />
+    <Content Include="fork-estevaofon\resources\images\red-bird3.png" />
+    <Content Include="fork-estevaofon\resources\images\selected-buttons.png" />
+    <Content Include="fork-estevaofon\resources\images\sling-2.png" />
+    <Content Include="fork-estevaofon\resources\images\sling-3.png" />
+    <Content Include="fork-estevaofon\resources\images\sling.png" />
+    <Content Include="fork-estevaofon\resources\images\stars-edited.png" />
+    <Content Include="fork-estevaofon\resources\images\stars.png" />
+    <Content Include="fork-estevaofon\resources\images\walls.png" />
+    <Content Include="fork-estevaofon\resources\images\wood.png" />
+    <Content Include="fork-estevaofon\resources\images\wood2.png" />
+    <Content Include="fork-estevaofon\resources\sounds\angry-birds.ogg" />
+    <Content Include="fork-estevaofon\_config.yml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

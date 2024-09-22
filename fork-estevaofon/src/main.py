@@ -1,4 +1,4 @@
-import os
+import os 
 import sys
 import math
 import time
@@ -11,23 +11,23 @@ from level import Level
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
-redbird = pygame.image.load(
-    "../resources/images/red-bird3.png").convert_alpha()
+redbird = pygame.image.load("C:\\Users\\light\\source\\repos\\Angry Birds AI\\fork-estevaofon\\resources\\images\\red-bird3.png").convert_alpha()
+print("currentPath ", current_path)
 background2 = pygame.image.load(
-    "../resources/images/background3.png").convert_alpha()
+    "fork-estevaofon/resources/images/background3.png").convert_alpha()
 sling_image = pygame.image.load(
-    "../resources/images/sling-3.png").convert_alpha()
+    "fork-estevaofon/resources/images/sling-3.png").convert_alpha()
 full_sprite = pygame.image.load(
-    "../resources/images/full-sprite.png").convert_alpha()
+    "fork-estevaofon/resources/images/full-sprite.png").convert_alpha()
 rect = pygame.Rect(181, 1050, 50, 50)
 cropped = full_sprite.subsurface(rect).copy()
 pig_image = pygame.transform.scale(cropped, (30, 30))
 buttons = pygame.image.load(
-    "../resources/images/selected-buttons.png").convert_alpha()
+    "fork-estevaofon/resources/images/selected-buttons.png").convert_alpha()
 pig_happy = pygame.image.load(
-    "../resources/images/pig_failed.png").convert_alpha()
+    "fork-estevaofon/resources/images/pig_failed.png").convert_alpha()
 stars = pygame.image.load(
-    "../resources/images/stars-edited.png").convert_alpha()
+    "fork-estevaofon/resources/images/stars-edited.png").convert_alpha()
 rect = pygame.Rect(0, 0, 200, 200)
 star1 = stars.subsurface(rect).copy()
 rect = pygame.Rect(204, 0, 200, 200)
@@ -134,7 +134,7 @@ def distance(xo, yo, x, y):
 
 def load_music():
     """Load the music"""
-    song1 = '../resources/sounds/angry-birds.ogg'
+    song1 = 'fork-estevaofon/resources/sounds/angry-birds.ogg'
     pygame.mixer.music.load(song1)
     pygame.mixer.music.play(-1)
 
