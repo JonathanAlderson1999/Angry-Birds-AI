@@ -7,7 +7,27 @@ current_path = os.getcwd()
 import pymunk as pm
 from characters import Bird
 from level import Level
+from Game_Network import game_network
 
+# Pig positions for level 1
+#[980, 72], [974, 178]
+network = game_network()
+ai_guess = network.move([980, 72, 974, 178])
+
+ai_guess = [0.01, 0.25]
+
+x_range = [100, 250]
+y_range = [370, 550]
+
+ai_guess = [x_range[0] + (ai_guess[0] * (x_range[1] - x_range[0])), y_range[0] + (ai_guess[1] * (y_range[1] - y_range[0]))]
+
+                # 100_mouse < 250 and y_mouse > 370 and y_mouse < 550):
+
+use_ai = True
+run_game = True
+
+if not run_game:
+    sys.exit(0)
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
@@ -134,9 +154,10 @@ def distance(xo, yo, x, y):
 
 def load_music():
     """Load the music"""
-    song1 = 'fork-estevaofon/resources/sounds/angry-birds.ogg'
-    pygame.mixer.music.load(song1)
-    pygame.mixer.music.play(-1)
+    # Please no    
+    #song1 = 'fork-estevaofon/resources/sounds/angry-birds.ogg'
+    #pygame.mixer.music.load(song1)
+    #pygame.mixer.music.play(-1)
 
 
 def sling_action():
@@ -346,7 +367,7 @@ while running:
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_n:
             space.gravity = (0.0, -700.0)
             level.bool_space = False
-        if (pygame.mouse.get_pressed()[0] and x_mouse > 100 and
+        if ((pygame.mouse.get_pressed()[0] or use_ai)and x_mouse > 100 and
                 x_mouse < 250 and y_mouse > 370 and y_mouse < 550):
             mouse_pressed = True
         if (event.type == pygame.MOUSEBUTTONUP and
@@ -358,6 +379,9 @@ while running:
                 t1 = time.time()*1000
                 xo = 154
                 yo = 156
+
+
+
                 if mouse_distance > rope_lenght:
                     mouse_distance = rope_lenght
                 if x_mouse < sling_x+5:
@@ -406,7 +430,11 @@ while running:
                     game_state = 0
                     bird_path = []
                     score = 0
-    x_mouse, y_mouse = pygame.mouse.get_pos()
+
+    if (use_ai):
+        x_mouse, y_mouse = ai_guess
+    else:
+        x_mouse, y_mouse = pygame.mouse.get_pos()
     # Draw background
     screen.fill((130, 200, 100))
     screen.blit(background2, (0, -50))

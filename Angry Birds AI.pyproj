@@ -21,11 +21,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Angry_Birds_AI.py" />
     <Compile Include="fork-estevaofon\src\characters.py" />
     <Compile Include="fork-estevaofon\src\level.py" />
     <Compile Include="fork-estevaofon\src\main.py" />
     <Compile Include="fork-estevaofon\src\polygon.py" />
+    <Compile Include="Game_Network.py" />
+    <Compile Include="Sequential_Network.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="fork-estevaofon\" />
