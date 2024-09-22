@@ -16,13 +16,6 @@ def normalize_array(a):
 
 # Pig positions for level 1
 #[980, 72], [974, 178]
-network = game_network()
-ai_guess = network.move(normalize_array(np.array([980, 72, 974, 178])))
-
-x_range = [100, 250]
-y_range = [370, 550]
-
-ai_guess = [x_range[0] + (ai_guess[0] * (x_range[1] - x_range[0])), y_range[0] + (ai_guess[1] * (y_range[1] - y_range[0]))]
 
                 # 100_mouse < 250 and y_mouse > 370 and y_mouse < 550):
 
@@ -435,7 +428,9 @@ while running:
                     score = 0
 
     if (use_ai):
-        x_mouse, y_mouse = ai_guess
+        network = game_network(np.random.rand())
+        move = network.move(normalize_array(np.array([980, 72, 974, 178])))
+        x_mouse, y_mouse = move
     else:
         x_mouse, y_mouse = pygame.mouse.get_pos()
     # Draw background

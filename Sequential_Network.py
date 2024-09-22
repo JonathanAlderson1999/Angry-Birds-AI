@@ -127,11 +127,10 @@ class layer:
 
 class sequential_network:
 
-    layers = []
-
     def __init__(self):
 
         print(". . .")
+        self.layers = []
 
     def __str__(self):
 
