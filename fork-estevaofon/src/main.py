@@ -19,8 +19,6 @@ def normalize_array(a):
 network = game_network()
 ai_guess = network.move(normalize_array(np.array([980, 72, 974, 178])))
 
-ai_guess = [0.01, 0.25]
-
 x_range = [100, 250]
 y_range = [370, 550]
 

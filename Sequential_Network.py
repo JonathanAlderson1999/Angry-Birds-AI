@@ -67,7 +67,7 @@ class layer:
 
         if (self.type == "dense"):
             weights = self.weights
-            self.activations = np.array([relu((np.sum(input * weights[j]) - biases[j])) for j in range(num_neurons)])
+            self.activations = np.array([tanh(relu((np.sum(input * weights[j]) - biases[j]))) for j in range(num_neurons)])
 
         elif (self.type == "conv2DTranspose"):
             kernels = self.kernels
