@@ -48,6 +48,8 @@ while running:
             high_score = score
             best_ai = ai_id
             print("New High Score: ", high_score, " from AI: ", best_ai)
+        else:
+            print("No high score ", ai_id)
 
         restart()
         level.load_level()
@@ -60,6 +62,7 @@ while running:
 
     # add a fake event so the AI can play
     for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
+
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -150,10 +153,10 @@ while running:
         x_mouse, y_mouse = pygame.mouse.get_pos()
     # Draw background
     screen.fill((130, 200, 100))
-    screen.blit(background2, (0, -50))
+    debug_blit(background2, (0, -50))
     # Draw first part of the sling
     rect = pygame.Rect(50, 0, 70, 220)
-    screen.blit(sling_image, (138, 420), rect)
+    debug_blit(sling_image, (138, 420), rect)
     # Draw the trail left behind
     for point in bird_path:
         pygame.draw.circle(screen, WHITE, point, 5, 0)
@@ -161,13 +164,13 @@ while running:
     if level.number_of_birds > 0:
         for i in range(level.number_of_birds-1):
             x = 100 - (i*35)
-            screen.blit(redbird, (x, 508))
+            debug_blit(redbird, (x, 508))
     # Draw sling behavior
     if mouse_pressed and level.number_of_birds > 0:
         sling_action()
     else:
         if time.time()*1000 - t1 > 300 and level.number_of_birds > 0:
-            screen.blit(redbird, (130, 426))
+            debug_blit(redbird, (130, 426))
         else:
             pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y-8),
                              (sling2_x, sling2_y-7), 5)
@@ -182,7 +185,7 @@ while running:
         x, y = p
         x -= 22
         y -= 20
-        screen.blit(redbird, (x, y))
+        debug_blit(redbird, (x, y))
         pygame.draw.circle(screen, BLUE,
                            p, int(bird.shape.radius), 2)
         if counter >= 3 and time.time() - t1 < 5:
@@ -223,7 +226,7 @@ while running:
         w,h = img.get_size()
         x -= w*0.5
         y -= h*0.5
-        screen.blit(img, (x, y))
+        debug_blit(img, (x, y))
         pygame.draw.circle(screen, BLUE, p, int(pig.radius), 2)
     # Draw columns and Beams
     for column in columns:
@@ -236,20 +239,20 @@ while running:
         space.step(dt) # make two updates per frame for better stability
     # Drawing second part of the sling
     rect = pygame.Rect(0, 0, 60, 200)
-    screen.blit(sling_image, (120, 420), rect)
+    debug_blit(sling_image, (120, 420), rect)
     # Draw score
     score_font = bold_font.render("SCORE", 1, WHITE)
     number_font = bold_font.render(str(score), 1, WHITE)
-    screen.blit(score_font, (1060, 90))
+    debug_blit(score_font, (1060, 90))
     if score == 0:
-        screen.blit(number_font, (1100, 130))
+        debug_blit(number_font, (1100, 130))
     else:
-        screen.blit(number_font, (1060, 130))
-    screen.blit(pause_button, (10, 90))
+        debug_blit(number_font, (1060, 130))
+    debug_blit(pause_button, (10, 90))
     # Pause option
     if game_state == 1:
-        screen.blit(play_button, (500, 200))
-        screen.blit(replay_button, (500, 300))
+        debug_blit(play_button, (500, 200))
+        debug_blit(replay_button, (500, 300))
     draw_level_cleared()
     draw_level_failed()
     pygame.display.flip()

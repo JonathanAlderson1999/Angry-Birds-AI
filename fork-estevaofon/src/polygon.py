@@ -3,7 +3,6 @@ from pymunk import Vec2d
 import pygame
 import math
 
-
 class Polygon():
     def __init__(self, pos, length, height, space, mass=5.0):
         moment = 1000
@@ -45,7 +44,7 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            screen.blit(rotated_logo_img, (np.x, np.y))
+            debug_blit(rotated_logo_img, (np.x, np.y))
         if element == 'columns':
             p = poly.body.position
             p = Vec2d(*self.to_pygame(p))
@@ -55,4 +54,4 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            screen.blit(rotated_logo_img, (np.x, np.y))
+            debug_blit(rotated_logo_img, (np.x, np.y))
