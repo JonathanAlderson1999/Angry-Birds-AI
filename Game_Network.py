@@ -6,7 +6,7 @@ class game_network:
 
     def __init__(self, seed):
 
-        random.seed(seed)
+        np.random.seed(seed)
 
         num_pigs = 2
         num_pig_vars = 2 

@@ -339,12 +339,37 @@ level = Level(pigs, columns, beams, space)
 level.number = 0
 level.load_level()
 
-frame_count = 0
+ai_move_interval = 180
+frame_count = ai_move_interval - 2
+ai_id = 12
+high_score = 0
+best_ai = 0
+network = game_network(ai_id)
 
 while running:
 
-    ai_move_interval = 6
     frame_count += 1
+
+    # Skip if offscreen to the left
+    if (len(birds) > 0 and (birds[0].body.position.x < 0)):
+        frame_count = ai_move_interval
+
+    ai_launch_bird = (frame_count % ai_move_interval == 0)
+    if (ai_launch_bird):
+
+        if (score > high_score):
+            high_score = score
+            best_ai = ai_id
+            print("New High Score: ", high_score, " from AI: ", best_ai)
+
+        restart()
+        level.load_level()
+        game_state = 0
+        bird_path = []
+        score = 0
+
+        network = game_network(ai_id)
+        ai_id += 1
 
     # add a fake event so the AI can play
     for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
@@ -372,7 +397,7 @@ while running:
         if (use_ai or (pygame.mouse.get_pressed()[0] and x_mouse > 100 and
                 x_mouse < 250 and y_mouse > 370 and y_mouse < 550)):
             mouse_pressed = True
-        if ((use_ai and (frame_count % ai_move_interval == 0)) or (event.type == pygame.MOUSEBUTTONUP and
+        if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and
                 event.button == 1 and mouse_pressed)):
             # Release new bird
             mouse_pressed = False
@@ -432,9 +457,8 @@ while running:
                     score = 0
 
     if (use_ai):
-        network = game_network(np.random.rand())
-        move = network.move(normalize_array(np.array([980, 72, 974, 178])))
-        x_mouse, y_mouse = [float(move[0]), float(move[1])]
+        ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
+        x_mouse, y_mouse = [float(ai_move[0]), float(ai_move[1])]
     else:
         x_mouse, y_mouse = pygame.mouse.get_pos()
     # Draw background
