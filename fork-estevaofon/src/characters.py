@@ -11,6 +11,7 @@ class Bird():
         body = pm.Body(mass, inertia)
         body.position = x, y
         power = distance * 53
+
         impulse = power * Vec2d(1, 0)
         angle = -angle
         body.apply_impulse_at_local_point(impulse.rotated(angle))

@@ -339,9 +339,15 @@ level = Level(pigs, columns, beams, space)
 level.number = 0
 level.load_level()
 
+frame_count = 0
+
 while running:
-    # Input handling
-    for event in pygame.event.get():
+
+    ai_move_interval = 6
+    frame_count += 1
+
+    # add a fake event so the AI can play
+    for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -363,20 +369,18 @@ while running:
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_n:
             space.gravity = (0.0, -700.0)
             level.bool_space = False
-        if ((pygame.mouse.get_pressed()[0] or use_ai)and x_mouse > 100 and
-                x_mouse < 250 and y_mouse > 370 and y_mouse < 550):
+        if (use_ai or (pygame.mouse.get_pressed()[0] and x_mouse > 100 and
+                x_mouse < 250 and y_mouse > 370 and y_mouse < 550)):
             mouse_pressed = True
-        if (event.type == pygame.MOUSEBUTTONUP and
-                event.button == 1 and mouse_pressed):
+        if ((use_ai and (frame_count % ai_move_interval == 0)) or (event.type == pygame.MOUSEBUTTONUP and
+                event.button == 1 and mouse_pressed)):
             # Release new bird
             mouse_pressed = False
             if level.number_of_birds > 0:
-                level.number_of_birds -= 1
+                #level.number_of_birds -= 1 # unlimited for testing
                 t1 = time.time()*1000
                 xo = 154
                 yo = 156
-
-
 
                 if mouse_distance > rope_lenght:
                     mouse_distance = rope_lenght
@@ -430,7 +434,7 @@ while running:
     if (use_ai):
         network = game_network(np.random.rand())
         move = network.move(normalize_array(np.array([980, 72, 974, 178])))
-        x_mouse, y_mouse = move
+        x_mouse, y_mouse = [float(move[0]), float(move[1])]
     else:
         x_mouse, y_mouse = pygame.mouse.get_pos()
     # Draw background

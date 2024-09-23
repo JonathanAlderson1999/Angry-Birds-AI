@@ -129,7 +129,6 @@ class sequential_network:
 
     def __init__(self):
 
-        print(". . .")
         self.layers = []
 
     def __str__(self):
