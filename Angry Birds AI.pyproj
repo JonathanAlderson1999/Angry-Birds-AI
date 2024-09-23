@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Include="fork-estevaofon\src\characters.py" />
     <Compile Include="fork-estevaofon\src\level.py" />
+    <Compile Include="fork-estevaofon\src\game.py" />
     <Compile Include="fork-estevaofon\src\main.py" />
     <Compile Include="fork-estevaofon\src\polygon.py" />
     <Compile Include="Game_Network.py" />
