@@ -221,7 +221,8 @@ def post_solve_pig_wood(arbiter, space, _):
         pigs.remove(pig)
 
 def debug_blit(image, pos, rect = None):
-    screen.blit(image, pos, rect)
+    return # lol
+    #screen.blit(image, pos, rect)
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))

@@ -253,8 +253,9 @@ while running:
     if game_state == 1:
         debug_blit(play_button, (500, 200))
         debug_blit(replay_button, (500, 300))
-    draw_level_cleared()
-    draw_level_failed()
-    pygame.display.flip()
-    clock.tick(50)
-    pygame.display.set_caption("fps: " + str(clock.get_fps()))
+
+    #draw_level_cleared()
+    #draw_level_failed()
+    #pygame.display.flip()
+    #clock.tick(50)
+    #pygame.display.set_caption("fps: " + str(clock.get_fps()))

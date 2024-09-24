@@ -44,7 +44,7 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            debug_blit(rotated_logo_img, (np.x, np.y))
+            #screen.blit(rotated_logo_img, (np.x, np.y))
         if element == 'columns':
             p = poly.body.position
             p = Vec2d(*self.to_pygame(p))
@@ -54,4 +54,4 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            debug_blit(rotated_logo_img, (np.x, np.y))
+            #screen.blit(rotated_logo_img, (np.x, np.y))
