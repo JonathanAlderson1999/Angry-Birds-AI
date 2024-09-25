@@ -11,6 +11,9 @@ from level import Level
 from Game_Network import game_network
 import numpy as np
 
+global x_mouse
+global y_mouse
+
 def normalize_array(a):
     normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
     return normalized
@@ -20,7 +23,7 @@ def normalize_array(a):
 
                 # 100_mouse < 250 and y_mouse > 370 and y_mouse < 550):
 
-use_ai = True
+use_ai = False
 run_game = True
 
 if not run_game:
@@ -41,15 +44,14 @@ while running:
     if (len(birds) > 0 and (birds[0].body.position.x < 0)):
         frame_count = ai_move_interval
 
-    ai_launch_bird = (frame_count % ai_move_interval == 0)
+    ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
     if (ai_launch_bird):
 
+        print(score, end = ", ")
         if (score > high_score):
             high_score = score
             best_ai = ai_id
-            print("New High Score: ", high_score, " from AI: ", best_ai)
-        else:
-            print("No high score ", ai_id)
+            #print("New High Score: ", high_score, " from AI: ", best_ai)
 
         restart()
         level.load_level()
@@ -60,8 +62,10 @@ while running:
         network = game_network(ai_id)
         ai_id += 1
 
+        # + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
+
     # add a fake event so the AI can play
-    for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
+    for event in (pygame.event.get()):
 
         if event.type == pygame.QUIT:
             running = False
@@ -97,8 +101,8 @@ while running:
                 xo = 154
                 yo = 156
 
-                if mouse_distance > rope_lenght:
-                    mouse_distance = rope_lenght
+                if mouse_distance > rope_length:
+                    mouse_distance = rope_length
                 if x_mouse < sling_x+5:
                     bird = Bird(mouse_distance, angle, xo, yo, space)
                     birds.append(bird)
@@ -167,7 +171,7 @@ while running:
             debug_blit(redbird, (x, 508))
     # Draw sling behavior
     if mouse_pressed and level.number_of_birds > 0:
-        sling_action()
+        [mouse_distance, rope_length, angle, x_mouse, y_mouse] = sling_action(mouse_distance, rope_length, angle, x_mouse, y_mouse)
     else:
         if time.time()*1000 - t1 > 300 and level.number_of_birds > 0:
             debug_blit(redbird, (130, 426))
@@ -254,8 +258,8 @@ while running:
         debug_blit(play_button, (500, 200))
         debug_blit(replay_button, (500, 300))
 
-    #draw_level_cleared()
-    #draw_level_failed()
-    #pygame.display.flip()
-    #clock.tick(50)
-    #pygame.display.set_caption("fps: " + str(clock.get_fps()))
+    [game_state, bonus_score_once, score] = draw_level_cleared(game_state, bonus_score_once, score)
+    game_state = draw_level_failed(game_state)
+    pygame.display.flip()
+    clock.tick(50)
+    pygame.display.set_caption("fps: " + str(clock.get_fps()))

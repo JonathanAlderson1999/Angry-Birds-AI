@@ -49,24 +49,19 @@ def load_music():
     #pygame.mixer.music.play(-1)
 
 
-def sling_action():
+def sling_action(mouse_distance, rope_length, angle, x_mouse, y_mouse):
     """Set up sling behavior"""
-    global mouse_distance
-    global rope_lenght
-    global angle
-    global x_mouse
-    global y_mouse
     # Fixing bird to the sling rope
     v = vector((sling_x, sling_y), (x_mouse, y_mouse))
     uv = unit_vector(v)
     uv1 = uv[0]
     uv2 = uv[1]
     mouse_distance = distance(sling_x, sling_y, x_mouse, y_mouse)
-    pu = (uv1*rope_lenght+sling_x, uv2*rope_lenght+sling_y)
+    pu = (uv1*rope_length+sling_x, uv2*rope_length+sling_y)
     bigger_rope = 102
     x_redbird = x_mouse - 20
     y_redbird = y_mouse - 20
-    if mouse_distance > rope_lenght:
+    if mouse_distance > rope_length:
         pux, puy = pu
         pux -= 20
         puy -= 20
@@ -89,12 +84,11 @@ def sling_action():
         dx = 0.00000000000001
     angle = math.atan((float(dy))/dx)
 
+    return [mouse_distance, rope_length, angle, x_mouse, y_mouse]
 
-def draw_level_cleared():
+
+def draw_level_cleared(game_state, bonus_score_once, score):
     """Draw level cleared"""
-    global game_state
-    global bonus_score_once
-    global score
     level_cleared = bold_font3.render("Level Cleared!", 1, WHITE)
     score_level_cleared = bold_font2.render(str(score), 1, WHITE)
     if level.number_of_birds >= 0 and len(pigs) == 0:
@@ -118,10 +112,10 @@ def draw_level_cleared():
         debug_blit(replay_button, (510, 480))
         debug_blit(next_button, (620, 480))
 
+    return [game_state, bonus_score_once, score]
 
-def draw_level_failed():
+def draw_level_failed(game_state):
     """Draw level failed"""
-    global game_state
     failed = bold_font3.render("Level Failed", 1, WHITE)
     if level.number_of_birds <= 0 and time.time() - t2 > 5 and len(pigs) > 0:
         game_state = 3
@@ -131,6 +125,7 @@ def draw_level_failed():
         debug_blit(pig_happy, (380, 120))
         debug_blit(replay_button, (520, 460))
 
+    return game_state
 
 def restart():
     """Delete all objects of the level"""
@@ -221,8 +216,8 @@ def post_solve_pig_wood(arbiter, space, _):
         pigs.remove(pig)
 
 def debug_blit(image, pos, rect = None):
-    return # lol
-    #screen.blit(image, pos, rect)
+    #return # lol
+    screen.blit(image, pos, rect)
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
@@ -273,7 +268,7 @@ poly_points = []
 ball_number = 0
 polys_dict = {}
 mouse_distance = 0
-rope_lenght = 90
+rope_length = 90
 angle = 0
 x_mouse = 0
 y_mouse = 0
