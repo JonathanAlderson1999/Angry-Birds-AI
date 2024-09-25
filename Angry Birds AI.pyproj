@@ -26,6 +26,7 @@
     <Compile Include="fork-estevaofon\src\game.py" />
     <Compile Include="fork-estevaofon\src\main.py" />
     <Compile Include="fork-estevaofon\src\polygon.py" />
+    <Compile Include="Genetic.py" />
     <Compile Include="Game_Network.py" />
     <Compile Include="Sequential_Network.py" />
   </ItemGroup>

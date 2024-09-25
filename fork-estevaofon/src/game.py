@@ -9,6 +9,14 @@ from characters import Bird
 from level import Level
 import numpy as np
 
+def reset_score():
+    global score
+    score = 0
+
+def get_score():
+    global score
+    return score
+
 def to_pygame(p):
     """Convert pymunk to pygame coordinates"""
     return int(p.x), int(-p.y+600)
@@ -166,6 +174,7 @@ def post_solve_bird_pig(arbiter, space, _):
     r = 30
     pygame.draw.circle(surface, BLACK, p, r, 4)
     pygame.draw.circle(surface, RED, p2, r, 4)
+
     pigs_to_remove = []
     for pig in pigs:
         if pig_body == pig.body:
@@ -180,6 +189,7 @@ def post_solve_bird_pig(arbiter, space, _):
 
 def post_solve_bird_wood(arbiter, space, _):
     """Collision between bird and wood"""
+
     poly_to_remove = []
     if arbiter.total_impulse.length > 1100:
         a, b = arbiter.shapes

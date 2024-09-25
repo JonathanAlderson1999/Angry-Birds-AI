@@ -18,18 +18,9 @@ def normalize_array(a):
     normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
     return normalized
 
-# Pig positions for level 1
-#[980, 72], [974, 178]
+use_ai = True
 
-                # 100_mouse < 250 and y_mouse > 370 and y_mouse < 550):
-
-use_ai = False
-run_game = True
-
-if not run_game:
-    sys.exit(0)
-
-ai_move_interval = 180
+ai_move_interval = 250
 frame_count = ai_move_interval - 2
 ai_id = 12
 high_score = 0
@@ -41,31 +32,34 @@ while running:
     frame_count += 1
 
     # Skip if offscreen to the left
-    if (len(birds) > 0 and (birds[0].body.position.x < 0)):
+    early_reset = False
+    if (len(birds) > 0):
+        early_reset = birds[0].body.position.x < 0
+        early_reset = early_reset or birds[0].body.velocity.get_length_sqrd() < 0.1
+
+    if early_reset:
         frame_count = ai_move_interval
 
     ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
     if (ai_launch_bird):
-
+        score = get_score()
         print(score, end = ", ")
         if (score > high_score):
             high_score = score
             best_ai = ai_id
-            #print("New High Score: ", high_score, " from AI: ", best_ai)
 
         restart()
         level.load_level()
         game_state = 0
         bird_path = []
-        score = 0
+        reset_score()
 
         network = game_network(ai_id)
+        print("new network " + str(ai_id))
         ai_id += 1
 
-        # + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
-
     # add a fake event so the AI can play
-    for event in (pygame.event.get()):
+    for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
 
         if event.type == pygame.QUIT:
             running = False
@@ -131,7 +125,7 @@ while running:
                     level.load_level()
                     game_state = 0
                     bird_path = []
-                    score = 0
+                    reset_score()
             if game_state == 4:
                 # Build next level
                 if x_mouse > 610 and y_mouse > 450:
@@ -139,7 +133,7 @@ while running:
                     level.number += 1
                     game_state = 0
                     level.load_level()
-                    score = 0
+                    reset_score()
                     bird_path = []
                     bonus_score_once = True
                 if x_mouse < 610 and x_mouse > 500 and y_mouse > 450:
@@ -148,7 +142,7 @@ while running:
                     level.load_level()
                     game_state = 0
                     bird_path = []
-                    score = 0
+                    reset_score()
 
     if (use_ai):
         ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
