@@ -3,39 +3,46 @@ import numpy as np
 import pickle
 from Game_Network import game_network
 
-def crossover_layer(x, y, mutation):
+def crossover_layer(layer, x, y, mutation):
 
-    num_weights = len(x.weights)
-    num_biasese = len(x.biases)
+    x_layer = x.network.layers[layer]
+    y_layer = y.network.layers[layer]
+
+    num_weights = len(x_layer.weights)
+    num_biasese = len(x_layer.biases)
 
     rand = np.random.rand(num_biasese)
     mutations = np.random.uniform(-mutation / 2, mutation / 2, 2 * num_weights)
 
     for w in range(num_weights):
         if (rand[w] > 0.5):
-           temp = x.weights[w]
-           x.weights[w] = y.weights[w]
-           y.weights[w] = temp
+           temp = x_layer.weights[w]
+           x_layer.weights[w] = y_layer.weights[w]
+           y_layer.weights[w] = temp
 
-        x.weights[w] += mutations[w]
-        y.weights[w] += mutations[w + num_biasese]
+        x_layer.weights[w] += mutations[w]
+        y_layer.weights[w] += mutations[w + num_biasese]
 
     rand = np.random.rand(num_biasese)
     mutations = np.random.uniform(-mutation / 2, mutation / 2, 2 * num_biasese)
 
     for b in range(num_biasese):
         if (rand[b] > 0.5):
-           temp = x.biases[b]
-           x.biases[b] = y.biases[b]
-           y.biases[b] = temp
+           temp = x_layer.biases[b]
+           x_layer.biases[b] = y_layer.biases[b]
+           y_layer.biases[b] = temp
 
-        x.biases[b] += mutations[b]
-        y.biases[b] += mutations[b + num_biasese]
+        x_layer.biases[b] += mutations[b]
+        y_layer.biases[b] += mutations[b + num_biasese]
+
+    x.network.layers[layer] = x_layer
+    y.network.layers[layer] = y_layer
+    return [x, y]
 
 def crossover(a, b, mutation):
 
     for i in range(len(a.network.layers)):
-        crossover_layer(a.network.layers[i], b.network.layers[i], mutation)
+        [a,b] = crossover_layer(i, a, b, mutation)
 
     return [a, b]
 
@@ -52,18 +59,25 @@ def select_parents(population, scores):
 
 def crossover_parents(parents):
 
+    # Bug: The same input network produces the same crossover in the end. . .
+
     new_population = []
 
     num_parents = len(parents)
 
-    rand = np.random.randint(num_parents, size = num_parents)
+    np.random.seed(1465)
+
+    rand = np.random.randint(num_parents, size = 2 * num_parents)
     mutation = np.random.rand(num_parents)
     j = 0
 
     for i in range(num_parents // 2):
 
-        new_population = new_population + (crossover(parents[rand[j]], parents[rand[j + 1]], mutation[i]))[:]
-        j += 2
+        rand_a = rand[i]
+        rand_b = rand[i + (num_parents // 2)]
+        new_population = new_population + (crossover(parents[rand[i]], parents[rand[i + (num_parents // 2)]], mutation[i]))[:]
+
+    return new_population
 
 
 

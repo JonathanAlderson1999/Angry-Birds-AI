@@ -20,6 +20,9 @@ class game_network:
 
         self.network = network
 
+    #def __getstate__(self):
+    #    return self
+
     def move(self, level_input):        
 
         input = np.array(level_input)

@@ -3,6 +3,7 @@ import sys
 import math
 import time
 import pygame
+import pickle
 from game import *
 current_path = os.getcwd()
 import pymunk as pm
@@ -22,10 +23,12 @@ use_ai = True
 
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
-ai_id = 12
+ai_id = 0
 high_score = 0
 best_ai = 0
-network = game_network(ai_id)
+
+population = pickle.load( open("Saved_Networks/generation0.pickle", "rb"))
+network = population[0]
 
 while running:
 
@@ -54,7 +57,7 @@ while running:
         bird_path = []
         reset_score()
 
-        network = game_network(ai_id)
+        network = population[ai_id]
         print("new network " + str(ai_id))
         ai_id += 1
 
