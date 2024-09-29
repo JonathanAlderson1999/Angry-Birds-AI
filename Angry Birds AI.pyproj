@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>fd613621-4936-44fd-acb3-d6f77a2aeae1</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Genetic.py</StartupFile>
+    <StartupFile>fork-estevaofon\src\main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

@@ -65,8 +65,6 @@ def crossover_parents(parents):
 
     num_parents = len(parents)
 
-    np.random.seed(1465)
-
     rand = np.random.randint(num_parents, size = 2 * num_parents)
     mutation = np.random.rand(num_parents)
     j = 0

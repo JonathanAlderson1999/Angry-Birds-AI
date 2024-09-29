@@ -58,6 +58,10 @@ while running:
         reset_score()
 
         network = population[ai_id]
+
+        if (ai_id >= len(population) - 1):
+            sys.exit()
+
         print("new network " + str(ai_id))
         ai_id += 1
 
