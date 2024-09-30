@@ -27,7 +27,7 @@ ai_id = 0
 high_score = 0
 best_ai = 0
 
-population = pickle.load( open("Saved_Networks/generation0.pickle", "rb"))
+population = pickle.load( open("Saved_Networks/generation1.pickle", "rb"))
 network = population[0]
 
 while running:
@@ -62,7 +62,6 @@ while running:
         if (ai_id >= len(population) - 1):
             sys.exit()
 
-        print("new network " + str(ai_id))
         ai_id += 1
 
     # add a fake event so the AI can play

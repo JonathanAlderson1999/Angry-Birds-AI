@@ -1,3 +1,4 @@
+import copy
 import random
 import numpy as np
 import pickle
@@ -41,10 +42,14 @@ def crossover_layer(layer, x, y, mutation):
 
 def crossover(a, b, mutation):
 
-    for i in range(len(a.network.layers)):
-        [a,b] = crossover_layer(i, a, b, mutation)
+    # todo: faster way to do this?
+    new_a = copy.deepcopy(a)
+    new_b = copy.deepcopy(b)
 
-    return [a, b]
+    for i in range(len(a.network.layers)):
+        [new_a, new_b] = crossover_layer(i, new_a, new_b, mutation)
+
+    return [new_a, new_b]
 
 def select_parents(population, scores):
 
@@ -58,9 +63,6 @@ def select_parents(population, scores):
 
 
 def crossover_parents(parents):
-
-    # Bug: The same input network produces the same crossover in the end. . .
-
     new_population = []
 
     num_parents = len(parents)
@@ -78,17 +80,21 @@ def crossover_parents(parents):
     return new_population
 
 
-
-ai_id = 13
-
-population = np.array([game_network(ai_id + i) for i in range(10)])
-scores =     [0, 15000, 15000, 0, 0, 0, 0, 0, 0, 0]
-
-parents = select_parents(population, scores)
-
-new_population = crossover_parents(parents)
-
 generation = 0
-pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
 
-print("Saved generation " + str(generation))
+prev_population = []
+
+with open("Saved_Networks/generation" + str(generation) + ".pickle", "rb") as f:
+    print(f.read())
+    prev_population = pickle.load(f)
+
+# todo: save this to file
+scores =     [0, 0, 0, 0, 0, 0, 5000, 0, 0, 0]
+
+new_parents = select_parents(prev_population, scores)
+
+new_population = crossover_parents(new_parents)
+
+pickle.dump(new_population, open("Saved_Networks/generation" + str(generation + 1) + ".pickle", "wb"))
+
+print("Saved generation " + str(generation + 1))

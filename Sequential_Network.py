@@ -25,6 +25,19 @@ class layer:
         self.biases = []
         self.dimension = [input_x, input_y]
 
+    def __repr__(self):
+
+        out = ""
+        
+        for weights in self.weights:
+            out += " w: "
+            out += str(hash("".join([str(i) for i in (weights.tolist())])))
+
+        out += " b: "
+        out += str(hash("".join([str(i) for i in (self.biases.tolist())])))
+
+        return out
+
     def dense(self, input_x, input_y, output_x, output_y):
         
         self.type = "dense"
@@ -134,6 +147,14 @@ class sequential_network:
     def __str__(self):
 
        return "".join([self.format(layer) for layer in self.layers])
+
+    def __repr__(self):
+
+        out = ""
+        for layer in self.layers:
+            out += layer.__repr__()
+
+        return out
 
     def format(self, layer):
 

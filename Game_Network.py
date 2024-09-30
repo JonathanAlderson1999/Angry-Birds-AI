@@ -20,8 +20,8 @@ class game_network:
 
         self.network = network
 
-    #def __getstate__(self):
-    #    return self
+    def __repr__(self):
+        return self.network.__repr__()
 
     def move(self, level_input):        
 
