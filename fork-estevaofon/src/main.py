@@ -71,23 +71,6 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_w:
-            # Toggle wall
-            if wall:
-                for line in static_lines1:
-                    space.remove(line)
-                wall = False
-            else:
-                for line in static_lines1:
-                    space.add(line)
-                wall = True
-
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
-            space.gravity = (0.0, -10.0)
-            level.bool_space = True
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_n:
-            space.gravity = (0.0, -700.0)
-            level.bool_space = False
         if (use_ai or (pygame.mouse.get_pressed()[0] and x_mouse > 100 and
                 x_mouse < 250 and y_mouse > 370 and y_mouse < 550)):
             mouse_pressed = True
@@ -97,7 +80,7 @@ while running:
             mouse_pressed = False
             if level.number_of_birds > 0:
                 #level.number_of_birds -= 1 # unlimited for testing
-                t1 = time.time()*1000
+                t1 = time.time() * 1000
                 xo = 154
                 yo = 156
 
