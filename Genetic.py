@@ -61,7 +61,6 @@ def select_parents(population, scores):
     
     return new_parents
 
-
 def crossover_parents(parents):
     new_population = []
 
@@ -79,17 +78,13 @@ def crossover_parents(parents):
 
     return new_population
 
-
 generation = 0
 
-prev_population = []
-
 with open("Saved_Networks/generation" + str(generation) + ".pickle", "rb") as f:
-    print(f.read())
     prev_population = pickle.load(f)
 
 # todo: save this to file
-scores =     [0, 0, 0, 0, 0, 0, 5000, 0, 0, 0]
+scores = [0, 0, 0, 0, 0, 0, 5000, 0, 0, 0]
 
 new_parents = select_parents(prev_population, scores)
 
