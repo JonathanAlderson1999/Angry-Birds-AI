@@ -30,6 +30,8 @@ best_ai = 0
 population = pickle.load( open("Saved_Networks/generation1.pickle", "rb"))
 network = population[0]
 
+game = game()
+
 while running:
 
     frame_count += 1
@@ -51,87 +53,15 @@ while running:
             high_score = score
             best_ai = ai_id
 
-        restart()
-        level.load_level()
-        game_state = 0
-        bird_path = []
-        reset_score()
-
+        game.restart()
         network = population[ai_id]
-
-        if (ai_id >= len(population) - 1):
-            sys.exit()
 
         ai_id += 1
 
     # add a fake event so the AI can play
     for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
 
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            running = False
-        if (use_ai or (pygame.mouse.get_pressed()[0] and x_mouse > 100 and
-                x_mouse < 250 and y_mouse > 370 and y_mouse < 550)):
-            mouse_pressed = True
-        if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and
-                event.button == 1 and mouse_pressed)):
-            # Release new bird
-            mouse_pressed = False
-            if level.number_of_birds > 0:
-                #level.number_of_birds -= 1 # unlimited for testing
-                t1 = time.time() * 1000
-                xo = 154
-                yo = 156
-
-                if mouse_distance > rope_length:
-                    mouse_distance = rope_length
-                if x_mouse < sling_x+5:
-                    bird = Bird(mouse_distance, angle, xo, yo, space)
-                    birds.append(bird)
-                else:
-                    bird = Bird(-mouse_distance, angle, xo, yo, space)
-                    birds.append(bird)
-                if level.number_of_birds == 0:
-                    t2 = time.time()
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            if (x_mouse < 60 and y_mouse < 155 and y_mouse > 90):
-                game_state = 1
-            if game_state == 1:
-                if x_mouse > 500 and y_mouse > 200 and y_mouse < 300:
-                    # Resume in the paused screen
-                    game_state = 0
-                if x_mouse > 500 and y_mouse > 300:
-                    # Restart in the paused screen
-                    restart()
-                    level.load_level()
-                    game_state = 0
-                    bird_path = []
-            if game_state == 3:
-                # Restart in the failed level screen
-                if x_mouse > 500 and x_mouse < 620 and y_mouse > 450:
-                    restart()
-                    level.load_level()
-                    game_state = 0
-                    bird_path = []
-                    reset_score()
-            if game_state == 4:
-                # Build next level
-                if x_mouse > 610 and y_mouse > 450:
-                    restart()
-                    level.number += 1
-                    game_state = 0
-                    level.load_level()
-                    reset_score()
-                    bird_path = []
-                    bonus_score_once = True
-                if x_mouse < 610 and x_mouse > 500 and y_mouse > 450:
-                    # Restart in the level cleared screen
-                    restart()
-                    level.load_level()
-                    game_state = 0
-                    bird_path = []
-                    reset_score()
+        game.process_event(event, use_ai, ai_launch_bird, ai_move)
 
     if (use_ai):
         ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))

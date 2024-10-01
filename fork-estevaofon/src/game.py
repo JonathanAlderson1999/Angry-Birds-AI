@@ -113,8 +113,29 @@ class game:
 
         return [game_state, bonus_score_once, score]
 
+    def release_bird():
+        mouse_pressed = False
+        if level.number_of_birds > 0:
+            #level.number_of_birds -= 1 # unlimited for testing
+            t1 = time.time() * 1000
+            xo = 154
+            yo = 156
+
+            if mouse_distance > rope_length:
+                mouse_distance = rope_length
+
+            if x_mouse < sling_x+5:
+                bird = Bird(mouse_distance, angle, xo, yo, space)
+                birds.append(bird)
+
+            else:
+                bird = Bird(-mouse_distance, angle, xo, yo, space)
+                birds.append(bird)
+
+            if level.number_of_birds == 0:
+                t2 = time.time()
+
     def draw_level_failed(game_state):
-        """Draw level failed"""
         failed = bold_font3.render("Level Failed", 1, WHITE)
         if level.number_of_birds <= 0 and time.time() - t2 > 5 and len(pigs) > 0:
             game_state = 3
@@ -126,8 +147,64 @@ class game:
 
         return game_state
 
+    def process_event(event, use_ai, ai_launch_bird, ai_move):
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            running = False
+
+        x_valid = (x_mouse > 100 and x_mouse < 250)
+        y_valid = (y_mouse > 370 and y_mouse < 550)
+        if (use_ai or (pygame.mouse.get_pressed()[0] and x_valid and y_valid)):
+            mouse_pressed = True
+
+        if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and event.button == 1 and mouse_pressed)):
+            release_bird()
+
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if (x_mouse < 60 and y_mouse < 155 and y_mouse > 90):
+                game_state = 1
+
+            if game_state == 1:
+                if x_mouse > 500 and y_mouse > 200 and y_mouse < 300:
+                    # Resume in the paused screen
+                    game_state = 0
+
+                if x_mouse > 500 and y_mouse > 300:
+                    # Restart in the paused screen
+                    restart()
+
+            if game_state == 3:
+                # Restart in the failed level screen
+                if x_mouse > 500 and x_mouse < 620 and y_mouse > 450:
+                    restart()
+
+            if game_state == 4:
+                # Build next level
+                if x_mouse > 610 and y_mouse > 450:
+                    restart()
+                    level.number += 1
+                    game_state = 0
+                    level.load_level()
+                    reset_score()
+                    bird_path = []
+                    bonus_score_once = True
+
+                if x_mouse < 610 and x_mouse > 500 and y_mouse > 450:
+                    # Restart in the level cleared screen
+                    restart()
+                    level.load_level()
+                    game_state = 0
+                    bird_path = []
+                    reset_score()
+
     def restart():
-        """Delete all objects of the level"""
+
+        game_state = 0
+        game_state = 0
+        bird_path = []
+
         pigs_to_remove = []
         birds_to_remove = []
         columns_to_remove = []
@@ -153,9 +230,9 @@ class game:
             space.remove(beam.shape, beam.shape.body)
             beams.remove(beam)
 
+        level.load_level()
 
     def post_solve_bird_pig(arbiter, space, _):
-        """Collision between bird and pig"""
         surface=screen
         a, b = arbiter.shapes
         bird_body = a.body
@@ -177,31 +254,29 @@ class game:
             space.remove(pig.shape, pig.shape.body)
             pigs.remove(pig)
 
-
     def post_solve_bird_wood(arbiter, space, _):
-        """Collision between bird and wood"""
-
         poly_to_remove = []
         if arbiter.total_impulse.length > 1100:
             a, b = arbiter.shapes
             for column in columns:
                 if b == column.shape:
                     poly_to_remove.append(column)
+
             for beam in beams:
                 if b == beam.shape:
                     poly_to_remove.append(beam)
+
             for poly in poly_to_remove:
                 if poly in columns:
                     columns.remove(poly)
+
                 if poly in beams:
                     beams.remove(poly)
+
             space.remove(b, b.body)
-            global score
             score += 5000
 
-
     def post_solve_pig_wood(arbiter, space, _):
-        """Collision between pig and wood"""
         pigs_to_remove = []
         if arbiter.total_impulse.length > 700:
             pig_shape, wood_shape = arbiter.shapes
@@ -217,7 +292,7 @@ class game:
             pigs.remove(pig)
 
     def debug_blit(image, pos, rect = None):
-        #return # lol
+        # todo: faster way of rendering for testing
         screen.blit(image, pos, rect)
 
 pygame.init()
