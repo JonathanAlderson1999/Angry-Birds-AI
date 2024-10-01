@@ -3,6 +3,14 @@ from polygon import Polygon
 
 
 class Level():
+
+    pigs = []
+    birds = []
+    balls = []
+    polys = []
+    beams = []
+    columns = []
+
     def __init__(self, pigs, columns, beams, space):
         self.pigs = pigs
         self.columns = columns
