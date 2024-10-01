@@ -1,6 +1,11 @@
+import pygame
+import pymunk as pm
 from characters import Pig
 from polygon import Polygon
-import pymunk as pm
+
+def to_pygame(p):
+    """Convert pymunk to pygame coordinates"""
+    return int(p.x), int(-p.y + 600)
 
 class Level():
 
@@ -24,7 +29,7 @@ class Level():
         self.setup_space()
 
     def post_solve_bird_pig(arbiter, space, _):
-        surface=screen
+        surface = screen
         a, b = arbiter.shapes
         bird_body = a.body
         pig_body = b.body
@@ -39,8 +44,8 @@ class Level():
             if pig_body == pig.body:
                 pig.life -= 20
                 pigs_to_remove.append(pig)
-                global score
                 score += 10000
+
         for pig in pigs_to_remove:
             space.remove(pig.shape, pig.shape.body)
             pigs.remove(pig)
@@ -87,10 +92,10 @@ class Level():
         self.space.gravity = (0.0, -700.0)
 
         static_body = pm.Body(body_type = pm.Body.STATIC)
-        static_lines =  [pm.Segment(static_body, (0.0, 060.0),    (1200.0, 60.0),  0.0)]
+        self.static_lines =  [pm.Segment(static_body, (0.0, 060.0),    (1200.0, 60.0),  0.0)]
         static_lines1 = [pm.Segment(static_body, (1200.0, 060.0), (1200.0, 800.0), 0.0)]
 
-        for line in static_lines:
+        for line in self.static_lines:
             line.elasticity = 0.95
             line.friction = 1
             line.collision_type = 3
@@ -102,7 +107,7 @@ class Level():
 
         self.space.add(static_body)
 
-        for line in static_lines:
+        for line in self.static_lines:
             self.space.add(line)
 
         self.space.add_collision_handler(0, 1).post_solve=self.post_solve_bird_pig
@@ -419,10 +424,76 @@ class Level():
             self.number_of_birds = 8
 
     def load_level(self):
+
+        pigs_to_remove = []
+        for pig in self.pigs:
+            pigs_to_remove.append(pig)
+
+        for pig in pigs_to_remove:
+            space.remove(pig.shape, pig.shape.body)
+            self.pigs.remove(pig)
+
+        birds_to_remove = []
+        for bird in self.birds:
+            birds_to_remove.append(bird)
+
+        for bird in birds_to_remove:
+            space.remove(bird.shape, bird.shape.body)
+            self.birds.remove(bird)
+
+        columns_to_remove = []
+        for column in self.columns:
+            columns_to_remove.append(column)
+
+        for column in columns_to_remove:
+            self.space.remove(column.shape, column.shape.body)
+            self.columns.remove(column)
+
+        beams_to_remove = []
+        for beam in self.beams:
+            beams_to_remove.append(beam)
+
+        for beam in beams_to_remove:
+            self.space.remove(beam.shape, beam.shape.body)
+            self.beams.remove(beam)
+
         try:
-            build_name = "build_"+str(self.number)
+            build_name = "build_" + str(self.number)
             getattr(self, build_name)()
         except AttributeError:
             self.number = 0
-            build_name = "build_"+str(self.number)
+            build_name = "build_" + str(self.number)
             getattr(self, build_name)()
+
+    def draw_level(self, screen):
+        for line in self.static_lines:
+            body = line.body
+            pv1 = body.position + line.a.rotated(body.angle)
+            pv2 = body.position + line.b.rotated(body.angle)
+            p1 = to_pygame(pv1)
+            p2 = to_pygame(pv2)
+            pygame.draw.lines(screen, (150, 150, 150), False, [p1, p2])
+
+        i = 0
+        for pig in self.pigs:
+            i += 1
+            pig = pig.shape
+            if pig.body.position.y < 0:
+                pigs_to_remove.append(pig)
+
+            p = to_pygame(pig.body.position)
+            x, y = p
+
+            angle_degrees = math.degrees(pig.body.angle)
+            img = pygame.transform.rotate(pig_image, angle_degrees)
+            w,h = img.get_size()
+            x -= w * 0.5
+            y -= h * 0.5
+            debug_blit(img, (x, y))
+            pygame.draw.circle(screen, BLUE, p, int(pig.radius), 2)
+
+        for column in self.columns:
+            column.draw_poly('columns', screen)
+
+        for beam in self.beams:
+            beam.draw_poly('beams', screen)

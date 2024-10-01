@@ -50,7 +50,7 @@ wall = False
 
 def to_pygame(p):
     """Convert pymunk to pygame coordinates"""
-    return int(p.x), int(-p.y+600)
+    return int(p.x), int(-p.y + 600)
 
 def vector(p0, p1):
     """Return the vector of the points
@@ -115,28 +115,8 @@ class game:
         birds_to_remove = []
         columns_to_remove = []
         beams_to_remove = []
-        for pig in pigs:
-            pigs_to_remove.append(pig)
-        for pig in pigs_to_remove:
-            space.remove(pig.shape, pig.shape.body)
-            pigs.remove(pig)
-        for bird in birds:
-            birds_to_remove.append(bird)
-        for bird in birds_to_remove:
-            space.remove(bird.shape, bird.shape.body)
-            birds.remove(bird)
-        for column in columns:
-            columns_to_remove.append(column)
-        for column in columns_to_remove:
-            space.remove(column.shape, column.shape.body)
-            columns.remove(column)
-        for beam in beams:
-            beams_to_remove.append(beam)
-        for beam in beams_to_remove:
-            space.remove(beam.shape, beam.shape.body)
-            beams.remove(beam)
 
-        level.load_level()
+        self.level.load_level()
 
     def sling_action(self):
         # Fixing bird to the sling rope
@@ -191,11 +171,11 @@ class game:
 
             if x_mouse < sling_x+5:
                 bird = Bird(mouse_distance, angle, xo, yo, space)
-                birds.append(bird)
+                self.level.birds.append(bird)
 
             else:
                 bird = Bird(-mouse_distance, angle, xo, yo, space)
-                birds.append(bird)
+                self.level.birds.append(bird)
 
             if level.number_of_birds == 0:
                 t2 = time.time()
@@ -328,7 +308,7 @@ class game:
         # Draw birds
         birds_to_remove = []
         pigs_to_remove = []
-        for bird in birds:
+        for bird in self.level.birds:
             if bird.shape.body.position.y < 0:
                 birds_to_remove.append(bird)
             p = to_pygame(bird.shape.body.position)
@@ -350,40 +330,7 @@ class game:
             space.remove(pig.shape, pig.shape.body)
             pigs.remove(pig)
 
-        # Draw static lines
-        for line in static_lines:
-            body = line.body
-            pv1 = body.position + line.a.rotated(body.angle)
-            pv2 = body.position + line.b.rotated(body.angle)
-            p1 = to_pygame(pv1)
-            p2 = to_pygame(pv2)
-            pygame.draw.lines(screen, (150, 150, 150), False, [p1, p2])
-
-        i = 0
-        # Draw pigs
-        for pig in pigs:
-            i += 1
-            pig = pig.shape
-            if pig.body.position.y < 0:
-                pigs_to_remove.append(pig)
-
-            p = to_pygame(pig.body.position)
-            x, y = p
-
-            angle_degrees = math.degrees(pig.body.angle)
-            img = pygame.transform.rotate(pig_image, angle_degrees)
-            w,h = img.get_size()
-            x -= w*0.5
-            y -= h*0.5
-            debug_blit(img, (x, y))
-            pygame.draw.circle(screen, BLUE, p, int(pig.radius), 2)
-
-        # Draw columns and Beams
-        for column in columns:
-            column.draw_poly('columns', screen)
-
-        for beam in beams:
-            beam.draw_poly('beams', screen)
+        self.level.draw_level(screen)
 
         # Drawing second part of the sling
         rect = pygame.Rect(0, 0, 60, 200)
