@@ -1,6 +1,6 @@
 from characters import Pig
 from polygon import Polygon
-
+import pymunk as pm
 
 class Level():
 
@@ -11,11 +11,8 @@ class Level():
     beams = []
     columns = []
 
-    def __init__(self, pigs, columns, beams, space):
-        self.pigs = pigs
-        self.columns = columns
-        self.beams = beams
-        self.space = space
+    def __init__(self):
+
         self.number = 0
         self.number_of_birds = 4
         # lower limit
@@ -23,6 +20,94 @@ class Level():
         self.two_star = 40000
         self.three_star = 60000
         self.bool_space = False
+
+        self.setup_space()
+
+    def post_solve_bird_pig(arbiter, space, _):
+        surface=screen
+        a, b = arbiter.shapes
+        bird_body = a.body
+        pig_body = b.body
+        p = to_pygame(bird_body.position)
+        p2 = to_pygame(pig_body.position)
+        r = 30
+        pygame.draw.circle(surface, BLACK, p, r, 4)
+        pygame.draw.circle(surface, RED, p2, r, 4)
+
+        pigs_to_remove = []
+        for pig in pigs:
+            if pig_body == pig.body:
+                pig.life -= 20
+                pigs_to_remove.append(pig)
+                global score
+                score += 10000
+        for pig in pigs_to_remove:
+            space.remove(pig.shape, pig.shape.body)
+            pigs.remove(pig)
+
+    def post_solve_bird_wood(arbiter, space, _):
+        poly_to_remove = []
+        if arbiter.total_impulse.length > 1100:
+            a, b = arbiter.shapes
+            for column in columns:
+                if b == column.shape:
+                    poly_to_remove.append(column)
+
+            for beam in beams:
+                if b == beam.shape:
+                    poly_to_remove.append(beam)
+
+            for poly in poly_to_remove:
+                if poly in columns:
+                    columns.remove(poly)
+
+                if poly in beams:
+                    beams.remove(poly)
+
+            space.remove(b, b.body)
+            score += 5000
+
+    def post_solve_pig_wood(arbiter, space, _):
+        pigs_to_remove = []
+        if arbiter.total_impulse.length > 700:
+            pig_shape, wood_shape = arbiter.shapes
+            for pig in pigs:
+                if pig_shape == pig.shape:
+                    pig.life -= 20
+                    global score
+                    score += 10000
+                    if pig.life <= 0:
+                        pigs_to_remove.append(pig)
+        for pig in pigs_to_remove:
+            space.remove(pig.shape, pig.shape.body)
+            pigs.remove(pig)
+
+    def setup_space(self):
+        self.space = pm.Space()
+        self.space.gravity = (0.0, -700.0)
+
+        static_body = pm.Body(body_type = pm.Body.STATIC)
+        static_lines =  [pm.Segment(static_body, (0.0, 060.0),    (1200.0, 60.0),  0.0)]
+        static_lines1 = [pm.Segment(static_body, (1200.0, 060.0), (1200.0, 800.0), 0.0)]
+
+        for line in static_lines:
+            line.elasticity = 0.95
+            line.friction = 1
+            line.collision_type = 3
+
+        for line in static_lines1:
+            line.elasticity = 0.95
+            line.friction = 1
+            line.collision_type = 3
+
+        self.space.add(static_body)
+
+        for line in static_lines:
+            self.space.add(line)
+
+        self.space.add_collision_handler(0, 1).post_solve=self.post_solve_bird_pig
+        self.space.add_collision_handler(0, 2).post_solve=self.post_solve_bird_wood
+        self.space.add_collision_handler(1, 2).post_solve=self.post_solve_pig_wood
 
     def open_flat(self, x, y, n):
         """Create a open flat struture"""
@@ -54,14 +139,14 @@ class Level():
         """Create a horizontal pile"""
         y += 70
         for i in range(n):
-            p = (x, y+i*20)
+            p = (x, y + i * 20)
             self.beams.append(Polygon(p, 85, 20, self.space))
 
     def vertical_pile(self, x, y, n):
         """Create a vertical pile"""
         y += 10
         for i in range(n):
-            p = (x, y+85+i*85)
+            p = (x, y + 85 + i * 85)
             self.columns.append(Polygon(p, 20, 85, self.space))
 
     def build_0(self):
@@ -83,10 +168,12 @@ class Level():
         p = (980, 240)
         self.beams.append(Polygon(p, 85, 20, self.space))
         self.number_of_birds = 4
+
         if self.bool_space:
             self.number_of_birds = 8
-        self.one_star = 30000
-        self.two_star = 40000
+
+        self.one_star =   30000
+        self.two_star =   40000
         self.three_star = 60000
 
     def build_1(self):

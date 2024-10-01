@@ -35,7 +35,7 @@ while running:
 
     # Skip if offscreen to the left
     early_reset = False
-    if (len(birds) > 0):
+    if (len(game.level.birds) > 0):
         early_reset = birds[0].body.position.x < 0
         early_reset = early_reset or birds[0].body.velocity.get_length_sqrd() < 0.1
 
@@ -55,15 +55,11 @@ while running:
 
         ai_id += 1
 
+    ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
+
     # add a fake event so the AI can play
     for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
         game.process_event(event, use_ai, ai_launch_bird, ai_move)
-
-    if (use_ai):
-        ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
-        x_mouse, y_mouse = [float(ai_move[0]), float(ai_move[1])]
-    else:
-        x_mouse, y_mouse = pygame.mouse.get_pos()
 
     game.draw()
 
