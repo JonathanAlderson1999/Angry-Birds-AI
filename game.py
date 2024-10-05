@@ -122,16 +122,16 @@ class game:
             pul = pux, puy
             debug_blit(redbird, pul)
             pu2 = (uv1*bigger_rope+sling_x, uv2*bigger_rope+sling_y)
-            pygame.draw.line(screen, (0, 0, 0), (sling2_x, sling2_y), pu2, 5)
+            debug_draw_line(screen, (0, 0, 0), (sling2_x, sling2_y), pu2, 5)
             debug_blit(redbird, pul)
-            pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu2, 5)
+            debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y), pu2, 5)
 
         else:
             self.mouse_distance += 10
             pu3 = (uv1 * self.mouse_distance + sling_x, uv2 * self.mouse_distance + sling_y)
-            pygame.draw.line(screen, (0, 0, 0), (sling2_x, sling2_y), pu3, 5)
+            debug_draw_line(screen, (0, 0, 0), (sling2_x, sling2_y), pu3, 5)
             debug_blit(redbird, (x_redbird, y_redbird))
-            pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu3, 5)
+            debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y), pu3, 5)
 
         # Angle of impulse
         dy = self.y_mouse - sling_y
@@ -238,7 +238,7 @@ class game:
             self.bonus_score_once = False
             self.game_state = 4
             rect = pygame.Rect(300, 0, 600, 800)
-            pygame.draw.rect(screen, BLACK, rect)
+            debug_draw_rect(screen, BLACK, rect)
             debug_blit(level_cleared, (450, 90))
             if self.level.score >= self.level.one_star and self.level.score <= self.level.two_star:
                 debug_blit(star1, (310, 190))
@@ -262,7 +262,7 @@ class game:
         if self.level.number_of_birds <= 0 and time.time() - self.t2 > 5 and len(self.level.pigs) > 0:
             self.game_state = 3
             rect = pygame.Rect(300, 0, 600, 800)
-            pygame.draw.rect(screen, BLACK, rect)
+            debug_draw_rect(screen, BLACK, rect)
             debug_blit(failed, (450, 90))
             debug_blit(pig_happy, (380, 120))
             debug_blit(replay_button, (520, 460))
@@ -277,7 +277,7 @@ class game:
 
         # Draw the trail left behind
         for point in self.bird_path:
-            pygame.draw.circle(screen, WHITE, point, 5, 0)
+            debug_draw_circle(screen, WHITE, point, 5, 0)
 
         # Draw the birds in the wait line
         if self.level.number_of_birds > 0:
@@ -292,7 +292,7 @@ class game:
             if time.time() * 1000 - self.t1 > 300 and self.level.number_of_birds > 0:
                 debug_blit(redbird, (130, 426))
             else:
-                pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y - 8), (sling2_x, sling2_y - 7), 5)
+                debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y - 8), (sling2_x, sling2_y - 7), 5)
 
         # Draw birds
         birds_to_remove = []
@@ -305,7 +305,7 @@ class game:
             x -= 22
             y -= 20
             debug_blit(redbird, (x, y))
-            pygame.draw.circle(screen, BLUE, p, int(bird.shape.radius), 2)
+            debug_draw_circle(screen, BLUE, p, int(bird.shape.radius), 2)
 
             if self.counter >= 3 and time.time() - self.t1 < 5:
                 self.bird_path.append(p)

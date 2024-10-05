@@ -14,9 +14,26 @@ WHITE = (255, 255, 255)
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
 
+render = True
+def turn_off_rendering():
+    global render
+    render = False
+
 def debug_blit(image, pos, rect = None):
-    # todo: faster way of rendering for testing
-    screen.blit(image, pos, rect)
+    if render:
+        screen.blit(image, pos, rect)
+
+def debug_draw_rect(screen, colour, rect):
+    if render:
+        pygame.draw.rect(screen, colour, rect)
+
+def debug_draw_line(screen, colour, p1, p2, width = 1):
+    if render:
+        pygame.draw.line(screen, colour, p1, p2, width)
+
+def debug_draw_circle(screen, colour, center, radius, width):
+    if render:
+        pygame.draw.circle(screen, colour, center, radius, width)
 
 class Polygon():
     def __init__(self, pos, length, height, space, mass=5.0):
@@ -49,7 +66,7 @@ class Polygon():
         ps = map(self.to_pygame, ps)
         ps = list(ps)
         color = (255, 0, 0)
-        pygame.draw.lines(screen, color, False, ps)
+        debug_draw_line(screen, color, False, ps)
 
         if element == 'beams':
             p = poly.body.position
@@ -59,7 +76,7 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            screen.blit(rotated_logo_img, (np.x, np.y))
+            debug_blit(rotated_logo_img, (np.x, np.y))
 
         if element == 'columns':
             p = poly.body.position
@@ -69,4 +86,4 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            screen.blit(rotated_logo_img, (np.x, np.y))
+            debug_blit(rotated_logo_img, (np.x, np.y))

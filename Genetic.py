@@ -96,6 +96,6 @@ def make_new_population(generation, population_size):
     new_population = crossover_parents(new_parents)
 
     pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
-    print("Saved generation " + str(generation))
+    print("\nSaved generation " + str(generation))
 
     return new_population

@@ -16,18 +16,23 @@ def normalize_array(a):
     normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
     return normalized
 
-train = False
-if (train):
-    import Genetic
 
 game = game()
 
-use_ai = True
 population_size = 10
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 generation = 0
+
+
+use_ai = True
+render_game = False
+
+render_game = render_game or not use_ai
+if not render_game:
+    turn_off_rendering()
+    pygame.display.iconify()
 
 while True:
 
@@ -65,7 +70,6 @@ while True:
             ai_scores.append(game.level.score)
             game.restart()
             if (ai_id == population_size):
-                print("")
                 continue
             network = population[ai_id]
 
@@ -81,8 +85,9 @@ while True:
         game.draw(use_ai)
         game.update_physics()
 
-        pygame.display.flip()
-        clock.tick(50)
-        pygame.display.set_caption("Angry Birds")
+        if render_game:
+            pygame.display.flip()
+            clock.tick(50)
+            pygame.display.set_caption("Angry Birds")
 
     pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))
