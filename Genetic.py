@@ -85,6 +85,7 @@ def crossover_parents(parents):
 def make_new_population(generation, population_size):
 
     if (generation == 0):
+        random.seed(1)
         prev_population = [game_network(random.randint(1, 10000)) for i in range(population_size)]
         scores = [1 for i in range(population_size)]
     else:
@@ -96,6 +97,5 @@ def make_new_population(generation, population_size):
     new_population = crossover_parents(new_parents)
 
     pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
-    print("\nSaved generation " + str(generation))
 
     return new_population

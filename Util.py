@@ -60,6 +60,10 @@ class Polygon():
 
     def draw_poly(self, element, screen):
         """Draw beams and columns"""
+
+        if not render:
+            return
+
         poly = self.shape
         ps = poly.get_vertices()
         ps.append(ps[0])

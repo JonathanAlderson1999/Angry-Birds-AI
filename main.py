@@ -44,7 +44,7 @@ while True:
     population = make_new_population(generation, population_size)
     network = population[0]
 
-    print("Testing generation: ", generation)
+    print("\nGen: ", str(generation).ljust(5), end = " ")
     generation += 1
 
     while ai_id < population_size:
@@ -62,7 +62,7 @@ while True:
 
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         if (ai_launch_bird):
-            print(game.level.score, end = ", ")
+            print(str(game.level.score).ljust(5), end = ", ")
             if (game.level.score > high_score):
                 high_score = game.level.score
                 best_ai = ai_id
