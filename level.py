@@ -435,7 +435,7 @@ class Level():
             self.number_of_birds = 8
 
     def load_level(self):
-
+        self.score = 0
         pigs_to_remove = []
         for pig in self.pigs:
             pigs_to_remove.append(pig)

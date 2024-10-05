@@ -9,64 +9,79 @@ import pymunk as pm
 from Characters import Bird
 from level import Level
 from Game_Network import game_network
+from Genetic import *
 import numpy as np
 
 def normalize_array(a):
     normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
     return normalized
 
-train = True
+train = False
 if (train):
     import Genetic
 
-
-use_ai = True
-
-ai_move_interval = 250
-frame_count = ai_move_interval - 2
-ai_id = 0
-high_score = 0
-best_ai = 0
-
-population = pickle.load( open("Saved_Networks/generation0.pickle", "rb"))
-network = population[0]
-
 game = game()
 
-while running:
+use_ai = True
+population_size = 10
+ai_move_interval = 250
+frame_count = ai_move_interval - 2
 
-    frame_count += 1
+generation = 0
 
-    # Skip if offscreen to the left
-    early_reset = False
-    if (len(game.level.birds) > 0):
-        early_reset = game.level.birds[0].body.position.x < 0
-        early_reset = early_reset or game.level.birds[0].body.velocity.get_length_sqrd() < 0.1
+while True:
 
-    if early_reset:
-        frame_count = ai_move_interval
+    ai_id = 9
+    high_score = 0
+    best_ai = 0
+    ai_scores = []
 
-    ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
-    if (ai_launch_bird):
-        print(game.level.score, end = ", ")
-        if (game.level.score > high_score):
-            high_score = game.level.score
-            best_ai = ai_id
+    population = make_new_population(generation, population_size)
+    network = population[0]
 
-        game.restart()
-        network = population[ai_id]
+    print("Testing generation: ", generation)
+    generation += 1
 
-        ai_id += 1
+    while ai_id < population_size:
 
-    ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
+        frame_count += 1
 
-    # add a fake event so the AI can play
-    for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
-        game.process_event(event, use_ai, ai_launch_bird, ai_move)
+        # Skip if offscreen to the left
+        early_reset = False
+        if (len(game.level.birds) > 0):
+            early_reset = game.level.birds[0].body.position.x < 0
+            early_reset = early_reset or game.level.birds[0].body.velocity.get_length_sqrd() < 0.1
 
-    game.draw()
-    game.update_physics()
+        if early_reset:
+            frame_count = ai_move_interval
 
-    pygame.display.flip()
-    clock.tick(50)
-    pygame.display.set_caption("Angry Birds")
+        ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
+        if (ai_launch_bird):
+            print(game.level.score, end = ", ")
+            if (game.level.score > high_score):
+                high_score = game.level.score
+                best_ai = ai_id
+
+            ai_scores.append(game.level.score)
+            game.restart()
+            if (ai_id == population_size):
+                continue
+            network = population[ai_id]
+
+            ai_id += 1
+
+        ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
+
+        # add a fake event so the AI can play
+        for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
+            game.process_event(event, use_ai, ai_launch_bird, ai_move)
+
+        game.draw()
+        game.update_physics()
+
+        pygame.display.flip()
+        clock.tick(50)
+        pygame.display.set_caption("Angry Birds")
+
+    print("he")
+    pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))

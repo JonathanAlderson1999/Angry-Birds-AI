@@ -78,21 +78,20 @@ def crossover_parents(parents):
 
     return new_population
 
-population_size = 10
+def make_new_population(generation, population_size):
 
-generation = 0
+    if (generation == 0):
+        prev_population = [game_network(random.randint(1, 10000)) for i in range(population_size)]
+        scores = [1 for i in range(population_size)]
+    else:
+        with open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "rb") as f:
+            [prev_population, scores] = pickle.load(f)
 
-if (generation == 0):
-    prev_population = [game_network(random.randint(1, 10000)) for i in range(population_size)]
-    scores = [1 for i in range(population_size)]
-else:
-    with open("Saved_Networks/generation" + str(generation) + ".pickle", "rb") as f:
-        [prev_population, scores] = pickle.load(f)
+    new_parents = select_parents(prev_population, scores)
 
-new_parents = select_parents(prev_population, scores)
+    new_population = crossover_parents(new_parents)
 
-new_population = crossover_parents(new_parents)
+    pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
+    print("Saved generation " + str(generation))
 
-pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
-
-print("Saved generation " + str(generation))
+    return new_population

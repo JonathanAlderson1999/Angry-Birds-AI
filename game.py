@@ -137,7 +137,7 @@ class game:
         dx = self.x_mouse - sling_x
         if dx == 0:
             dx = 0.00000000000001
-        angle = math.atan((float(dy)) / dx)
+        self.angle = math.atan((float(dy)) / dx)
 
     def release_bird(self):
         self.mouse_pressed = False
@@ -164,9 +164,9 @@ class game:
     def process_event(self, event, use_ai, ai_launch_bird, ai_move):
 
         if use_ai:
-            x_mouse, y_mouse = [float(ai_move[0]), float(ai_move[1])]
+            self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
         else:
-            x_mouse, y_mouse = pygame.mouse.get_pos()
+            self.x_mouse, self.y_mouse = pygame.mouse.get_pos()
 
         if event.type == pygame.QUIT:
             running = False
@@ -174,36 +174,36 @@ class game:
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
 
-        x_valid = (x_mouse > 100 and x_mouse < 250)
-        y_valid = (y_mouse > 370 and y_mouse < 550)
+        x_valid = (self.x_mouse > 100 and self.x_mouse < 250)
+        y_valid = (self.y_mouse > 370 and self.y_mouse < 550)
         if (use_ai or (pygame.mouse.get_pressed()[0] and x_valid and y_valid)):
             self.mouse_pressed = True
 
         if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.mouse_pressed)):
             self.release_bird()
-            print("AI Move: ", str(x_mouse), " ", str(y_mouse))
+            print("AI Move: ", str(self.x_mouse), " ", str(self.y_mouse))
 
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            if (x_mouse < 60 and y_mouse < 155 and y_mouse > 90):
+            if (self.x_mouse < 60 and self.y_mouse < 155 and self.y_mouse > 90):
                 self.game_state = 1
 
             if self.game_state == 1:
-                if x_mouse > 500 and y_mouse > 200 and y_mouse < 300:
+                if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:
                     # Resume in the paused screen
                     self.game_state = 0
 
-                if x_mouse > 500 and y_mouse > 300:
+                if self.x_mouse > 500 and self.y_mouse > 300:
                     # Restart in the paused screen
                     restart()
 
             if self.game_state == 3:
                 # Restart in the failed level screen
-                if x_mouse > 500 and x_mouse < 620 and y_mouse > 450:
+                if self.x_mouse > 500 and self.x_mouse < 620 and self.y_mouse > 450:
                     restart()
 
             if self.game_state == 4:
                 # Build next level
-                if x_mouse > 610 and y_mouse > 450:
+                if self.x_mouse > 610 and self.y_mouse > 450:
                     restart()
                     self.level.number += 1
                     self.game_state = 0
@@ -212,7 +212,7 @@ class game:
                     self.bird_path = []
                     self.bonus_score_once = True
 
-                if x_mouse < 610 and x_mouse > 500 and y_mouse > 450:
+                if self.x_mouse < 610 and self.x_mouse > 500 and self.y_mouse > 450:
                     # Restart in the level cleared screen
                     restart()
                     self.level.load_level()
