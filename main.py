@@ -72,8 +72,8 @@ while True:
 
         ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
 
-        if not use_ai:
-            for event in (pygame.event.get()):
+        for event in (pygame.event.get()):
+            if not use_ai:
                 game.process_event(event)
 
         game.launch_bird(ai_launch_bird, ai_move)
