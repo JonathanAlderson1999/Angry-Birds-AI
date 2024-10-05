@@ -1,14 +1,14 @@
 import math
 import pygame
 import pymunk as pm
-from characters import Pig
-from polygon import Polygon
+from Characters import Pig
+from Util import *
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
 
 
-full_sprite = pygame.image.load("fork-estevaofon/resources/images/full-sprite.png").convert_alpha()
+full_sprite = pygame.image.load("estevaofon/resources/images/full-sprite.png").convert_alpha()
 cropped =   full_sprite.subsurface(pygame.Rect(181, 1050, 50,  50 )).copy()
 pig_image = pygame.transform.scale(cropped, (30, 30))
 
@@ -50,15 +50,15 @@ class Level():
         pygame.draw.circle(surface, RED, p2, r, 4)
 
         pigs_to_remove = []
-        for pig in pigs:
+        for pig in self.pigs:
             if pig_body == pig.body:
                 pig.life -= 20
                 pigs_to_remove.append(pig)
-                score += 10000
+                self.score += 10000
 
         for pig in pigs_to_remove:
             space.remove(pig.shape, pig.shape.body)
-            pigs.remove(pig)
+            self.pigs.remove(pig)
 
     def post_solve_bird_wood(arbiter, space, _):
         poly_to_remove = []
@@ -80,22 +80,21 @@ class Level():
                     beams.remove(poly)
 
             space.remove(b, b.body)
-            score += 5000
+            self.score += 5000
 
-    def post_solve_pig_wood(arbiter, space, _):
+    def post_solve_pig_wood(arbiter, space, _, foo):
         pigs_to_remove = []
         if arbiter.total_impulse.length > 700:
             pig_shape, wood_shape = arbiter.shapes
-            for pig in pigs:
+            for pig in self.pigs:
                 if pig_shape == pig.shape:
                     pig.life -= 20
-                    global score
                     score += 10000
                     if pig.life <= 0:
                         pigs_to_remove.append(pig)
         for pig in pigs_to_remove:
             space.remove(pig.shape, pig.shape.body)
-            pigs.remove(pig)
+            self.pigs.remove(pig)
 
     def setup_space(self):
         self.space = pm.Space()
@@ -440,7 +439,7 @@ class Level():
             pigs_to_remove.append(pig)
 
         for pig in pigs_to_remove:
-            space.remove(pig.shape, pig.shape.body)
+            self.space.remove(pig.shape, pig.shape.body)
             self.pigs.remove(pig)
 
         birds_to_remove = []
@@ -448,7 +447,7 @@ class Level():
             birds_to_remove.append(bird)
 
         for bird in birds_to_remove:
-            space.remove(bird.shape, bird.shape.body)
+            self.space.remove(bird.shape, bird.shape.body)
             self.birds.remove(bird)
 
         columns_to_remove = []

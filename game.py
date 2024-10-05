@@ -5,19 +5,20 @@ import time
 import pygame
 current_path = os.getcwd()
 import pymunk as pm
-from characters import Bird
+from Characters import Bird
 from level import Level
 import numpy as np
+from Util import *
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
 
-redbird =     pygame.image.load("C:\\Users\\light\\source\\repos\\Angry Birds AI\\fork-estevaofon\\resources\\images\\red-bird3.png").convert_alpha()
-background2 = pygame.image.load("fork-estevaofon/resources/images/background3.png").convert_alpha()
-sling_image = pygame.image.load("fork-estevaofon/resources/images/sling-3.png").convert_alpha()
-buttons =     pygame.image.load("fork-estevaofon/resources/images/selected-buttons.png").convert_alpha()
-pig_happy =   pygame.image.load("fork-estevaofon/resources/images/pig_failed.png").convert_alpha()
-stars =       pygame.image.load("fork-estevaofon/resources/images/stars-edited.png").convert_alpha()
+redbird =     pygame.image.load("C:\\Users\\light\\source\\repos\\Angry Birds AI\\estevaofon\\resources\\images\\red-bird3.png").convert_alpha()
+background2 = pygame.image.load("estevaofon/resources/images/background3.png").convert_alpha()
+sling_image = pygame.image.load("estevaofon/resources/images/sling-3.png").convert_alpha()
+buttons =     pygame.image.load("estevaofon/resources/images/selected-buttons.png").convert_alpha()
+pig_happy =   pygame.image.load("estevaofon/resources/images/pig_failed.png").convert_alpha()
+stars =       pygame.image.load("estevaofon/resources/images/stars-edited.png").convert_alpha()
 
 star1 =           stars.subsurface(pygame.Rect(0,   0,    200, 200)).copy()
 star2 =           stars.subsurface(pygame.Rect(204, 0,    200, 200)).copy()
@@ -35,11 +36,6 @@ bold_font2 = pygame.font.SysFont("arial", 40, bold = True)
 bold_font3 = pygame.font.SysFont("arial", 50, bold = True)
 
 running = True
-
-RED =   (255, 0,   0)
-BLUE =  (0,   0,   255)
-BLACK = (0,   0,   0)
-WHITE = (255, 255, 255)
 
 restart_counter = False
 wall = False
@@ -72,10 +68,6 @@ def distance(xo, yo, x, y):
     d = ((dx ** 2) + (dy ** 2)) ** 0.5
     return d
 
-def debug_blit(image, pos, rect = None):
-    # todo: faster way of rendering for testing
-    screen.blit(image, pos, rect)
-
 class game:
 
     score = 0
@@ -96,15 +88,16 @@ class game:
         self.level.number = 0
         self.level.load_level()
 
-        score = 0
-        game_state = 0
+        self.score = 0
+        self.game_state = 0
         self.bird_path = []
-        counter = 0
+        self.counter = 0
+        self.restart_counter = True
 
     def restart(self):
 
-        game_state = 0
-        game_state = 0
+        self.game_state = 0
+        self.game_state = 0
         self.bird_path = []
 
         pigs_to_remove = []
@@ -156,25 +149,25 @@ class game:
 
     def release_bird(self):
         self.mouse_pressed = False
-        if level.number_of_birds > 0:
+        if self.level.number_of_birds > 0:
             #level.number_of_birds -= 1 # unlimited for testing
             self.t1 = time.time() * 1000
             xo = 154
             yo = 156
 
-            if mouse_distance > rope_length:
-                mouse_distance = rope_length
+            if self.mouse_distance > self.rope_length:
+                self.mouse_distance = self.rope_length
 
-            if x_mouse < sling_x+5:
-                bird = Bird(mouse_distance, angle, xo, yo, space)
+            if self.x_mouse < self.sling_x + 5:
+                bird = Bird(self.mouse_distance, self.angle, xo, yo, self.space)
                 self.level.birds.append(bird)
 
             else:
-                bird = Bird(-mouse_distance, angle, xo, yo, space)
+                bird = Bird(-self.mouse_distance, self.angle, xo, yo, self.space)
                 self.level.birds.append(bird)
 
             if level.number_of_birds == 0:
-                t2 = time.time()
+                self.t2 = time.time()
 
     def process_event(self, event, use_ai, ai_launch_bird, ai_move):
 
@@ -195,32 +188,32 @@ class game:
             mouse_pressed = True
 
         if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.mouse_pressed)):
-            release_bird()
+            self.release_bird()
 
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if (x_mouse < 60 and y_mouse < 155 and y_mouse > 90):
-                game_state = 1
+                self.game_state = 1
 
-            if game_state == 1:
+            if self.game_state == 1:
                 if x_mouse > 500 and y_mouse > 200 and y_mouse < 300:
                     # Resume in the paused screen
-                    game_state = 0
+                    self.game_state = 0
 
                 if x_mouse > 500 and y_mouse > 300:
                     # Restart in the paused screen
                     restart()
 
-            if game_state == 3:
+            if self.game_state == 3:
                 # Restart in the failed level screen
                 if x_mouse > 500 and x_mouse < 620 and y_mouse > 450:
                     restart()
 
-            if game_state == 4:
+            if self.game_state == 4:
                 # Build next level
                 if x_mouse > 610 and y_mouse > 450:
                     restart()
                     self.level.number += 1
-                    game_state = 0
+                    self.game_state = 0
                     self.level.load_level()
                     reset_score()
                     self.bird_path = []
@@ -230,31 +223,31 @@ class game:
                     # Restart in the level cleared screen
                     restart()
                     self.level.load_level()
-                    game_state = 0
+                    self.game_state = 0
                     self.bird_path = []
                     reset_score()
 
     def draw_level_cleared(self):
         level_cleared = bold_font3.render("Level Cleared!", 1, WHITE)
-        score_level_cleared = bold_font2.render(str(score), 1, WHITE)
+        score_level_cleared = bold_font2.render(str(self.score), 1, WHITE)
 
-        if self.level.number_of_birds >= 0 and len(pigs) == 0:
+        if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
             if bonus_score_once:
-                score += (self.level.number_of_birds-1) * 10000
+                self.score += (self.level.number_of_birds-1) * 10000
 
             bonus_score_once = False
-            game_state = 4
+            self.game_state = 4
             rect = pygame.Rect(300, 0, 600, 800)
             pygame.draw.rect(screen, BLACK, rect)
             debug_blit(level_cleared, (450, 90))
-            if score >= self.level.one_star and score <= self.level.two_star:
+            if self.score >= self.level.one_star and self.score <= self.level.two_star:
                 debug_blit(star1, (310, 190))
 
-            if score >= self.level.two_star and score <= self.level.three_star:
+            if self.score >= self.level.two_star and self.score <= self.level.three_star:
                 debug_blit(star1, (310, 190))
                 debug_blit(star2, (500, 170))
 
-            if score >= self.level.three_star:
+            if self.score >= self.level.three_star:
                 debug_blit(star1, (310, 190))
                 debug_blit(star2, (500, 170))
                 debug_blit(star3, (700, 200))
@@ -266,8 +259,8 @@ class game:
     def draw_level_failed(self, game_state):
         failed = bold_font3.render("Level Failed", 1, WHITE)
 
-        if self.level.number_of_birds <= 0 and time.time() - t2 > 5 and len(pigs) > 0:
-            game_state = 3
+        if self.level.number_of_birds <= 0 and time.time() - self.t2 > 5 and len(self.level.pigs) > 0:
+            self.game_state = 3
             rect = pygame.Rect(300, 0, 600, 800)
             pygame.draw.rect(screen, BLACK, rect)
             debug_blit(failed, (450, 90))
@@ -314,9 +307,14 @@ class game:
             debug_blit(redbird, (x, y))
             pygame.draw.circle(screen, BLUE, p, int(bird.shape.radius), 2)
 
-            if counter >= 3 and time.time() - self.t1 < 5:
+            if self.counter >= 3 and time.time() - self.t1 < 5:
                 self.bird_path.append(p)
-                restart_counter = True
+                self.restart_counter = True
+        self.counter += 1
+
+        if self.restart_counter:
+            self.counter = 0
+            self.restart_counter = False
 
         # Remove birds and pigs
         for bird in birds_to_remove:
@@ -332,20 +330,23 @@ class game:
         rect = pygame.Rect(0, 0, 60, 200)
         debug_blit(sling_image, (120, 420), rect)
 
-        # Draw score
+        # Draw self.score
         score_font = bold_font.render("SCORE", 1, WHITE)
-        number_font = bold_font.render(str(score), 1, WHITE)
+        number_font = bold_font.render(str(self.score), 1, WHITE)
         debug_blit(score_font, (1060, 90))
 
-        if score == 0:
+        if self.score == 0:
             debug_blit(number_font, (1100, 130))
         else:
             debug_blit(number_font, (1060, 130))
 
         # Pause option
-        if game_state == 1:
+        if self.game_state == 1:
             debug_blit(play_button, (500, 200))
             debug_blit(replay_button, (500, 300))
+
+        self.draw_level_cleared()
+        self.draw_level_failed(self.game_state)
 
         debug_blit(pause_button, (10, 90))
 

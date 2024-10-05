@@ -3,6 +3,19 @@ from pymunk import Vec2d
 import pygame
 import math
 
+RED =   (255, 0,   0)
+BLUE =  (0,   0,   255)
+BLACK = (0,   0,   0)
+WHITE = (255, 255, 255)
+
+
+pygame.init()
+screen = pygame.display.set_mode((1200, 650))
+
+def debug_blit(image, pos, rect = None):
+    # todo: faster way of rendering for testing
+    screen.blit(image, pos, rect)
+
 class Polygon():
     def __init__(self, pos, length, height, space, mass=5.0):
         moment = 1000
@@ -15,8 +28,8 @@ class Polygon():
         space.add(body, shape)
         self.body = body
         self.shape = shape
-        wood = pygame.image.load("fork-estevaofon/resources/images/wood.png").convert_alpha()
-        wood2 = pygame.image.load("fork-estevaofon/resources/images/wood2.png").convert_alpha()
+        wood = pygame.image.load("estevaofon/resources/images/wood.png").convert_alpha()
+        wood2 = pygame.image.load("estevaofon/resources/images/wood2.png").convert_alpha()
         rect = pygame.Rect(251, 357, 86, 22)
         self.beam_image = wood.subsurface(rect).copy()
         rect = pygame.Rect(16, 252, 22, 84)
@@ -35,22 +48,22 @@ class Polygon():
         ps = list(ps)
         color = (255, 0, 0)
         pygame.draw.lines(screen, color, False, ps)
+
         if element == 'beams':
             p = poly.body.position
             p = Vec2d(*self.to_pygame(p))
             angle_degrees = math.degrees(poly.body.angle) + 180
-            rotated_logo_img = pygame.transform.rotate(self.beam_image,
-                                                       angle_degrees)
+            rotated_logo_img = pygame.transform.rotate(self.beam_image, angle_degrees)
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
             screen.blit(rotated_logo_img, (np.x, np.y))
+
         if element == 'columns':
             p = poly.body.position
             p = Vec2d(*self.to_pygame(p))
             angle_degrees = math.degrees(poly.body.angle) + 180
-            rotated_logo_img = pygame.transform.rotate(self.column_image,
-                                                       angle_degrees)
+            rotated_logo_img = pygame.transform.rotate(self.column_image, angle_degrees)
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p

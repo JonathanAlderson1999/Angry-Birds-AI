@@ -7,7 +7,7 @@ import pickle
 from game import *
 current_path = os.getcwd()
 import pymunk as pm
-from characters import Bird
+from Characters import Bird
 from level import Level
 from Game_Network import game_network
 import numpy as np
@@ -44,10 +44,9 @@ while running:
 
     ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
     if (ai_launch_bird):
-        score = get_score()
-        print(score, end = ", ")
-        if (score > high_score):
-            high_score = score
+        print(game.score, end = ", ")
+        if (game.score > high_score):
+            high_score = game.score
             best_ai = ai_id
 
         game.restart()
@@ -63,16 +62,12 @@ while running:
 
     game.draw()
 
-    counter += 1
 
-    if restart_counter:
-        counter = 0
-        restart_counter = False
 
-    game.udpate_physics()
 
-    game.draw_level_cleared()
-    game.draw_level_failed(game_state)
+    #game.udpate_physics()
+
+
     pygame.display.flip()
     clock.tick(50)
     pygame.display.set_caption("fps: " + str(clock.get_fps()))

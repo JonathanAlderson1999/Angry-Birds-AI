@@ -55,7 +55,7 @@ def select_parents(population, scores):
 
     score_sum = sum(scores)
 
-    weighted_chance = np.array([(score / score_sum) for score in scores])
+    weighted_chance = np.array([(self.score / score_sum) for self.score in scores])
 
     new_parents = np.random.choice(population, len(population), p = weighted_chance)
     
