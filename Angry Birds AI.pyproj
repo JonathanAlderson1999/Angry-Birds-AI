@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>fd613621-4936-44fd-acb3-d6f77a2aeae1</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>fork-estevaofon\src\main.py</StartupFile>
+    <StartupFile>Main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,59 +21,55 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="fork-estevaofon\src\characters.py" />
-    <Compile Include="fork-estevaofon\src\level.py" />
-    <Compile Include="fork-estevaofon\src\game.py" />
-    <Compile Include="fork-estevaofon\src\main.py" />
-    <Compile Include="fork-estevaofon\src\polygon.py" />
+    <Compile Include="Characters.py" />
+    <Compile Include="Level.py" />
+    <Compile Include="Game.py" />
+    <Compile Include="Main.py" />
+    <Compile Include="Polygon.py" />
     <Compile Include="Genetic.py" />
     <Compile Include="Game_Network.py" />
     <Compile Include="Sequential_Network.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="fork-estevaofon\" />
-    <Folder Include="fork-estevaofon\resources\" />
-    <Folder Include="fork-estevaofon\resources\images\" />
-    <Folder Include="fork-estevaofon\resources\sounds\" />
-    <Folder Include="fork-estevaofon\src\" />
+    <Folder Include="estevaofon\" />
+    <Folder Include="estevaofon\resources\" />
+    <Folder Include="estevaofon\resources\images\" />
+    <Folder Include="estevaofon\resources\sounds\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fork-estevaofon\.gitignore" />
-    <Content Include="fork-estevaofon\LICENSE" />
-    <Content Include="fork-estevaofon\Pipfile" />
-    <Content Include="fork-estevaofon\Pipfile.lock" />
-    <Content Include="fork-estevaofon\README.md" />
-    <Content Include="fork-estevaofon\requirements.txt" />
-    <Content Include="fork-estevaofon\resources\images\angry-birds-image.png" />
-    <Content Include="fork-estevaofon\resources\images\angry_birds.png" />
-    <Content Include="fork-estevaofon\resources\images\angry_birds_chrome_pigs_by_chinzapep-d5bnxdz.png" />
-    <Content Include="fork-estevaofon\resources\images\angry_birds_toons_sprites_by_jared33-d64u29w.png" />
-    <Content Include="fork-estevaofon\resources\images\background.png" />
-    <Content Include="fork-estevaofon\resources\images\background1.jpg" />
-    <Content Include="fork-estevaofon\resources\images\background2.jpg" />
-    <Content Include="fork-estevaofon\resources\images\background3.png" />
-    <Content Include="fork-estevaofon\resources\images\background4.png" />
-    <Content Include="fork-estevaofon\resources\images\buttons-image.png" />
-    <Content Include="fork-estevaofon\resources\images\Buttons.png" />
-    <Content Include="fork-estevaofon\resources\images\column.png" />
-    <Content Include="fork-estevaofon\resources\images\full-sprite.png" />
-    <Content Include="fork-estevaofon\resources\images\gravity-zero.png" />
-    <Content Include="fork-estevaofon\resources\images\latest.png" />
-    <Content Include="fork-estevaofon\resources\images\pig_failed.png" />
-    <Content Include="fork-estevaofon\resources\images\red-bird.png" />
-    <Content Include="fork-estevaofon\resources\images\red-bird2.png" />
-    <Content Include="fork-estevaofon\resources\images\red-bird3.png" />
-    <Content Include="fork-estevaofon\resources\images\selected-buttons.png" />
-    <Content Include="fork-estevaofon\resources\images\sling-2.png" />
-    <Content Include="fork-estevaofon\resources\images\sling-3.png" />
-    <Content Include="fork-estevaofon\resources\images\sling.png" />
-    <Content Include="fork-estevaofon\resources\images\stars-edited.png" />
-    <Content Include="fork-estevaofon\resources\images\stars.png" />
-    <Content Include="fork-estevaofon\resources\images\walls.png" />
-    <Content Include="fork-estevaofon\resources\images\wood.png" />
-    <Content Include="fork-estevaofon\resources\images\wood2.png" />
-    <Content Include="fork-estevaofon\resources\sounds\angry-birds.ogg" />
-    <Content Include="fork-estevaofon\_config.yml" />
+    <Content Include="estevaofon\LICENSE" />
+    <Content Include="estevaofon\Pipfile" />
+    <Content Include="estevaofon\README.md" />
+    <Content Include="estevaofon\requirements.txt" />
+    <Content Include="estevaofon\resources\images\angry-birds-image.png" />
+    <Content Include="estevaofon\resources\images\angry_birds.png" />
+    <Content Include="estevaofon\resources\images\angry_birds_chrome_pigs_by_chinzapep-d5bnxdz.png" />
+    <Content Include="estevaofon\resources\images\angry_birds_toons_sprites_by_jared33-d64u29w.png" />
+    <Content Include="estevaofon\resources\images\background.png" />
+    <Content Include="estevaofon\resources\images\background1.jpg" />
+    <Content Include="estevaofon\resources\images\background2.jpg" />
+    <Content Include="estevaofon\resources\images\background3.png" />
+    <Content Include="estevaofon\resources\images\background4.png" />
+    <Content Include="estevaofon\resources\images\buttons-image.png" />
+    <Content Include="estevaofon\resources\images\Buttons.png" />
+    <Content Include="estevaofon\resources\images\column.png" />
+    <Content Include="estevaofon\resources\images\full-sprite.png" />
+    <Content Include="estevaofon\resources\images\gravity-zero.png" />
+    <Content Include="estevaofon\resources\images\latest.png" />
+    <Content Include="estevaofon\resources\images\pig_failed.png" />
+    <Content Include="estevaofon\resources\images\red-bird.png" />
+    <Content Include="estevaofon\resources\images\red-bird2.png" />
+    <Content Include="estevaofon\resources\images\red-bird3.png" />
+    <Content Include="estevaofon\resources\images\selected-buttons.png" />
+    <Content Include="estevaofon\resources\images\sling-2.png" />
+    <Content Include="estevaofon\resources\images\sling-3.png" />
+    <Content Include="estevaofon\resources\images\sling.png" />
+    <Content Include="estevaofon\resources\images\stars-edited.png" />
+    <Content Include="estevaofon\resources\images\stars.png" />
+    <Content Include="estevaofon\resources\images\walls.png" />
+    <Content Include="estevaofon\resources\images\wood.png" />
+    <Content Include="estevaofon\resources\images\wood2.png" />
+    <Content Include="estevaofon\resources\sounds\angry-birds.ogg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
