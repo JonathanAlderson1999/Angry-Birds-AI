@@ -1,13 +1,15 @@
 import pymunk as pm
 from pymunk import Vec2d
-import pygame
 import math
+    
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import pygame
 
 RED =   (255, 0,   0)
 BLUE =  (0,   0,   255)
 BLACK = (0,   0,   0)
 WHITE = (255, 255, 255)
-
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))

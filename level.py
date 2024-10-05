@@ -1,5 +1,5 @@
 import math
-import pygame
+#import pygame
 import pymunk as pm
 from Characters import Pig
 from Util import *
@@ -26,8 +26,10 @@ class Level():
     beams = []
     columns = []
 
-    def __init__(self):
+    score = 0
 
+    def __init__(self):
+        self.score = 0
         self.number = 0
         self.number_of_birds = 4
         # lower limit
@@ -38,7 +40,7 @@ class Level():
 
         self.setup_space()
 
-    def post_solve_bird_pig(arbiter, space, _):
+    def post_solve_bird_pig(self, arbiter, space, _):
         surface = screen
         a, b = arbiter.shapes
         bird_body = a.body
@@ -60,36 +62,36 @@ class Level():
             space.remove(pig.shape, pig.shape.body)
             self.pigs.remove(pig)
 
-    def post_solve_bird_wood(arbiter, space, _):
+    def post_solve_bird_wood(self, arbiter, space, _):
         poly_to_remove = []
         if arbiter.total_impulse.length > 1100:
             a, b = arbiter.shapes
-            for column in columns:
+            for column in self.columns:
                 if b == column.shape:
                     poly_to_remove.append(column)
 
-            for beam in beams:
+            for beam in self.beams:
                 if b == beam.shape:
                     poly_to_remove.append(beam)
 
             for poly in poly_to_remove:
-                if poly in columns:
-                    columns.remove(poly)
+                if poly in self.columns:
+                    self.columns.remove(poly)
 
-                if poly in beams:
-                    beams.remove(poly)
+                if poly in self.beams:
+                    self.beams.remove(poly)
 
             space.remove(b, b.body)
             self.score += 5000
 
-    def post_solve_pig_wood(arbiter, space, _, foo):
+    def post_solve_pig_wood(self, arbiter, space, _):
         pigs_to_remove = []
         if arbiter.total_impulse.length > 700:
             pig_shape, wood_shape = arbiter.shapes
             for pig in self.pigs:
                 if pig_shape == pig.shape:
                     pig.life -= 20
-                    score += 10000
+                    self.score += 10000
                     if pig.life <= 0:
                         pigs_to_remove.append(pig)
         for pig in pigs_to_remove:

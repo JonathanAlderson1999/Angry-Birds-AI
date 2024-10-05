@@ -2,7 +2,6 @@ import os
 import sys
 import math
 import time
-import pygame
 import pickle
 from game import *
 current_path = os.getcwd()
@@ -44,9 +43,9 @@ while running:
 
     ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
     if (ai_launch_bird):
-        print(game.score, end = ", ")
-        if (game.score > high_score):
-            high_score = game.score
+        print(game.level.score, end = ", ")
+        if (game.level.score > high_score):
+            high_score = game.level.score
             best_ai = ai_id
 
         game.restart()
@@ -65,9 +64,9 @@ while running:
 
 
 
-    #game.udpate_physics()
+    game.update_physics()
 
 
     pygame.display.flip()
     clock.tick(50)
-    pygame.display.set_caption("fps: " + str(clock.get_fps()))
+    pygame.display.set_caption("Angry Birds")

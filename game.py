@@ -2,7 +2,7 @@ import os
 import sys
 import math
 import time
-import pygame
+#import pygame
 current_path = os.getcwd()
 import pymunk as pm
 from Characters import Bird
@@ -34,6 +34,7 @@ bold_font3 = pygame.font.SysFont("arial", 50, bold = True)
 
 sling_x,  sling_y  = 135, 450
 sling2_x, sling2_y = 160, 450
+rope_length = 90
 
 clock = pygame.time.Clock()
 
@@ -70,14 +71,11 @@ def distance(xo, yo, x, y):
     return d
 
 class game:
-    score = 0
     game_state = 0
     bonus_score_once = 0
 
     t1 = 0
     angle = 0
-    rope_length = 90
-
     x_mouse = 0
     y_mouse = 0
     mouse_pressed = False
@@ -88,7 +86,6 @@ class game:
         self.level.number = 0
         self.level.load_level()
 
-        self.score = 0
         self.game_state = 0
         self.bird_path = []
         self.counter = 0
@@ -107,17 +104,17 @@ class game:
         self.level.load_level()
 
     def sling_action(self):
-        v = vector((sling_x, sling_y), (x_mouse, y_mouse))
+        v = vector((sling_x, sling_y), (self.x_mouse, self.y_mouse))
         uv = unit_vector(v)
         uv1 = uv[0]
         uv2 = uv[1]
-        mouse_distance = distance(sling_x, sling_y, x_mouse, y_mouse)
+        self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)
         pu = (uv1 * rope_length + sling_x, uv2 * rope_length + sling_y)
         bigger_rope = 102
-        x_redbird = x_mouse - 20
-        y_redbird = y_mouse - 20
+        x_redbird = self.x_mouse - 20
+        y_redbird = self.y_mouse - 20
 
-        if mouse_distance > rope_length:
+        if self.mouse_distance > rope_length:
             pux, puy = pu
             pux -= 20
             puy -= 20
@@ -129,18 +126,18 @@ class game:
             pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu2, 5)
 
         else:
-            mouse_distance += 10
-            pu3 = (uv1*mouse_distance+sling_x, uv2*mouse_distance+sling_y)
+            self.mouse_distance += 10
+            pu3 = (uv1 * self.mouse_distance + sling_x, uv2 * self.mouse_distance + sling_y)
             pygame.draw.line(screen, (0, 0, 0), (sling2_x, sling2_y), pu3, 5)
             debug_blit(redbird, (x_redbird, y_redbird))
             pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu3, 5)
 
         # Angle of impulse
-        dy = y_mouse - sling_y
-        dx = x_mouse - sling_x
+        dy = self.y_mouse - sling_y
+        dx = self.x_mouse - sling_x
         if dx == 0:
             dx = 0.00000000000001
-        angle = math.atan((float(dy))/dx)
+        angle = math.atan((float(dy)) / dx)
 
     def release_bird(self):
         self.mouse_pressed = False
@@ -150,8 +147,8 @@ class game:
             xo = 154
             yo = 156
 
-            if self.mouse_distance > self.rope_length:
-                self.mouse_distance = self.rope_length
+            if self.mouse_distance > rope_length:
+                self.mouse_distance = rope_length
 
             if self.x_mouse < sling_x + 5:
                 bird = Bird(self.mouse_distance, self.angle, xo, yo, self.level.space)
@@ -180,7 +177,7 @@ class game:
         x_valid = (x_mouse > 100 and x_mouse < 250)
         y_valid = (y_mouse > 370 and y_mouse < 550)
         if (use_ai or (pygame.mouse.get_pressed()[0] and x_valid and y_valid)):
-            mouse_pressed = True
+            self.mouse_pressed = True
 
         if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.mouse_pressed)):
             self.release_bird()
@@ -212,7 +209,7 @@ class game:
                     self.level.load_level()
                     reset_score()
                     self.bird_path = []
-                    bonus_score_once = True
+                    self.bonus_score_once = True
 
                 if x_mouse < 610 and x_mouse > 500 and y_mouse > 450:
                     # Restart in the level cleared screen
@@ -224,25 +221,25 @@ class game:
 
     def draw_level_cleared(self):
         level_cleared = bold_font3.render("Level Cleared!", 1, WHITE)
-        score_level_cleared = bold_font2.render(str(self.score), 1, WHITE)
+        score_level_cleared = bold_font2.render(str(self.level.score), 1, WHITE)
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
-            if bonus_score_once:
-                self.score += (self.level.number_of_birds-1) * 10000
+            if self.bonus_score_once:
+                self.level.score += (self.level.number_of_birds - 1) * 10000
 
-            bonus_score_once = False
+            self.bonus_score_once = False
             self.game_state = 4
             rect = pygame.Rect(300, 0, 600, 800)
             pygame.draw.rect(screen, BLACK, rect)
             debug_blit(level_cleared, (450, 90))
-            if self.score >= self.level.one_star and self.score <= self.level.two_star:
+            if self.level.score >= self.level.one_star and self.level.score <= self.level.two_star:
                 debug_blit(star1, (310, 190))
 
-            if self.score >= self.level.two_star and self.score <= self.level.three_star:
+            if self.level.score >= self.level.two_star and self.level.score <= self.level.three_star:
                 debug_blit(star1, (310, 190))
                 debug_blit(star2, (500, 170))
 
-            if self.score >= self.level.three_star:
+            if self.level.score >= self.level.three_star:
                 debug_blit(star1, (310, 190))
                 debug_blit(star2, (500, 170))
                 debug_blit(star3, (700, 200))
@@ -282,7 +279,7 @@ class game:
 
         # Draw sling behavior
         if self.mouse_pressed and self.level.number_of_birds > 0:
-            sling_action()
+            self.sling_action()
         else:
             if time.time() * 1000 - self.t1 > 300 and self.level.number_of_birds > 0:
                 debug_blit(redbird, (130, 426))
@@ -327,10 +324,10 @@ class game:
 
         # Draw self.score
         score_font = bold_font.render("SCORE", 1, WHITE)
-        number_font = bold_font.render(str(self.score), 1, WHITE)
+        number_font = bold_font.render(str(self.level.score), 1, WHITE)
         debug_blit(score_font, (1060, 90))
 
-        if self.score == 0:
+        if self.level.score == 0:
             debug_blit(number_font, (1100, 130))
         else:
             debug_blit(number_font, (1060, 130))
@@ -348,4 +345,4 @@ class game:
     def update_physics(self):
         dt = 1.0 / 50.0 / 2.
         for x in range(2):
-            space.step(dt) # make two updates per frame for better stability
+            self.level.space.step(dt) # make two updates per frame for better stability
