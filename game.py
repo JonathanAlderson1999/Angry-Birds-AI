@@ -79,6 +79,7 @@ class game:
     x_mouse = 0
     y_mouse = 0
     mouse_pressed = False
+    released_mouse = False
     mouse_distance = 0
 
     def __init__(self):
@@ -161,12 +162,18 @@ class game:
             if self.level.number_of_birds == 0:
                 self.t2 = time.time()
 
-    def process_event(self, event, use_ai, ai_launch_bird, ai_move):
 
-        if use_ai:
-            self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
+    def process_event(self, event):
+        self.x_mouse, self.y_mouse = pygame.mouse.get_pos()
+        x_valid = (self.x_mouse > 100 and self.x_mouse < 250)
+        y_valid = (self.y_mouse > 370 and self.y_mouse < 550)
+        if (pygame.mouse.get_pressed()[0] and x_valid and y_valid):
+            self.mouse_pressed = True
+
+        if self.mouse_pressed and (event.type == pygame.MOUSEBUTTONUP and event.button == 1):
+            self.released_mouse = True
         else:
-            self.x_mouse, self.y_mouse = pygame.mouse.get_pos()
+            self.released_mouse = False
 
         if event.type == pygame.QUIT:
             running = False
@@ -174,18 +181,19 @@ class game:
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
 
-        x_valid = (self.x_mouse > 100 and self.x_mouse < 250)
-        y_valid = (self.y_mouse > 370 and self.y_mouse < 550)
-        if (use_ai or (pygame.mouse.get_pressed()[0] and x_valid and y_valid)):
-            self.mouse_pressed = True
-
-        if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.mouse_pressed)):
-            self.release_bird()
-            print("AI Move: ", str(self.x_mouse), " ", str(self.y_mouse))
-
+        # Pause button
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if (self.x_mouse < 60 and self.y_mouse < 155 and self.y_mouse > 90):
                 self.game_state = 1
+
+    def launch_bird(self, ai_launch_bird, ai_move):
+
+        if ai_launch_bird:
+                self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
+
+        if (ai_launch_bird or self.released_mouse):
+            self.release_bird()
+            print("AI Move: ", str(self.x_mouse), " ", str(self.y_mouse))
 
             if self.game_state == 1:
                 if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:
@@ -260,7 +268,7 @@ class game:
             debug_blit(pig_happy, (380, 120))
             debug_blit(replay_button, (520, 460))
 
-    def draw(self):
+    def draw(self, use_ai):
         screen.fill((130, 200, 100))
         debug_blit(background2, (0, -50))
 
@@ -274,12 +282,12 @@ class game:
 
         # Draw the birds in the wait line
         if self.level.number_of_birds > 0:
-            for i in range(self.level.number_of_birds-1):
-                x = 100 - (i*35)
+            for i in range(self.level.number_of_birds - 1):
+                x = 100 - (i * 35)
                 debug_blit(redbird, (x, 508))
 
         # Draw sling behavior
-        if self.mouse_pressed and self.level.number_of_birds > 0:
+        if (use_ai or self.mouse_pressed) and self.level.number_of_birds > 0:
             self.sling_action()
         else:
             if time.time() * 1000 - self.t1 > 300 and self.level.number_of_birds > 0:

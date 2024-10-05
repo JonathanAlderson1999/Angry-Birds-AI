@@ -31,7 +31,7 @@ generation = 0
 
 while True:
 
-    ai_id = 9
+    ai_id = 0
     high_score = 0
     best_ai = 0
     ai_scores = []
@@ -72,16 +72,16 @@ while True:
 
         ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
 
-        # add a fake event so the AI can play
-        for event in (pygame.event.get() + [pygame.event.Event(pygame.MOUSEBUTTONDOWN)]):
-            game.process_event(event, use_ai, ai_launch_bird, ai_move)
+        if not use_ai:
+            for event in (pygame.event.get()):
+                game.process_event(event)
 
-        game.draw()
+        game.launch_bird(ai_launch_bird, ai_move)
+        game.draw(use_ai)
         game.update_physics()
 
         pygame.display.flip()
         clock.tick(50)
         pygame.display.set_caption("Angry Birds")
 
-    print("he")
     pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))
