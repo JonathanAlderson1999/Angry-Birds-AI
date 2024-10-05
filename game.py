@@ -28,15 +28,16 @@ replay_button = buttons.subsurface(pygame.Rect(24,  4,    100, 100)).copy()
 next_button =   buttons.subsurface(pygame.Rect(142, 365,  130, 100)).copy()
 play_button =   buttons.subsurface(pygame.Rect(18,  212,  100, 100)).copy()
 
-clock = pygame.time.Clock()
-clock = pygame.time.Clock()
-
 bold_font =  pygame.font.SysFont("arial", 30, bold = True)
 bold_font2 = pygame.font.SysFont("arial", 40, bold = True)
 bold_font3 = pygame.font.SysFont("arial", 50, bold = True)
 
-running = True
+sling_x,  sling_y  = 135, 450
+sling2_x, sling2_y = 160, 450
 
+clock = pygame.time.Clock()
+
+running = True
 restart_counter = False
 wall = False
 
@@ -69,7 +70,6 @@ def distance(xo, yo, x, y):
     return d
 
 class game:
-
     score = 0
     game_state = 0
     bonus_score_once = 0
@@ -95,7 +95,6 @@ class game:
         self.restart_counter = True
 
     def restart(self):
-
         self.game_state = 0
         self.game_state = 0
         self.bird_path = []
@@ -108,10 +107,6 @@ class game:
         self.level.load_level()
 
     def sling_action(self):
-        # Fixing bird to the sling rope
-        sling_x,  sling_y  = 135, 450
-        sling2_x, sling2_y = 160, 450
-
         v = vector((sling_x, sling_y), (x_mouse, y_mouse))
         uv = unit_vector(v)
         uv1 = uv[0]
@@ -158,15 +153,15 @@ class game:
             if self.mouse_distance > self.rope_length:
                 self.mouse_distance = self.rope_length
 
-            if self.x_mouse < self.sling_x + 5:
-                bird = Bird(self.mouse_distance, self.angle, xo, yo, self.space)
+            if self.x_mouse < sling_x + 5:
+                bird = Bird(self.mouse_distance, self.angle, xo, yo, self.level.space)
                 self.level.birds.append(bird)
 
             else:
                 bird = Bird(-self.mouse_distance, self.angle, xo, yo, self.space)
                 self.level.birds.append(bird)
 
-            if level.number_of_birds == 0:
+            if self.level.number_of_birds == 0:
                 self.t2 = time.time()
 
     def process_event(self, event, use_ai, ai_launch_bird, ai_move):

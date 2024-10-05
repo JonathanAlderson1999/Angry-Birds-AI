@@ -36,8 +36,8 @@ while running:
     # Skip if offscreen to the left
     early_reset = False
     if (len(game.level.birds) > 0):
-        early_reset = birds[0].body.position.x < 0
-        early_reset = early_reset or birds[0].body.velocity.get_length_sqrd() < 0.1
+        early_reset = game.level.birds[0].body.position.x < 0
+        early_reset = early_reset or game.level.birds[0].body.velocity.get_length_sqrd() < 0.1
 
     if early_reset:
         frame_count = ai_move_interval
