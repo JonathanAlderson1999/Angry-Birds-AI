@@ -193,7 +193,6 @@ class game:
 
         if (ai_launch_bird or self.released_mouse):
             self.release_bird()
-            print("AI Move: ", str(self.x_mouse), " ", str(self.y_mouse))
 
             if self.game_state == 1:
                 if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:

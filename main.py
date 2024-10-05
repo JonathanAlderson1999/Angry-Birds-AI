@@ -65,6 +65,7 @@ while True:
             ai_scores.append(game.level.score)
             game.restart()
             if (ai_id == population_size):
+                print("")
                 continue
             network = population[ai_id]
 
