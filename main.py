@@ -15,6 +15,11 @@ def normalize_array(a):
     normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
     return normalized
 
+train = True
+if (train):
+    import Genetic
+
+
 use_ai = True
 
 ai_move_interval = 250
@@ -23,7 +28,7 @@ ai_id = 0
 high_score = 0
 best_ai = 0
 
-population = pickle.load( open("Saved_Networks/generation1.pickle", "rb"))
+population = pickle.load( open("Saved_Networks/generation0.pickle", "rb"))
 network = population[0]
 
 game = game()
@@ -60,12 +65,7 @@ while running:
         game.process_event(event, use_ai, ai_launch_bird, ai_move)
 
     game.draw()
-
-
-
-
     game.update_physics()
-
 
     pygame.display.flip()
     clock.tick(50)

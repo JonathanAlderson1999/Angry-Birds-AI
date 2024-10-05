@@ -155,7 +155,7 @@ class game:
                 self.level.birds.append(bird)
 
             else:
-                bird = Bird(-self.mouse_distance, self.angle, xo, yo, self.space)
+                bird = Bird(-self.mouse_distance, self.angle, xo, yo, self.level.space)
                 self.level.birds.append(bird)
 
             if self.level.number_of_birds == 0:
@@ -181,6 +181,7 @@ class game:
 
         if (ai_launch_bird or (event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.mouse_pressed)):
             self.release_bird()
+            print("AI Move: ", str(x_mouse), " ", str(y_mouse))
 
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if (x_mouse < 60 and y_mouse < 155 and y_mouse > 90):
@@ -310,10 +311,10 @@ class game:
 
         # Remove birds and pigs
         for bird in birds_to_remove:
-            space.remove(bird.shape, bird.shape.body)
-            birds.remove(bird)
+            self.level.space.remove(bird.shape, bird.shape.body)
+            self.level.birds.remove(bird)
         for pig in pigs_to_remove:
-            space.remove(pig.shape, pig.shape.body)
+            self.level.space.remove(pig.shape, pig.shape.body)
             pigs.remove(pig)
 
         self.level.draw_level(screen)

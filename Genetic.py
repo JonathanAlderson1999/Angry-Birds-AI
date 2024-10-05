@@ -55,7 +55,7 @@ def select_parents(population, scores):
 
     score_sum = sum(scores)
 
-    weighted_chance = np.array([(self.score / score_sum) for self.score in scores])
+    weighted_chance = np.array([(score / score_sum) for score in scores])
 
     new_parents = np.random.choice(population, len(population), p = weighted_chance)
     
@@ -78,18 +78,21 @@ def crossover_parents(parents):
 
     return new_population
 
+population_size = 10
+
 generation = 0
 
-with open("Saved_Networks/generation" + str(generation) + ".pickle", "rb") as f:
-    prev_population = pickle.load(f)
-
-# todo: save this to file
-scores = [0, 0, 0, 0, 0, 0, 5000, 0, 0, 0]
+if (generation == 0):
+    prev_population = [game_network(random.randint(1, 10000)) for i in range(population_size)]
+    scores = [1 for i in range(population_size)]
+else:
+    with open("Saved_Networks/generation" + str(generation) + ".pickle", "rb") as f:
+        [prev_population, scores] = pickle.load(f)
 
 new_parents = select_parents(prev_population, scores)
 
 new_population = crossover_parents(new_parents)
 
-pickle.dump(new_population, open("Saved_Networks/generation" + str(generation + 1) + ".pickle", "wb"))
+pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
 
-print("Saved generation " + str(generation + 1))
+print("Saved generation " + str(generation))
