@@ -1,7 +1,17 @@
+import math
 import pygame
 import pymunk as pm
 from characters import Pig
 from polygon import Polygon
+
+pygame.init()
+screen = pygame.display.set_mode((1200, 650))
+
+
+full_sprite = pygame.image.load("fork-estevaofon/resources/images/full-sprite.png").convert_alpha()
+cropped =   full_sprite.subsurface(pygame.Rect(181, 1050, 50,  50 )).copy()
+pig_image = pygame.transform.scale(cropped, (30, 30))
+
 
 def to_pygame(p):
     """Convert pymunk to pygame coordinates"""
