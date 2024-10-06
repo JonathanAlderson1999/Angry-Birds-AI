@@ -19,7 +19,7 @@ def normalize_array(a):
 
 game = game()
 
-population_size = 10
+population_size = 2
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 

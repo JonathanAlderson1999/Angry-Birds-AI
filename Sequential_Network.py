@@ -38,14 +38,14 @@ class layer:
 
         return out
 
-    def dense(self, input_x, input_y, output_x, output_y):
+    def dense(self, network, input_x, input_y, output_x, output_y):
         
         self.type = "dense"
         num_input_nodes  = input_x  * input_y
         num_dense_nodes = output_x * output_y
 
-        self.weights   = ([np.random.rand(num_input_nodes) for j in range(num_dense_nodes)])
-        self.biases = (np.random.rand(num_dense_nodes))
+        self.weights   = ([network.initialize_weights(num_input_nodes) for j in range(num_dense_nodes)])
+        self.biases = (np.zeros(num_dense_nodes))
         self.dimension = [output_x, output_y]
 
     def conv2DTranspose(self, prev_layer, kernel_size, stride):
@@ -140,9 +140,10 @@ class layer:
 
 class sequential_network:
 
-    def __init__(self):
+    def __init__(self, num_input_neurons):
 
         self.layers = []
+        self.num_input_neurons = num_input_neurons
 
     def __str__(self):
 
@@ -170,6 +171,11 @@ class sequential_network:
         
         return out
 
+    # he method
+    def initialize_weights(self, num_values):
+        variance = 2 / self.num_input_neurons
+        return [-variance + random.random() * 2 * variance for value in range(num_values)]
+
     def input(self, dimension):
 
         new_layer = layer()
@@ -179,7 +185,7 @@ class sequential_network:
     def dense(self, input_x, input_y, output_x, output_y):
 
         new_layer = layer()
-        new_layer.dense(input_x, input_y, output_x, output_y)
+        new_layer.dense(self, input_x, input_y, output_x, output_y)
         self.layers.append(new_layer)
 
     def conv2DTranspose(self, kernel_size, stride):
@@ -220,3 +226,5 @@ class sequential_network:
             activation = tanh(activation)
 
         return (self.layers[-1])
+
+# https://medium.com/@sanjay_dutta/understanding-glorot-and-he-initialization-a-guide-for-college-students-00f3dfae0393
