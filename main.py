@@ -19,7 +19,7 @@ ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 
-generation = 0
+generation = 5
 game_speed = 20
 
 use_ai = True
@@ -39,6 +39,12 @@ while True:
     population = make_new_population(generation, population_size)
     network = population[0]
 
+    for network in population:
+        print(network.network.layers[0].biases)
+        print(network.network.layers[0].weights)
+        print("")
+
+    #print("")
     generation += 1
 
     while ai_id < population_size:

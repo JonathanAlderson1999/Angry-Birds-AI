@@ -59,7 +59,11 @@ def select_parents(population, scores):
         score_sum = len(scores)
         scores = [1 for score in scores]
 
-    weighted_chance = np.array([(score / score_sum) for score in scores])
+    unbiased_weighted_chance = np.repeat(1. / len(scores) , len(scores))
+    biased_weighted_chance = np.array([(score / score_sum) for score in scores])
+
+    temperature = 0.25
+    weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
 
     new_parents = np.random.choice(population, len(population), p = weighted_chance)
     
@@ -71,8 +75,19 @@ def crossover_parents(parents):
     num_parents = len(parents)
 
     rand = np.random.randint(num_parents, size = 2 * num_parents)
-    mutation = np.random.rand(num_parents)
+    mutation = np.random.rand(num_parents) * 0.1
     j = 0
+
+    # let's see if the average of any value is changing
+    average_biases = 0
+    average_weights = 0
+    for network in parents:
+        average_biases += sum(network.network.layers[0].biases)
+        average_weights += sum([sum(weights) for weights in network.network.layers[0].weights])
+    average_biases /= len(parents) * len(parents[0].network.layers[0].biases)
+    average_weights /= len(parents) * len(parents[0].network.layers[0].weights)
+    print(average_biases)
+    print(average_weights)
 
     for i in range(num_parents // 2):
 
@@ -99,3 +114,6 @@ def make_new_population(generation, population_size):
     pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
 
     return new_population
+
+
+#https://medium.com/@harshit158/softmax-temperature-5492e4007f71
