@@ -82,9 +82,12 @@ class game:
     released_mouse = False
     mouse_distance = 0
 
+    hiscore = 0
+
     def __init__(self):
         self.level = Level()
         self.level.number = 0
+        self.hiscore = 0
         self.level.load_level()
 
         self.game_state = 0
@@ -330,7 +333,6 @@ class game:
         rect = pygame.Rect(0, 0, 60, 200)
         debug_blit(sling_image, (120, 420), rect)
 
-        # Draw self.score
         score_font = bold_font.render("SCORE", 1, WHITE)
         number_font = bold_font.render(str(self.level.score), 1, WHITE)
         debug_blit(score_font, (1060, 90))
@@ -339,6 +341,11 @@ class game:
             debug_blit(number_font, (1100, 130))
         else:
             debug_blit(number_font, (1060, 130))
+
+        score_font = bold_font.render("HISCORE", 1, WHITE)
+        number_font = bold_font.render(str(self.hiscore), 1, WHITE)
+        debug_blit(score_font, (1060, 20))
+        debug_blit(number_font, (1060, 50))
 
         # Pause option
         if self.game_state == 1:

@@ -27,9 +27,13 @@ def debug_draw_rect(screen, colour, rect):
     if render:
         pygame.draw.rect(screen, colour, rect)
 
-def debug_draw_line(screen, colour, p1, p2, width = 1):
+def debug_draw_lines(screen, colour, closed, points, width = 1):
     if render:
-        pygame.draw.line(screen, colour, p1, p2, width)
+        pygame.draw.lines(screen, colour, closed, points, width)
+
+def debug_draw_line(screen, colour, closed, points, width = 1):
+    if render:
+        pygame.draw.line(screen, colour, closed, points, width)
 
 def debug_draw_circle(screen, colour, center, radius, width):
     if render:
@@ -70,7 +74,7 @@ class Polygon():
         ps = map(self.to_pygame, ps)
         ps = list(ps)
         color = (255, 0, 0)
-        debug_draw_line(screen, color, False, ps)
+        debug_draw_lines(screen, color, False, ps)
 
         if element == 'beams':
             p = poly.body.position

@@ -26,10 +26,8 @@ class Level():
     beams = []
     columns = []
 
-    score = 0
-
     def __init__(self):
-        self.score = 0
+        self.score = -9999
         self.number = 0
         self.number_of_birds = 4
         # lower limit
@@ -64,6 +62,10 @@ class Level():
 
     def post_solve_bird_wood(self, arbiter, space, _):
         poly_to_remove = []
+
+        # basic reward for AI
+        self.score += round(max(0, 0.1 * (arbiter.total_impulse.length - 500)))
+
         if arbiter.total_impulse.length > 1100:
             a, b = arbiter.shapes
             for column in self.columns:
@@ -483,7 +485,7 @@ class Level():
             pv2 = body.position + line.b.rotated(body.angle)
             p1 = to_pygame(pv1)
             p2 = to_pygame(pv2)
-            debug_draw_line(screen, (150, 150, 150), False, [p1, p2])
+            debug_draw_lines(screen, (150, 150, 150), False, [p1, p2])
 
         i = 0
         for pig in self.pigs:

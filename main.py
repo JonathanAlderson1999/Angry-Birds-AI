@@ -23,11 +23,12 @@ population_size = 2
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
-generation = 0
 
+generation = 0
+game_speed = 20
 
 use_ai = True
-render_game = False
+render_game = True
 
 render_game = render_game or not use_ai
 if not render_game:
@@ -37,7 +38,6 @@ if not render_game:
 while True:
 
     ai_id = 0
-    high_score = 0
     best_ai = 0
     ai_scores = []
 
@@ -62,9 +62,12 @@ while True:
 
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         if (ai_launch_bird):
-            print(str(game.level.score).ljust(5), end = ", ")
-            if (game.level.score > high_score):
-                high_score = game.level.score
+            first_time = (game.hiscore == -9999)
+            if (not first_time):
+                print(str(game.level.score).ljust(5), end = ", ")
+
+            if (game.level.score > game.hiscore):
+                game.high_score = game.level.score
                 best_ai = ai_id
 
             ai_scores.append(game.level.score)
@@ -87,7 +90,7 @@ while True:
 
         if render_game:
             pygame.display.flip()
-            clock.tick(50)
+            clock.tick(50 * game_speed)
             pygame.display.set_caption("Angry Birds")
 
     pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))
