@@ -19,8 +19,8 @@ ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 
-generation = 5
-game_speed = 20
+generation = 0
+game_speed = 5
 
 use_ai = True
 render_game = True
@@ -39,12 +39,12 @@ while True:
     population = make_new_population(generation, population_size)
     network = population[0]
 
-    for network in population:
-        print(network.network.layers[0].biases)
-        print(network.network.layers[0].weights)
-        print("")
+    if False:
+        for network in population:
+            print(network.network.layers[0].biases)
+            print(network.network.layers[0].weights)
+            print("")
 
-    #print("")
     generation += 1
 
     while ai_id < population_size:
@@ -84,6 +84,7 @@ while True:
         for event in (pygame.event.get()):
             if not use_ai:
                 game.process_event(event)
+                game.launch_bird(False, None)
 
         if (ai_launch_bird):
             ai_move = network.move(np.array([980, 72, 974, 178]))

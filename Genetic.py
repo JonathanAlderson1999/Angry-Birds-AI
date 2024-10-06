@@ -4,28 +4,36 @@ import numpy as np
 import pickle
 from Game_Network import game_network
 
+total_mutation = 0
+
 def crossover_layer(layer, x, y, mutation):
 
     x_layer = x.network.layers[layer]
     y_layer = y.network.layers[layer]
 
-    num_weights = len(x_layer.weights)
+    [weights_x, weights_y] = [len(x_layer.weights[0]), len(x_layer.weights)]
+    rand = [np.random.rand(weights_x) for i in range(weights_y)]
+    mutations = [np.random.uniform(-mutation / 2, mutation / 2, 2 * weights_x) for i in range(weights_y)]
+
+    for w in range(weights_y):
+        for n in range(weights_x):
+            if (rand[w][n] > 0.5):
+               temp = x_layer.weights[w][n]
+               x_layer.weights[w][n] = y_layer.weights[w][n]
+               y_layer.weights[w][n] = temp
+
+            x_layer.weights[w][n] += mutations[w][n]
+            y_layer.weights[w][n] += mutations[w][n + weights_x]
+
+        global total_mutation
+        total_mutation += mutations[w][n]
+        total_mutation += mutations[w][n + weights_x]
+
+    num_biases = len(x_layer.biases)
+    rand = np.random.rand(num_biases)
+    mutations = np.random.uniform(-mutation / 2, mutation / 2, 2 * num_biases)
+
     num_biasese = len(x_layer.biases)
-
-    rand = np.random.rand(num_biasese)
-    mutations = np.random.uniform(-mutation / 2, mutation / 2, 2 * num_weights)
-
-    for w in range(num_weights):
-        if (rand[w] > 0.5):
-           temp = x_layer.weights[w]
-           x_layer.weights[w] = y_layer.weights[w]
-           y_layer.weights[w] = temp
-
-        x_layer.weights[w] += mutations[w]
-        y_layer.weights[w] += mutations[w + num_biasese]
-
-    rand = np.random.rand(num_biasese)
-    mutations = np.random.uniform(-mutation / 2, mutation / 2, 2 * num_biasese)
 
     for b in range(num_biasese):
         if (rand[b] > 0.5):
@@ -38,6 +46,9 @@ def crossover_layer(layer, x, y, mutation):
 
     x.network.layers[layer] = x_layer
     y.network.layers[layer] = y_layer
+
+    #print(total_mutation)
+
     return [x, y]
 
 def crossover(a, b, mutation):
@@ -51,6 +62,8 @@ def crossover(a, b, mutation):
 
     return [new_a, new_b]
 
+temperature = 0.75
+
 def select_parents(population, scores):
 
     score_sum = sum(scores)
@@ -61,8 +74,10 @@ def select_parents(population, scores):
 
     unbiased_weighted_chance = np.repeat(1. / len(scores) , len(scores))
     biased_weighted_chance = np.array([(score / score_sum) for score in scores])
+    
+    global temperature
+    temperature -= 0.01
 
-    temperature = 0.25
     weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
 
     new_parents = np.random.choice(population, len(population), p = weighted_chance)
@@ -75,7 +90,8 @@ def crossover_parents(parents):
     num_parents = len(parents)
 
     rand = np.random.randint(num_parents, size = 2 * num_parents)
-    mutation = np.random.rand(num_parents) * 0.1
+    mutation = np.random.rand(num_parents) * 0.0
+    #mutation = np.zeros(num_parents)
     j = 0
 
     # let's see if the average of any value is changing
@@ -86,8 +102,8 @@ def crossover_parents(parents):
         average_weights += sum([sum(weights) for weights in network.network.layers[0].weights])
     average_biases /= len(parents) * len(parents[0].network.layers[0].biases)
     average_weights /= len(parents) * len(parents[0].network.layers[0].weights)
-    print(average_biases)
-    print(average_weights)
+    #print(average_biases)
+    #print(average_weights)
 
     for i in range(num_parents // 2):
 

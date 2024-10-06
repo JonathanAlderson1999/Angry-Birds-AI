@@ -155,9 +155,11 @@ class game:
 
             if self.x_mouse < sling_x + 5:
                 bird = Bird(self.mouse_distance, self.angle, xo, yo, self.level.space)
+                self.level.score += round(self.mouse_distance * 0.25)
                 self.level.birds.append(bird)
 
             else:
+                self.level.score -= 100
                 bird = Bird(-self.mouse_distance, self.angle, xo, yo, self.level.space)
                 self.level.birds.append(bird)
 
