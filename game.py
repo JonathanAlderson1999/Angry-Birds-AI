@@ -82,12 +82,11 @@ class game:
     released_mouse = False
     mouse_distance = 0
 
-    hiscore = 0
+    hiscore = -9999
 
     def __init__(self):
         self.level = Level()
         self.level.number = 0
-        self.hiscore = 0
         self.level.load_level()
 
         self.game_state = 0

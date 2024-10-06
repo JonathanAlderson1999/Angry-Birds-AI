@@ -2,6 +2,8 @@ import random
 from Sequential_Network import sequential_network
 import numpy as np
 
+from Util import *
+
 class game_network:
 
     def __init__(self, seed):
@@ -16,7 +18,7 @@ class game_network:
         num_input_neurons = num_pigs * num_pig_vars
 
         network = sequential_network(num_input_neurons)
-        network.dense(num_input_neurons, 1, hidden_layer_size, 1)
+        network.dense(num_input_neurons, 1, hidden_layer_size, 1, relu = False)
         #network.dense(hidden_layer_size, 1, hidden_layer_size, 1)
         #network.dense(hidden_layer_size, 1, 2, 1)
 
@@ -27,8 +29,20 @@ class game_network:
 
     def move(self, level_input):        
 
-        input = np.array(level_input)
-        move = self.network.feed_forward(input, len(input), 1).activations
+        [screen_x, screen_y] = get_screen_size()
+
+        x_values = level_input[::2]
+        y_values = level_input[1::2]
+
+        normalized_x = ((x_values / screen_x) - 0.5) * 2
+        normalized_y = ((y_values / screen_y) - 0.5) * 2
+
+        normalized = np.ravel(np.column_stack((normalized_x, normalized_y)))
+
+        move = self.network.feed_forward(normalized, len(normalized), 1).activations
+
+        # switch from -1, 1 to 0, 1
+        move = (move + 1.0) / 2
 
         x_range = [100, 250]
         y_range = [370, 550]

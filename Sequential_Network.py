@@ -15,15 +15,18 @@ class layer:
     activations = []
     dimension   = [0, 0]
 
+    use_relu = True
+
     # conv2DTranspose
     kernels = []
 
-    def input(self, input_x, input_y):
+    def input(self, input_x, input_y, relu = True):
         self.type = "input"
 
         self.weights = []
         self.biases = []
         self.dimension = [input_x, input_y]
+        self.use_relu = relu
 
     def __repr__(self):
 
@@ -38,7 +41,7 @@ class layer:
 
         return out
 
-    def dense(self, network, input_x, input_y, output_x, output_y):
+    def dense(self, network, input_x, input_y, output_x, output_y, relu = False):
         
         self.type = "dense"
         num_input_nodes  = input_x  * input_y
@@ -47,6 +50,7 @@ class layer:
         self.weights   = ([network.initialize_weights(num_input_nodes) for j in range(num_dense_nodes)])
         self.biases = (np.zeros(num_dense_nodes))
         self.dimension = [output_x, output_y]
+        self.use_relu = relu
 
     def conv2DTranspose(self, prev_layer, kernel_size, stride):
 
@@ -80,7 +84,10 @@ class layer:
 
         if (self.type == "dense"):
             weights = self.weights
-            self.activations = np.array([tanh(relu((np.sum(input * weights[j]) - biases[j]))) for j in range(num_neurons)])
+            if self.use_relu:  
+                self.activations = np.array([tanh(relu(np.sum(input * weights[j]) - biases[j])) for j in range(num_neurons)])
+            else:
+                self.activations = np.array([tanh((np.sum(input * weights[j]) - biases[j])) for j in range(num_neurons)])
 
         elif (self.type == "conv2DTranspose"):
             kernels = self.kernels
@@ -182,10 +189,10 @@ class sequential_network:
         new_layer.input(dimension[0], dimension[1])
         self.layers.append(new_layer)
 
-    def dense(self, input_x, input_y, output_x, output_y):
+    def dense(self, input_x, input_y, output_x, output_y, relu = False):
 
         new_layer = layer()
-        new_layer.dense(self, input_x, input_y, output_x, output_y)
+        new_layer.dense(self, input_x, input_y, output_x, output_y, relu)
         self.layers.append(new_layer)
 
     def conv2DTranspose(self, kernel_size, stride):

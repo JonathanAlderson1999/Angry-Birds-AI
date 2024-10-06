@@ -12,12 +12,17 @@ BLACK = (0,   0,   0)
 WHITE = (255, 255, 255)
 
 pygame.init()
+screen_x = 1200
+screen_y = 650
 screen = pygame.display.set_mode((1200, 650))
 
 render = True
 def turn_off_rendering():
     global render
     render = False
+
+def get_screen_size():
+    return [screen_x, screen_y]
 
 def debug_blit(image, pos, rect = None):
     if render:

@@ -64,7 +64,7 @@ class Level():
         poly_to_remove = []
 
         # basic reward for AI
-        self.score += round(max(0, 0.1 * (arbiter.total_impulse.length - 500)))
+        self.score += round(max(0, 0.1 * (arbiter.total_impulse.length - 250)))
 
         if arbiter.total_impulse.length > 1100:
             a, b = arbiter.shapes

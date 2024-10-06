@@ -12,14 +12,9 @@ from Game_Network import game_network
 from Genetic import *
 import numpy as np
 
-def normalize_array(a):
-    normalized = (a - np.min(a)) / (np.max(a) - np.min(a))
-    return normalized
-
-
 game = game()
 
-population_size = 2
+population_size = 10
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
@@ -44,7 +39,6 @@ while True:
     population = make_new_population(generation, population_size)
     network = population[0]
 
-    print("\nGen: ", str(generation).ljust(5), end = " ")
     generation += 1
 
     while ai_id < population_size:
@@ -66,8 +60,11 @@ while True:
             if (not first_time):
                 print(str(game.level.score).ljust(5), end = ", ")
 
+            if ai_id == 0:
+                print("\nGen: ", str(generation).ljust(5), end = " ")
+
             if (game.level.score > game.hiscore):
-                game.high_score = game.level.score
+                game.hiscore = game.level.score
                 best_ai = ai_id
 
             ai_scores.append(game.level.score)
@@ -78,13 +75,14 @@ while True:
 
             ai_id += 1
 
-        ai_move = network.move(normalize_array(np.array([980, 72, 974, 178])))
-
         for event in (pygame.event.get()):
             if not use_ai:
                 game.process_event(event)
 
-        game.launch_bird(ai_launch_bird, ai_move)
+        if (ai_launch_bird):
+            ai_move = network.move(np.array([980, 72, 974, 178]))
+            game.launch_bird(ai_launch_bird, ai_move)
+
         game.draw(use_ai)
         game.update_physics()
 
