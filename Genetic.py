@@ -17,10 +17,10 @@ def crossover_layer(layer, x, y, mutation):
 
     for w in range(weights_y):
         for n in range(weights_x):
-            if (rand[w][n] > 0.5):
-               temp = x_layer.weights[w][n]
-               x_layer.weights[w][n] = y_layer.weights[w][n]
-               y_layer.weights[w][n] = temp
+            #if (rand[w][n] > 0.5):
+            #   temp = x_layer.weights[w][n]
+            #   x_layer.weights[w][n] = y_layer.weights[w][n]
+            #   y_layer.weights[w][n] = temp
 
             x_layer.weights[w][n] += mutations[w][n]
             y_layer.weights[w][n] += mutations[w][n + weights_x]
@@ -62,9 +62,13 @@ def crossover(a, b, mutation):
 
     return [new_a, new_b]
 
-temperature = 0.75
+temperature = 0.2
 
 def select_parents(population, scores):
+
+    population_count = len(population)
+    population = [population[i] for i in range(len(population)) if scores[i] >= 0]
+    scores = [score for score in scores if score >= 0]
 
     score_sum = sum(scores)
 
@@ -80,7 +84,7 @@ def select_parents(population, scores):
 
     weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
 
-    new_parents = np.random.choice(population, len(population), p = weighted_chance)
+    new_parents = np.random.choice(population, population_count, p = weighted_chance)
     
     return new_parents
 
@@ -90,7 +94,7 @@ def crossover_parents(parents):
     num_parents = len(parents)
 
     rand = np.random.randint(num_parents, size = 2 * num_parents)
-    mutation = np.random.rand(num_parents) * 0.0
+    mutation = np.random.rand(num_parents) * 0
     #mutation = np.zeros(num_parents)
     j = 0
 

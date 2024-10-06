@@ -159,7 +159,7 @@ class game:
                 self.level.birds.append(bird)
 
             else:
-                self.level.score -= 100
+                self.level.score = -1
                 bird = Bird(-self.mouse_distance, self.angle, xo, yo, self.level.space)
                 self.level.birds.append(bird)
 

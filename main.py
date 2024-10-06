@@ -20,10 +20,10 @@ frame_count = ai_move_interval - 2
 
 
 generation = 0
-game_speed = 5
+game_speed = 500
 
 use_ai = True
-render_game = True
+render_game = False
 
 render_game = render_game or not use_ai
 if not render_game:
