@@ -152,6 +152,8 @@ def make_new_population(generation, population_size):
 
     new_parents = select_parents(prev_population, scores)
 
+    new_parents.__repr__()
+
     new_population = crossover_parents(new_parents)
 
     pickle.dump(new_population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))

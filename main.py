@@ -19,7 +19,7 @@ ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 
-generation = 0
+generation = 1
 game_speed = 500
 
 use_ai = True

@@ -44,11 +44,11 @@ class layer:
 
         else:
             out += "b: "
-            out += ", ".join([str(round(b, 2)) for b in self.biases])
+            out += ",  ".join([f"{str(round(b, 1)):<6s}" for b in self.biases])
 
             out += "        w: "
             for weights in self.weights:
-                out += ", ".join([str(round(w, 2)) for w in weights])
+                out += ",  ".join([f"{str(round(w, 1)):<6s}" for w in weights])
                 out += "        "
 
         return out
