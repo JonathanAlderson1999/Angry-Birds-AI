@@ -14,7 +14,7 @@ import numpy as np
 
 game = game()
 
-population_size = 10
+population_size = 30
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
@@ -23,7 +23,7 @@ generation = 0
 game_speed = 500
 
 use_ai = True
-render_game = False
+render_game = True
 
 render_game = render_game or not use_ai
 if not render_game:
@@ -39,7 +39,8 @@ while True:
     population = make_new_population(generation, population_size)
     network = population[0]
 
-    if False:
+    if True:
+        print("")
         for network in population:
             print(network.network.layers[0].biases)
             print(network.network.layers[0].weights)

@@ -32,12 +32,24 @@ class layer:
 
         out = ""
         
-        for weights in self.weights:
-            out += " w: "
-            out += str(hash("".join([str(i) for i in (weights.tolist())])))
+        show_hash = False
 
-        out += " b: "
-        out += str(hash("".join([str(i) for i in (self.biases.tolist())])))
+        if show_hash:
+            out += " w: "
+            for weights in self.weights:
+                out += str(hash("".join([str(i) for i in (weights.tolist())])))
+
+            out += " b: "
+            out += str(hash("".join([str(i) for i in (self.biases.tolist())])))
+
+        else:
+            out += "b: "
+            out += ", ".join([str(round(b, 2)) for b in self.biases])
+
+            out += "        w: "
+            for weights in self.weights:
+                out += ", ".join([str(round(w, 2)) for w in weights])
+                out += "        "
 
         return out
 
@@ -181,7 +193,7 @@ class sequential_network:
     # he method
     def initialize_weights(self, num_values):
         variance = 2 / self.num_input_neurons
-        return [-variance + random.random() * 2 * variance for value in range(num_values)]
+        return np.array([-variance + random.random() * 2 * variance for value in range(num_values)])
 
     def input(self, dimension):
 

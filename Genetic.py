@@ -6,6 +6,31 @@ from Game_Network import game_network
 
 total_mutation = 0
 
+def mutate_layer(layer, x, mutation):
+
+    x_layer = x.network.layers[layer]
+
+    [weights_x, weights_y] = [len(x_layer.weights[0]), len(x_layer.weights)]
+    rand = [np.random.rand(weights_x) for i in range(weights_y)]
+    mutations = [np.random.uniform(-mutation / 2, mutation / 2, weights_x) for i in range(weights_y)]
+
+    for w in range(weights_y):
+        for n in range(weights_x):
+            x_layer.weights[w][n] += mutations[w][n]
+
+    num_biases = len(x_layer.biases)
+    rand = np.random.rand(num_biases)
+    mutations = np.random.uniform(-mutation / 2, mutation / 2, num_biases)
+
+    num_biasese = len(x_layer.biases)
+
+    for b in range(num_biasese):
+        x_layer.biases[b] += mutations[b]
+
+    x.network.layers[layer] = x_layer
+
+    return x
+
 def crossover_layer(layer, x, y, mutation):
 
     x_layer = x.network.layers[layer]
@@ -62,6 +87,17 @@ def crossover(a, b, mutation):
 
     return [new_a, new_b]
 
+def mutate(a, mutation):
+
+    new_a = copy.deepcopy(a)
+
+    for i in range(len(a.network.layers)):
+        new_a = mutate_layer(i, new_a, mutation)
+
+    new_a.__repr__()
+
+    return new_a
+
 temperature = 0.2
 
 def select_parents(population, scores):
@@ -94,26 +130,13 @@ def crossover_parents(parents):
     num_parents = len(parents)
 
     rand = np.random.randint(num_parents, size = 2 * num_parents)
-    mutation = np.random.rand(num_parents) * 0
+    mutation = np.random.rand(num_parents) * 0.01#0.25 # not sure
     #mutation = np.zeros(num_parents)
     j = 0
 
-    # let's see if the average of any value is changing
-    average_biases = 0
-    average_weights = 0
-    for network in parents:
-        average_biases += sum(network.network.layers[0].biases)
-        average_weights += sum([sum(weights) for weights in network.network.layers[0].weights])
-    average_biases /= len(parents) * len(parents[0].network.layers[0].biases)
-    average_weights /= len(parents) * len(parents[0].network.layers[0].weights)
-    #print(average_biases)
-    #print(average_weights)
-
-    for i in range(num_parents // 2):
-
-        rand_a = rand[i]
-        rand_b = rand[i + (num_parents // 2)]
-        new_population = new_population + (crossover(parents[rand[i]], parents[rand[i + (num_parents // 2)]], mutation[i]))[:]
+    for i in range(num_parents):
+        new_parent = parents[i]
+        new_population = new_population + [mutate(parents[rand[i]], mutation[i])]
 
     return new_population
 
@@ -137,3 +160,22 @@ def make_new_population(generation, population_size):
 
 
 #https://medium.com/@harshit158/softmax-temperature-5492e4007f71
+
+
+    ## let's see if the average of any value is changing
+    #average_biases = 0
+    #average_weights = 0
+    #for network in parents:
+    #    average_biases += sum(network.network.layers[0].biases)
+    #    average_weights += sum([sum(weights) for weights in network.network.layers[0].weights])
+    #average_biases /= len(parents) * len(parents[0].network.layers[0].biases)
+    #average_weights /= len(parents) * len(parents[0].network.layers[0].weights)
+    ##print(average_biases)
+    ##print(average_weights)
+
+# Todo: actually cross over parents 
+    #for i in range(num_parents // 2):
+
+    #    rand_a = rand[i]
+    #    rand_b = rand[i + (num_parents // 2)]
+    #    new_population = new_population + (crossover(parents[rand[i]], parents[rand[i + (num_parents // 2)]], mutation[i]))[:]
