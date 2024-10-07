@@ -120,6 +120,8 @@ def select_parents(population, scores):
 
     weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
 
+    print("\nSelecting Parents: ", str(weighted_chance))
+
     new_parents = np.random.choice(population, population_count, p = weighted_chance)
     
     return new_parents
@@ -127,7 +129,7 @@ def select_parents(population, scores):
 def crossover_parents(parents):
     new_population = []
     num_parents = len(parents)
-    mutation = np.random.rand(num_parents) * 0.25 # not sure
+    mutation = np.random.rand(num_parents) * 0.1 # not sure
 
     for i in range(num_parents):
         parent = parents[i]
