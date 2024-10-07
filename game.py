@@ -142,7 +142,10 @@ class game:
             dx = 0.00000000000001
         self.angle = math.atan((float(dy)) / dx)
 
-    def release_bird(self):
+    def release_bird(self, use_ai):
+
+        self.draw(use_ai)
+
         self.mouse_pressed = False
         if self.level.number_of_birds > 0:
             #level.number_of_birds -= 1 # unlimited for testing
@@ -196,7 +199,7 @@ class game:
                 self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
 
         if (ai_launch_bird or self.released_mouse):
-            self.release_bird()
+            self.release_bird(True)
 
             if self.game_state == 1:
                 if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:

@@ -14,13 +14,13 @@ import numpy as np
 
 game = game()
 
-population_size = 30
+population_size = 15
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 
 generation = 0
-game_speed = 2
+game_speed = 20000
 
 use_ai = True
 render_game = False
@@ -35,6 +35,7 @@ while True:
     ai_id = 0
     best_ai = 0
     ai_scores = []
+    game.hiscore = -9999
 
     population = make_new_population(generation, population_size)
     network = population[0]
@@ -89,11 +90,12 @@ while True:
                 game.process_event(event)
                 game.launch_bird(False, None)
 
+
         if (ai_launch_bird):
             ai_move = network.move(np.array([980, 72, 974, 178]))
             game.launch_bird(ai_launch_bird, ai_move)
-
-        game.draw(use_ai)
+        else:
+            game.draw(use_ai)
         game.update_physics()
 
         if render_game:

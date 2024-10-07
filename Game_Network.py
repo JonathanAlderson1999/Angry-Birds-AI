@@ -50,7 +50,7 @@ class game_network:
         move = self.network.feed_forward(normalized, len(normalized), 1).activations
 
         # switch from -1, 1 to 0, 1
-        move = (move + 1.0) / 2
+        #move = (move + 1.0) / 2
 
         x_range = [100, 250]
         y_range = [370, 550]

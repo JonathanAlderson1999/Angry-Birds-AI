@@ -127,7 +127,7 @@ def select_parents(population, scores):
 def crossover_parents(parents):
     new_population = []
     num_parents = len(parents)
-    mutation = np.random.rand(num_parents) * 0.25 # not sure
+    mutation = np.random.rand(num_parents) * 0.01 # not sure
 
     for i in range(num_parents):
         parent = parents[i]
@@ -139,7 +139,7 @@ def crossover_parents(parents):
 def make_new_population(generation, population_size):
 
     if (generation == 0):
-        random.seed(1)
+        random.seed(2)
         prev_population = [game_network(random.randint(1, 10000)) for i in range(population_size)]
         scores = [1 for i in range(population_size)]
     else:
@@ -147,8 +147,6 @@ def make_new_population(generation, population_size):
             [prev_population, scores] = pickle.load(f)
 
     new_parents = select_parents(prev_population, scores)
-
-    new_parents.__repr__()
 
     new_population = crossover_parents(new_parents)
 
