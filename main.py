@@ -19,8 +19,8 @@ ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 
-generation = 1
-game_speed = 1
+generation = 0
+game_speed = 2
 
 use_ai = True
 render_game = False
@@ -48,7 +48,7 @@ while True:
 
     generation += 1
 
-    while ai_id < population_size:
+    while ai_id <= population_size:
 
         frame_count += 1
 
@@ -67,6 +67,8 @@ while True:
             if (not first_time):
                 print(str(game.level.score).ljust(5), end = ", ")
 
+                ai_scores.append(game.level.score)
+
             if ai_id == 0:
                 print("\nGen: ", str(generation).ljust(5), end = " ")
 
@@ -74,10 +76,10 @@ while True:
                 game.hiscore = game.level.score
                 best_ai = ai_id
 
-            ai_scores.append(game.level.score)
             game.restart()
+
             if (ai_id == population_size):
-                continue
+                break
             network = population[ai_id]
 
             ai_id += 1

@@ -154,9 +154,6 @@ class layer:
 
             activations = np.zeros(len(kernels))
 
-            #for kernel_id in range(len(kernels)):
-
-
 class sequential_network:
 
     def __init__(self, num_input_neurons):

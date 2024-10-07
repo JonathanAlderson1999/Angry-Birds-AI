@@ -25,7 +25,15 @@ class game_network:
         self.network = network
 
     def __repr__(self):
-        return self.network.__repr__()
+        out = self.network.__repr__()
+
+        # todo: don't hard code
+        show_activation = True
+        if show_activation:
+            activations = self.move(np.array([980, 72, 974, 178]))
+            out += "   ".join([str(round(a)) for a in activations])
+
+        return out
 
     def move(self, level_input):        
 
