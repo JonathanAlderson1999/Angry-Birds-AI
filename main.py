@@ -20,10 +20,10 @@ frame_count = ai_move_interval - 2
 
 
 generation = 1
-game_speed = 500
+game_speed = 1
 
 use_ai = True
-render_game = True
+render_game = False
 
 render_game = render_game or not use_ai
 if not render_game:
@@ -39,7 +39,7 @@ while True:
     population = make_new_population(generation, population_size)
     network = population[0]
 
-    if True:
+    if False:
         print("")
         for network in population:
             print(network.network.layers[0].biases)
