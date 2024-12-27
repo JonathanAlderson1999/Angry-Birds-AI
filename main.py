@@ -17,12 +17,14 @@ ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
 max_pigs = 3
+score_reset_threshold = 5000
+
 start_level = 0
 generation = 0
 game_speed = 20000
 
-use_ai = True
-render_game = False
+use_ai = False
+render_game = True
 
 game = game(start_level)
 
@@ -58,7 +60,7 @@ while True:
         early_reset = False
         if (len(game.level.birds) > 0):
             early_reset = game.level.birds[0].body.position.x < 0
-            early_reset = early_reset or game.level.birds[0].body.velocity.get_length_sqrd() < 0.1
+            early_reset = early_reset or game.level.birds[-1].body.velocity.get_length_sqrd() < 0.1
 
         if early_reset:
             frame_count = ai_move_interval
@@ -66,7 +68,9 @@ while True:
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         if (ai_launch_bird):
             first_time = (game.hiscore == -9999)
-            if (not first_time):
+            continue_playing = game.level.score >= score_reset_threshold
+
+            if (not first_time and not continue_playing):
                 print(str(game.level.score).ljust(5), end = ", ")
 
                 ai_scores.append(game.level.score)
@@ -78,19 +82,22 @@ while True:
                 game.hiscore = game.level.score
                 best_ai = ai_id
 
-            game.restart()
+            if (not continue_playing):
+                game.restart()
+                network = population[ai_id]
+                ai_id += 1
+            else:
+                print("debug")
 
             if (ai_id == population_size):
                 break
-            network = population[ai_id]
-
-            ai_id += 1
 
         for event in (pygame.event.get()):
             if not use_ai:
                 game.process_event(event)
                 game.launch_bird(False, None)
 
+        game.process_game_state()
 
         if (ai_launch_bird):
             pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]

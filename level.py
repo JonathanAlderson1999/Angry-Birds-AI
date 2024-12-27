@@ -491,8 +491,6 @@ class Level():
         for pig in self.pigs:
             i += 1
             pig = pig.shape
-            if pig.body.position.y < 0:
-                pigs_to_remove.append(pig)
 
             p = to_pygame(pig.body.position)
             x, y = p

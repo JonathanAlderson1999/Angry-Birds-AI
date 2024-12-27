@@ -78,8 +78,10 @@ class game:
     angle = 0
     x_mouse = 0
     y_mouse = 0
+    sling_pressed = False
+    released_sling = False
     mouse_pressed = False
-    released_mouse = False
+    mouse_released = False
     mouse_distance = 0
 
     hiscore = -9999
@@ -146,9 +148,9 @@ class game:
 
         self.draw(use_ai)
 
-        self.mouse_pressed = False
+        self.sling_pressed = False
         if self.level.number_of_birds > 0:
-            #level.number_of_birds -= 1 # unlimited for testing
+            self.level.number_of_birds -= 1
             self.t1 = time.time() * 1000
             xo = 154
             yo = 156
@@ -174,13 +176,16 @@ class game:
         self.x_mouse, self.y_mouse = pygame.mouse.get_pos()
         x_valid = (self.x_mouse > 100 and self.x_mouse < 250)
         y_valid = (self.y_mouse > 370 and self.y_mouse < 550)
-        if (pygame.mouse.get_pressed()[0] and x_valid and y_valid):
-            self.mouse_pressed = True
+        pygame_mouse_pressed = pygame.mouse.get_pressed()[0]
+        pygame_mouse_up = (event.type == pygame.MOUSEBUTTONUP and event.button == 1)
 
-        if self.mouse_pressed and (event.type == pygame.MOUSEBUTTONUP and event.button == 1):
-            self.released_mouse = True
-        else:
-            self.released_mouse = False
+        self.sling_pressed = (pygame_mouse_pressed and x_valid and y_valid)
+
+        self.mouse_pressed = pygame_mouse_pressed
+
+        self.released_sling = (self.sling_pressed and pygame_mouse_up)
+
+        self.released_mouse = (self.mouse_pressed and pygame_mouse_up)
 
         if event.type == pygame.QUIT:
             running = False
@@ -198,9 +203,11 @@ class game:
         if ai_launch_bird:
                 self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
 
-        if (ai_launch_bird or self.released_mouse):
+        if (ai_launch_bird or self.released_sling):
             self.release_bird(True)
 
+    def process_game_state(self):
+        if (self.released_mouse):
             if self.game_state == 1:
                 if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:
                     # Resume in the paused screen
@@ -218,21 +225,19 @@ class game:
             if self.game_state == 4:
                 # Build next level
                 if self.x_mouse > 610 and self.y_mouse > 450:
-                    restart()
+                    self.restart()
                     self.level.number += 1
                     self.game_state = 0
                     self.level.load_level()
-                    reset_score()
                     self.bird_path = []
                     self.bonus_score_once = True
 
                 if self.x_mouse < 610 and self.x_mouse > 500 and self.y_mouse > 450:
                     # Restart in the level cleared screen
-                    restart()
+                    self.restart()
                     self.level.load_level()
                     self.game_state = 0
                     self.bird_path = []
-                    reset_score()
 
     def draw_level_cleared(self):
         level_cleared = bold_font3.render("Level Cleared!", 1, WHITE)
