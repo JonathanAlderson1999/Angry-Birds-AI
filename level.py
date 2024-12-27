@@ -1,7 +1,7 @@
 import math
 #import pygame
 import pymunk as pm
-from Characters import Pig
+from characters import Pig
 from Util import *
 
 pygame.init()

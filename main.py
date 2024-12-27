@@ -6,7 +6,7 @@ import pickle
 from game import *
 current_path = os.getcwd()
 import pymunk as pm
-from Characters import Bird
+from characters import Bird
 from level import Level
 from Game_Network import game_network
 from Genetic import *

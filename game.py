@@ -5,7 +5,7 @@ import time
 #import pygame
 current_path = os.getcwd()
 import pymunk as pm
-from Characters import Bird
+from characters import Bird
 from level import Level
 import numpy as np
 from Util import *
@@ -13,7 +13,7 @@ from Util import *
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
 
-redbird =     pygame.image.load("C:\\Users\\light\\source\\repos\\Angry Birds AI\\estevaofon\\resources\\images\\red-bird3.png").convert_alpha()
+redbird =     pygame.image.load("estevaofon/resources/images/red-bird3.png").convert_alpha()
 background2 = pygame.image.load("estevaofon/resources/images/background3.png").convert_alpha()
 sling_image = pygame.image.load("estevaofon/resources/images/sling-3.png").convert_alpha()
 buttons =     pygame.image.load("estevaofon/resources/images/selected-buttons.png").convert_alpha()
