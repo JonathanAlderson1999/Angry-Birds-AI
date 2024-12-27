@@ -136,11 +136,11 @@ def crossover_parents(parents):
 
     return new_population
 
-def make_new_population(generation, population_size):
+def make_new_population(generation, population_size, num_pigs):
 
     if (generation == 0):
         random.seed(2)
-        prev_population = [game_network(random.randint(1, 10000)) for i in range(population_size)]
+        prev_population = [game_network(random.randint(1, 10000), num_pigs) for i in range(population_size)]
         scores = [1 for i in range(population_size)]
     else:
         with open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "rb") as f:

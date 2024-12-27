@@ -12,18 +12,19 @@ from Game_Network import game_network
 from Genetic import *
 import numpy as np
 
-game = game()
-
 population_size = 15
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
-
+max_pigs = 3
+start_level = 0
 generation = 0
 game_speed = 20000
 
 use_ai = True
 render_game = False
+
+game = game(start_level)
 
 render_game = render_game or not use_ai
 if not render_game:
@@ -37,7 +38,7 @@ while True:
     ai_scores = []
     game.hiscore = -9999
 
-    population = make_new_population(generation, population_size)
+    population = make_new_population(generation, population_size, max_pigs)
     network = population[0]
 
     if False:
@@ -92,7 +93,8 @@ while True:
 
 
         if (ai_launch_bird):
-            ai_move = network.move(np.array([980, 72, 974, 178]))
+            pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
+            ai_move = network.move(pig_positions)
             game.launch_bird(ai_launch_bird, ai_move)
         else:
             game.draw(use_ai)

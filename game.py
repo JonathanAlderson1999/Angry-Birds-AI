@@ -84,9 +84,9 @@ class game:
 
     hiscore = -9999
 
-    def __init__(self):
+    def __init__(self, start_level):
         self.level = Level()
-        self.level.number = 0
+        self.level.number = start_level
         self.level.load_level()
 
         self.game_state = 0
