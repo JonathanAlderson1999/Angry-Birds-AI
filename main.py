@@ -21,7 +21,7 @@ score_reset_threshold = 5000
 
 start_level = 0
 generation = 0
-game_speed = 4#20000
+game_speed = 2#20000
 
 use_ai = True
 render_game = True
@@ -59,8 +59,10 @@ while True:
         # Skip if offscreen to the left
         early_reset = False
         if (len(game.level.birds) > 0):
-            early_reset = game.level.birds[0].body.position.x < 0
-            early_reset = early_reset or game.level.birds[-1].body.velocity.get_length_sqrd() < 0.1
+            offscreen = (game.level.birds[0].body.position.x < 0)
+            not_moving = (game.level.birds[-1].body.velocity.x < 2)
+            not_scored = (game.level.score == 0)
+            early_reset = (offscreen or (not_moving and not_scored))
 
         if early_reset:
             frame_count = ai_move_interval
@@ -69,7 +71,10 @@ while True:
         if (ai_launch_bird):
 
             first_time = (game.hiscore == -9999)
-            continue_playing = False #game.level.score >= score_reset_threshold
+            scored_enough = (game.level.score >= score_reset_threshold)
+            has_remaining_birds = (game.level.number_of_birds > 0)
+            completed_level = (game.game_state != PLAY)
+            continue_playing = (scored_enough and has_remaining_birds and not completed_level)
 
             if (not first_time and not continue_playing):
                 print(str(game.level.score).ljust(5), end = ", ")
@@ -91,8 +96,6 @@ while True:
                     break
 
                 network = population[ai_id]
-            else:
-                print("debug")
 
         for event in (pygame.event.get()):
             if not use_ai:
