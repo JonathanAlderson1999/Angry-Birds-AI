@@ -13,6 +13,11 @@ from Util import *
 pygame.init()
 screen = pygame.display.set_mode((1200, 650))
 
+PLAY = 0
+PAUSED = 1
+FAILED = 3
+COMPLETED = 4
+
 redbird =     pygame.image.load("estevaofon/resources/images/red-bird3.png").convert_alpha()
 background2 = pygame.image.load("estevaofon/resources/images/background3.png").convert_alpha()
 sling_image = pygame.image.load("estevaofon/resources/images/sling-3.png").convert_alpha()
@@ -71,7 +76,7 @@ def distance(xo, yo, x, y):
     return d
 
 class game:
-    game_state = 0
+    game_state = PLAY
     bonus_score_once = 0
 
     t1 = 0
@@ -79,7 +84,7 @@ class game:
     x_mouse = 0
     y_mouse = 0
     sling_pressed = False
-    released_sling = False
+    sling_released = False
     mouse_pressed = False
     mouse_released = False
     mouse_distance = 0
@@ -91,14 +96,14 @@ class game:
         self.level.number = start_level
         self.level.load_level()
 
-        self.game_state = 0
+        self.game_state = PLAY
         self.bird_path = []
         self.counter = 0
         self.restart_counter = True
 
     def restart(self):
-        self.game_state = 0
-        self.game_state = 0
+        self.game_state = PLAY
+        self.game_state = PLAY
         self.bird_path = []
 
         pigs_to_remove = []
@@ -173,19 +178,20 @@ class game:
 
 
     def process_event(self, event):
+
         self.x_mouse, self.y_mouse = pygame.mouse.get_pos()
-        x_valid = (self.x_mouse > 100 and self.x_mouse < 250)
-        y_valid = (self.y_mouse > 370 and self.y_mouse < 550)
+        x_valid = (self.x_mouse > 0 and self.x_mouse < 450)
+        y_valid = (self.y_mouse > 170 and self.y_mouse < 650)
         pygame_mouse_pressed = pygame.mouse.get_pressed()[0]
         pygame_mouse_up = (event.type == pygame.MOUSEBUTTONUP and event.button == 1)
 
+        self.sling_released = (self.sling_pressed and pygame_mouse_up)
+
         self.sling_pressed = (pygame_mouse_pressed and x_valid and y_valid)
 
+        self.mouse_released = (self.mouse_pressed and pygame_mouse_up)
+
         self.mouse_pressed = pygame_mouse_pressed
-
-        self.released_sling = (self.sling_pressed and pygame_mouse_up)
-
-        self.released_mouse = (self.mouse_pressed and pygame_mouse_up)
 
         if event.type == pygame.QUIT:
             running = False
@@ -196,38 +202,40 @@ class game:
         # Pause button
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             if (self.x_mouse < 60 and self.y_mouse < 155 and self.y_mouse > 90):
-                self.game_state = 1
+                self.game_state = PAUSED
 
     def launch_bird(self, ai_launch_bird, ai_move):
+
+        if self.game_state != PLAY:
+            return
 
         if ai_launch_bird:
                 self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
 
-        if (ai_launch_bird or self.released_sling):
+        if (ai_launch_bird or self.sling_released):
             self.release_bird(True)
 
     def process_game_state(self):
-        if (self.released_mouse):
-            if self.game_state == 1:
+        if (self.mouse_released):
+            if self.game_state == PAUSED:
                 if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:
                     # Resume in the paused screen
-                    self.game_state = 0
+                    self.game_state = PLAY
 
                 if self.x_mouse > 500 and self.y_mouse > 300:
                     # Restart in the paused screen
                     restart()
 
-            if self.game_state == 3:
-                # Restart in the failed level screen
+            if self.game_state == FAILED:
                 if self.x_mouse > 500 and self.x_mouse < 620 and self.y_mouse > 450:
                     restart()
 
-            if self.game_state == 4:
+            if self.game_state == COMPLETED:
                 # Build next level
                 if self.x_mouse > 610 and self.y_mouse > 450:
                     self.restart()
                     self.level.number += 1
-                    self.game_state = 0
+                    self.game_state = PLAY
                     self.level.load_level()
                     self.bird_path = []
                     self.bonus_score_once = True
@@ -236,7 +244,7 @@ class game:
                     # Restart in the level cleared screen
                     self.restart()
                     self.level.load_level()
-                    self.game_state = 0
+                    self.game_state = PLAY
                     self.bird_path = []
 
     def draw_level_cleared(self):
@@ -248,7 +256,7 @@ class game:
                 self.level.score += (self.level.number_of_birds - 1) * 10000
 
             self.bonus_score_once = False
-            self.game_state = 4
+            self.game_state = COMPLETED
             rect = pygame.Rect(300, 0, 600, 800)
             debug_draw_rect(screen, BLACK, rect)
             debug_blit(level_cleared, (450, 90))
@@ -272,7 +280,7 @@ class game:
         failed = bold_font3.render("Level Failed", 1, WHITE)
 
         if self.level.number_of_birds <= 0 and time.time() - self.t2 > 5 and len(self.level.pigs) > 0:
-            self.game_state = 3
+            self.game_state = FAILED
             rect = pygame.Rect(300, 0, 600, 800)
             debug_draw_rect(screen, BLACK, rect)
             debug_blit(failed, (450, 90))
@@ -298,7 +306,7 @@ class game:
                 debug_blit(redbird, (x, 508))
 
         # Draw sling behavior
-        if (use_ai or self.mouse_pressed) and self.level.number_of_birds > 0:
+        if (use_ai or self.sling_pressed) and self.level.number_of_birds > 0:
             self.sling_action()
         else:
             if time.time() * 1000 - self.t1 > 300 and self.level.number_of_birds > 0:
@@ -356,8 +364,7 @@ class game:
         debug_blit(score_font, (1060, 20))
         debug_blit(number_font, (1060, 50))
 
-        # Pause option
-        if self.game_state == 1:
+        if self.game_state == PAUSED:
             debug_blit(play_button, (500, 200))
             debug_blit(replay_button, (500, 300))
 

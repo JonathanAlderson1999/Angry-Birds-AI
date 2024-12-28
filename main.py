@@ -21,9 +21,9 @@ score_reset_threshold = 5000
 
 start_level = 0
 generation = 0
-game_speed = 20000
+game_speed = 4#20000
 
-use_ai = False
+use_ai = True
 render_game = True
 
 game = game(start_level)
@@ -35,7 +35,7 @@ if not render_game:
 
 while True:
 
-    ai_id = 0
+    ai_id = -1
     best_ai = 0
     ai_scores = []
     game.hiscore = -9999
@@ -67,16 +67,17 @@ while True:
 
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         if (ai_launch_bird):
+
             first_time = (game.hiscore == -9999)
-            continue_playing = game.level.score >= score_reset_threshold
+            continue_playing = False #game.level.score >= score_reset_threshold
 
             if (not first_time and not continue_playing):
                 print(str(game.level.score).ljust(5), end = ", ")
 
                 ai_scores.append(game.level.score)
 
-            if ai_id == 0:
-                print("\nGen: ", str(generation).ljust(5), end = " ")
+            if ai_id == -1:
+                print("\nGen " + str(generation).ljust(5))
 
             if (game.level.score > game.hiscore):
                 game.hiscore = game.level.score
@@ -84,13 +85,14 @@ while True:
 
             if (not continue_playing):
                 game.restart()
-                network = population[ai_id]
                 ai_id += 1
+                population_complete = (ai_id == population_size)
+                if population_complete:
+                    break
+
+                network = population[ai_id]
             else:
                 print("debug")
-
-            if (ai_id == population_size):
-                break
 
         for event in (pygame.event.get()):
             if not use_ai:
