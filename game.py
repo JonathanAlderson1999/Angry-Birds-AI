@@ -116,6 +116,9 @@ class game:
     def update_sling(self):
         self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)
 
+        if self.mouse_distance <= rope_length:
+            self.mouse_distance += 10
+
         # Angle of impulse
         dy = self.y_mouse - sling_y
         dx = self.x_mouse - sling_x
@@ -145,15 +148,12 @@ class game:
             pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu2, 5)
 
         else:
-            self.mouse_distance += 10
             pu3 = (uv1 * self.mouse_distance + sling_x, uv2 * self.mouse_distance + sling_y)
             pygame.draw.line(screen, (0, 0, 0), (sling2_x, sling2_y), pu3, 5)
             screen.blit(redbird, (x_redbird, y_redbird))
             pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu3, 5)
 
-    def release_bird(self, use_ai):
-
-        self.draw(use_ai)
+    def release_bird(self):
 
         self.sling_pressed = False
         if self.level.number_of_birds > 0:
@@ -214,7 +214,7 @@ class game:
             self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
 
         if (ai_launch_bird or self.sling_released):
-            self.release_bird(True)
+            self.release_bird()
 
     def process_game_state(self):
 
@@ -222,6 +222,7 @@ class game:
             self.game_state = FAILED
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
+            self.game_state = COMPLETED
             if self.bonus_score_once:
                 self.level.score += ((self.level.number_of_birds - 1) * 10000)
 
@@ -263,7 +264,6 @@ class game:
         score_level_cleared = bold_font2.render(str(self.level.score), 1, WHITE)
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
-            self.game_state = COMPLETED
             rect = pygame.Rect(300, 0, 600, 800)
             pygame.draw.rect(screen, BLACK, rect)
             screen.blit(level_cleared, (450, 90))
