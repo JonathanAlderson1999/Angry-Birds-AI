@@ -22,7 +22,7 @@ score_reset_threshold = 5000
 start_level = 8
 start_ai = 0
 generation = 3
-game_speed = 1
+game_speed = 2000
 
 use_ai = True
 render_game = True
@@ -120,7 +120,7 @@ while True:
 
         if render_game:
             pygame.display.flip()
-            #clock.tick(50 * game_speed)
-            pygame.display.set_caption("Angry Birds")
+            clock.tick(10000)
+            pygame.display.set_caption("Angry Birds - Gen: " + str(generation - 1) + " AI: " + str(ai_id + 1))
 
     pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))

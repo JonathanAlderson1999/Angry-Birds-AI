@@ -314,7 +314,6 @@ class game:
                 debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y - 8), (sling2_x, sling2_y - 7), 5)
 
         # Draw birds
-        pigs_to_remove = []
         for bird in self.level.birds:
             p = to_pygame(bird.shape.body.position)
             x, y = p
