@@ -16,34 +16,6 @@ screen_x = 1200
 screen_y = 650
 screen = pygame.display.set_mode((1200, 650))
 
-render = True
-def turn_off_rendering():
-    global render
-    render = False
-
-def get_screen_size():
-    return [screen_x, screen_y]
-
-def debug_blit(image, pos, rect = None):
-    if render:
-        screen.blit(image, pos, rect)
-
-def debug_draw_rect(screen, colour, rect):
-    if render:
-        pygame.draw.rect(screen, colour, rect)
-
-def debug_draw_lines(screen, colour, closed, points, width = 1):
-    if render:
-        pygame.draw.lines(screen, colour, closed, points, width)
-
-def debug_draw_line(screen, colour, closed, points, width = 1):
-    if render:
-        pygame.draw.line(screen, colour, closed, points, width)
-
-def debug_draw_circle(screen, colour, center, radius, width):
-    if render:
-        pygame.draw.circle(screen, colour, center, radius, width)
-
 class Polygon():
     def __init__(self, pos, length, height, space, mass=5.0):
         moment = 1000
@@ -70,16 +42,13 @@ class Polygon():
     def draw_poly(self, element, screen):
         """Draw beams and columns"""
 
-        if not render:
-            return
-
         poly = self.shape
         ps = poly.get_vertices()
         ps.append(ps[0])
         ps = map(self.to_pygame, ps)
         ps = list(ps)
         color = (255, 0, 0)
-        debug_draw_lines(screen, color, False, ps)
+        pygame.draw.lines(screen, color, False, ps)
 
         if element == 'beams':
             p = poly.body.position
@@ -89,7 +58,7 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            debug_blit(rotated_logo_img, (np.x, np.y))
+            screen.blit(rotated_logo_img, (np.x, np.y))
 
         if element == 'columns':
             p = poly.body.position
@@ -99,4 +68,4 @@ class Polygon():
             offset = Vec2d(*rotated_logo_img.get_size()) / 2.
             p = p - offset
             np = p
-            debug_blit(rotated_logo_img, (np.x, np.y))
+            screen.blit(rotated_logo_img, (np.x, np.y))

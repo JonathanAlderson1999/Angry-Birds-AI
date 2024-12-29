@@ -46,8 +46,8 @@ class Level():
         p = to_pygame(bird_body.position)
         p2 = to_pygame(pig_body.position)
         r = 30
-        debug_draw_circle(surface, BLACK, p, r, 4)
-        debug_draw_circle(surface, RED, p2, r, 4)
+        pygame.draw.circle(surface, BLACK, p, r, 4)
+        pygame.draw.circle(surface, RED, p2, r, 4)
 
         pigs_to_remove = []
         for pig in self.pigs:
@@ -490,7 +490,7 @@ class Level():
             pv2 = body.position + line.b.rotated(body.angle)
             p1 = to_pygame(pv1)
             p2 = to_pygame(pv2)
-            debug_draw_lines(screen, (150, 150, 150), False, [p1, p2])
+            pygame.draw.lines(screen, (150, 150, 150), False, [p1, p2])
 
         i = 0
         for pig in self.pigs:
@@ -505,8 +505,8 @@ class Level():
             w,h = img.get_size()
             x -= w * 0.5
             y -= h * 0.5
-            debug_blit(img, (x, y))
-            debug_draw_circle(screen, BLUE, p, int(pig.radius), 2)
+            screen.blit(img, (x, y))
+            pygame.draw.circle(screen, BLUE, p, int(pig.radius), 2)
 
         for column in self.columns:
             column.draw_poly('columns', screen)

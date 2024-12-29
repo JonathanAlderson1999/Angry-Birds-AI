@@ -19,19 +19,18 @@ frame_count = ai_move_interval - 2
 max_pigs = 3
 score_reset_threshold = 5000
 
-start_level = 8
+start_level = 0#8
 start_ai = 0
 generation = 3
 game_speed = 2000
 
 use_ai = True
-render_game = True
+render_game = False
 
 game = game(start_level)
 
 render_game = render_game or not use_ai
 if not render_game:
-    turn_off_rendering()
     pygame.display.iconify()
 
 while True:
@@ -108,17 +107,17 @@ while True:
                 game.process_event(event)
                 game.launch_bird(False, None)
 
-        game.process_game_state()
-
         if (ai_launch_bird):
             pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
             ai_move = network.move(pig_positions)
             game.launch_bird(ai_launch_bird, ai_move)
-        else:
-            game.draw(use_ai)
+
+        game.process_game_state()        
+        game.update_sling()
         game.update_physics()
 
         if render_game:
+            game.draw(use_ai)
             pygame.display.flip()
             clock.tick(10000)
             pygame.display.set_caption("Angry Birds - Gen: " + str(generation - 1) + " AI: " + str(ai_id + 1))

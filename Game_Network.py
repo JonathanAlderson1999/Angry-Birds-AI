@@ -37,7 +37,7 @@ class game_network:
 
     def move(self, pig_positions):        
 
-        [screen_x, screen_y] = get_screen_size()
+        [screen_x, screen_y] = screen.get_size()
 
         padded_pig_positions = np.concatenate((np.array(pig_positions).flatten(), np.zeros((self.max_pigs - len(pig_positions)) * self.num_pig_vars)))
 

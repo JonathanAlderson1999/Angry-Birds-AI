@@ -113,12 +113,21 @@ class game:
 
         self.level.load_level()
 
-    def sling_action(self):
+    def update_sling(self):
+        self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)
+
+        # Angle of impulse
+        dy = self.y_mouse - sling_y
+        dx = self.x_mouse - sling_x
+        if dx == 0:
+            dx = 0.00000000000001
+        self.angle = math.atan((float(dy)) / dx)
+
+    def draw_sling(self):
         v = vector((sling_x, sling_y), (self.x_mouse, self.y_mouse))
         uv = unit_vector(v)
         uv1 = uv[0]
         uv2 = uv[1]
-        self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)
         pu = (uv1 * rope_length + sling_x, uv2 * rope_length + sling_y)
         bigger_rope = 102
         x_redbird = self.x_mouse - 20
@@ -129,25 +138,18 @@ class game:
             pux -= 20
             puy -= 20
             pul = pux, puy
-            debug_blit(redbird, pul)
+            screen.blit(redbird, pul)
             pu2 = (uv1*bigger_rope+sling_x, uv2*bigger_rope+sling_y)
-            debug_draw_line(screen, (0, 0, 0), (sling2_x, sling2_y), pu2, 5)
-            debug_blit(redbird, pul)
-            debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y), pu2, 5)
+            pygame.draw.line(screen, (0, 0, 0), (sling2_x, sling2_y), pu2, 5)
+            screen.blit(redbird, pul)
+            pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu2, 5)
 
         else:
             self.mouse_distance += 10
             pu3 = (uv1 * self.mouse_distance + sling_x, uv2 * self.mouse_distance + sling_y)
-            debug_draw_line(screen, (0, 0, 0), (sling2_x, sling2_y), pu3, 5)
-            debug_blit(redbird, (x_redbird, y_redbird))
-            debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y), pu3, 5)
-
-        # Angle of impulse
-        dy = self.y_mouse - sling_y
-        dx = self.x_mouse - sling_x
-        if dx == 0:
-            dx = 0.00000000000001
-        self.angle = math.atan((float(dy)) / dx)
+            pygame.draw.line(screen, (0, 0, 0), (sling2_x, sling2_y), pu3, 5)
+            screen.blit(redbird, (x_redbird, y_redbird))
+            pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y), pu3, 5)
 
     def release_bird(self, use_ai):
 
@@ -215,6 +217,16 @@ class game:
             self.release_bird(True)
 
     def process_game_state(self):
+
+        if self.level.number_of_birds <= 0 and time.time() - self.t2 > 5 and len(self.level.pigs) > 0:
+            self.game_state = FAILED
+
+        if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
+            if self.bonus_score_once:
+                self.level.score += ((self.level.number_of_birds - 1) * 10000)
+
+            self.bonus_score_once = False
+
         if (self.mouse_released):
             if self.game_state == PAUSED:
                 if self.x_mouse > 500 and self.y_mouse > 200 and self.y_mouse < 300:
@@ -251,67 +263,62 @@ class game:
         score_level_cleared = bold_font2.render(str(self.level.score), 1, WHITE)
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
-            if self.bonus_score_once:
-                self.level.score += ((self.level.number_of_birds - 1) * 10000)
-
-            self.bonus_score_once = False
             self.game_state = COMPLETED
             rect = pygame.Rect(300, 0, 600, 800)
-            debug_draw_rect(screen, BLACK, rect)
-            debug_blit(level_cleared, (450, 90))
+            pygame.draw.rect(screen, BLACK, rect)
+            screen.blit(level_cleared, (450, 90))
             if self.level.score >= self.level.one_star and self.level.score <= self.level.two_star:
-                debug_blit(star1, (310, 190))
+                screen.blit(star1, (310, 190))
 
             if self.level.score >= self.level.two_star and self.level.score <= self.level.three_star:
-                debug_blit(star1, (310, 190))
-                debug_blit(star2, (500, 170))
+                screen.blit(star1, (310, 190))
+                screen.blit(star2, (500, 170))
 
             if self.level.score >= self.level.three_star:
-                debug_blit(star1, (310, 190))
-                debug_blit(star2, (500, 170))
-                debug_blit(star3, (700, 200))
+                screen.blit(star1, (310, 190))
+                screen.blit(star2, (500, 170))
+                screen.blit(star3, (700, 200))
 
-            debug_blit(score_level_cleared, (550, 400))
-            debug_blit(replay_button, (510, 480))
-            debug_blit(next_button, (620, 480))
+            screen.blit(score_level_cleared, (550, 400))
+            screen.blit(replay_button, (510, 480))
+            screen.blit(next_button, (620, 480))
 
     def draw_level_failed(self, game_state):
         failed = bold_font3.render("Level Failed", 1, WHITE)
 
         if self.level.number_of_birds <= 0 and time.time() - self.t2 > 5 and len(self.level.pigs) > 0:
-            self.game_state = FAILED
             rect = pygame.Rect(300, 0, 600, 800)
-            debug_draw_rect(screen, BLACK, rect)
-            debug_blit(failed, (450, 90))
-            debug_blit(pig_happy, (380, 120))
-            debug_blit(replay_button, (520, 460))
+            draw_rect(screen, BLACK, rect)
+            screen.blit(failed, (450, 90))
+            screen.blit(pig_happy, (380, 120))
+            screen.blit(replay_button, (520, 460))
 
     def draw(self, use_ai):
         screen.fill((130, 200, 100))
-        debug_blit(background2, (0, -50))
+        screen.blit(background2, (0, -50))
 
         # Draw first part of the sling
         rect = pygame.Rect(50, 0, 70, 220)
-        debug_blit(sling_image, (138, 420), rect)
+        screen.blit(sling_image, (138, 420), rect)
 
         # Draw the trail left behind
         for point in self.bird_path:
-            debug_draw_circle(screen, WHITE, point, 5, 0)
+            pygame.draw.circle(screen, WHITE, point, 5, 0)
 
         # Draw the birds in the wait line
         if self.level.number_of_birds > 0:
             for i in range(self.level.number_of_birds - 1):
                 x = 100 - (i * 35)
-                debug_blit(redbird, (x, 508))
+                screen.blit(redbird, (x, 508))
 
         # Draw sling behavior
         if (use_ai or self.sling_pressed) and self.level.number_of_birds > 0:
-            self.sling_action()
+            self.draw_sling()
         else:
             if time.time() * 1000 - self.t1 > 300 and self.level.number_of_birds > 0:
-                debug_blit(redbird, (130, 426))
+                screen.blit(redbird, (130, 426))
             else:
-                debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y - 8), (sling2_x, sling2_y - 7), 5)
+                pygame.draw.line(screen, (0, 0, 0), (sling_x, sling_y - 8), (sling2_x, sling2_y - 7), 5)
 
         # Draw birds
         for bird in self.level.birds:
@@ -319,8 +326,8 @@ class game:
             x, y = p
             x -= 22
             y -= 20
-            debug_blit(redbird, (x, y))
-            debug_draw_circle(screen, BLUE, p, int(bird.shape.radius), 2)
+            screen.blit(redbird, (x, y))
+            pygame.draw.circle(screen, BLUE, p, int(bird.shape.radius), 2)
 
             if self.counter >= 3 and time.time() - self.t1 < 5:
                 self.bird_path.append(p)
@@ -335,30 +342,30 @@ class game:
 
         # Drawing second part of the sling
         rect = pygame.Rect(0, 0, 60, 200)
-        debug_blit(sling_image, (120, 420), rect)
+        screen.blit(sling_image, (120, 420), rect)
 
         score_font = bold_font.render("SCORE", 1, WHITE)
         number_font = bold_font.render(str(self.level.score), 1, WHITE)
-        debug_blit(score_font, (1060, 90))
+        screen.blit(score_font, (1060, 90))
 
         if self.level.score == 0:
-            debug_blit(number_font, (1100, 130))
+            screen.blit(number_font, (1100, 130))
         else:
-            debug_blit(number_font, (1060, 130))
+            screen.blit(number_font, (1060, 130))
 
         score_font = bold_font.render("HISCORE", 1, WHITE)
         number_font = bold_font.render(str(self.hiscore), 1, WHITE)
-        debug_blit(score_font, (1060, 20))
-        debug_blit(number_font, (1060, 50))
+        screen.blit(score_font, (1060, 20))
+        screen.blit(number_font, (1060, 50))
 
         if self.game_state == PAUSED:
-            debug_blit(play_button, (500, 200))
-            debug_blit(replay_button, (500, 300))
+            screen.blit(play_button, (500, 200))
+            screen.blit(replay_button, (500, 300))
 
         self.draw_level_cleared()
         self.draw_level_failed(self.game_state)
 
-        debug_blit(pause_button, (10, 90))
+        screen.blit(pause_button, (10, 90))
 
     def update_physics(self):
         dt = 1.0 / 50.0 / 2.
