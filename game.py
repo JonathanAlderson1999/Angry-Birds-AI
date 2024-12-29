@@ -77,7 +77,7 @@ def distance(xo, yo, x, y):
 
 class game:
     game_state = PLAY
-    bonus_score_once = 0
+    bonus_score_once = True
 
     t1 = 0
     angle = 0
@@ -103,7 +103,7 @@ class game:
 
     def restart(self):
         self.game_state = PLAY
-        self.game_state = PLAY
+        self.bonus_score_once = True
         self.bird_path = []
 
         pigs_to_remove = []
@@ -252,7 +252,7 @@ class game:
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
             if self.bonus_score_once:
-                self.level.AddScore((self.level.number_of_birds - 1) * 10000)
+                self.level.score += ((self.level.number_of_birds - 1) * 10000)
 
             self.bonus_score_once = False
             self.game_state = COMPLETED

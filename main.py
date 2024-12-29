@@ -19,10 +19,10 @@ frame_count = ai_move_interval - 2
 max_pigs = 3
 score_reset_threshold = 5000
 
-start_level = 0
-start_ai = 8
-generation = 0
-game_speed = 2#20000
+start_level = 8
+start_ai = 0
+generation = 3
+game_speed = 1
 
 use_ai = True
 render_game = True
@@ -60,14 +60,15 @@ while True:
         # Skip if offscreen to the left
         early_reset = False
         if (len(game.level.birds) > 0):
+            completed_level = (game.game_state == COMPLETED)
             offscreen = (game.level.birds[0].body.position.x < 0)
             not_moving = (game.level.birds[-1].body.velocity.x < 2)
-            not_scored = (game.level.score == 0)
-            early_reset = (offscreen or (not_moving and not_scored))
+            not_scored = (game.level.birds[-1].score == 0)
+            early_reset = (completed_level or offscreen or (not_moving and not_scored))
 
         if early_reset:
             frame_count = ai_move_interval
-            print("Early Reset")
+            #print("Early Reset")
 
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         if (ai_launch_bird):
@@ -78,13 +79,11 @@ while True:
             completed_level = (game.game_state != PLAY)
             continue_playing = (scored_enough and has_remaining_birds and not completed_level)
 
-            if (len(game.level.birds) > 0):
-                print("Bird Score: ", game.level.birds[-1].score)
+            #if (len(game.level.birds) > 0):
+               # print("Bird Score: ", game.level.birds[-1].score)
 
             if (not first_time and not continue_playing):
                 print(str(game.level.score).ljust(5), end = ", ")
-
-                ai_scores[ai_id + 1] = game.level.score
 
             if ai_id == -1:
                 print("\nGen " + str(generation).ljust(5))
@@ -94,11 +93,13 @@ while True:
                 best_ai = ai_id
 
             if (not continue_playing):
-                game.restart()
                 ai_id += 1
+                game.restart()
                 population_complete = (ai_id == population_size)
                 if population_complete:
                     break
+                else:
+                    ai_scores[ai_id] = game.level.score
 
                 network = population[ai_id]
 
@@ -119,7 +120,7 @@ while True:
 
         if render_game:
             pygame.display.flip()
-            clock.tick(50 * game_speed)
+            #clock.tick(50 * game_speed)
             pygame.display.set_caption("Angry Birds")
 
     pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))

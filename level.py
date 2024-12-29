@@ -54,7 +54,8 @@ class Level():
             if pig_body == pig.body:
                 pig.life -= 20
                 pigs_to_remove.append(pig)
-                self.score += 10000
+                self.score += 5000
+                self.birds[-1].score += 5000
 
         for pig in pigs_to_remove:
             space.remove(pig.shape, pig.shape.body)
@@ -86,8 +87,8 @@ class Level():
                     self.beams.remove(poly)
 
             space.remove(b, b.body)
-            self.score += 5000
-            self.birds[-1].score += 5000
+            self.score += 700
+            self.birds[-1].score += 700
 
     def post_solve_pig_wood(self, arbiter, space, _):
         pigs_to_remove = []
@@ -96,8 +97,8 @@ class Level():
             for pig in self.pigs:
                 if pig_shape == pig.shape:
                     pig.life -= 20
-                    self.score += 10000
-                    self.birds[-1].score += 10000
+                    self.score += 5000
+                    self.birds[-1].score += 5000
                     if pig.life <= 0:
                         pigs_to_remove.append(pig)
         for pig in pigs_to_remove:
