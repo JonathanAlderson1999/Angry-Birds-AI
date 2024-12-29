@@ -20,6 +20,7 @@ max_pigs = 3
 score_reset_threshold = 5000
 
 start_level = 0
+start_ai = 8
 generation = 0
 game_speed = 2#20000
 
@@ -35,9 +36,9 @@ if not render_game:
 
 while True:
 
-    ai_id = -1
+    ai_id = -1 + start_ai
     best_ai = 0
-    ai_scores = []
+    ai_scores = [0 for i in range(population_size)]
     game.hiscore = -9999
 
     population = make_new_population(generation, population_size, max_pigs)
@@ -66,20 +67,24 @@ while True:
 
         if early_reset:
             frame_count = ai_move_interval
+            print("Early Reset")
 
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         if (ai_launch_bird):
 
             first_time = (game.hiscore == -9999)
-            scored_enough = (game.level.score >= score_reset_threshold)
+            scored_enough = (len(game.level.birds) == 0) or (game.level.birds[-1].score >= score_reset_threshold)
             has_remaining_birds = (game.level.number_of_birds > 0)
             completed_level = (game.game_state != PLAY)
             continue_playing = (scored_enough and has_remaining_birds and not completed_level)
 
+            if (len(game.level.birds) > 0):
+                print("Bird Score: ", game.level.birds[-1].score)
+
             if (not first_time and not continue_playing):
                 print(str(game.level.score).ljust(5), end = ", ")
 
-                ai_scores.append(game.level.score)
+                ai_scores[ai_id + 1] = game.level.score
 
             if ai_id == -1:
                 print("\nGen " + str(generation).ljust(5))

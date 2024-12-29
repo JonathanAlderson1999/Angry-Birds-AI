@@ -165,7 +165,6 @@ class game:
 
             if self.x_mouse < sling_x + 5:
                 bird = Bird(self.mouse_distance, self.angle, xo, yo, self.level.space)
-                #self.level.score += round(self.mouse_distance * 0.25)
                 self.level.birds.append(bird)
 
             else:
@@ -210,7 +209,7 @@ class game:
             return
 
         if ai_launch_bird:
-                self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
+            self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
 
         if (ai_launch_bird or self.sling_released):
             self.release_bird(True)
@@ -253,7 +252,7 @@ class game:
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
             if self.bonus_score_once:
-                self.level.score += (self.level.number_of_birds - 1) * 10000
+                self.level.AddScore((self.level.number_of_birds - 1) * 10000)
 
             self.bonus_score_once = False
             self.game_state = COMPLETED
@@ -315,11 +314,8 @@ class game:
                 debug_draw_line(screen, (0, 0, 0), (sling_x, sling_y - 8), (sling2_x, sling2_y - 7), 5)
 
         # Draw birds
-        birds_to_remove = []
         pigs_to_remove = []
         for bird in self.level.birds:
-            if bird.shape.body.position.y < 0:
-                birds_to_remove.append(bird)
             p = to_pygame(bird.shape.body.position)
             x, y = p
             x -= 22
@@ -335,14 +331,6 @@ class game:
         if self.restart_counter:
             self.counter = 0
             self.restart_counter = False
-
-        # Remove birds and pigs
-        for bird in birds_to_remove:
-            self.level.space.remove(bird.shape, bird.shape.body)
-            self.level.birds.remove(bird)
-        for pig in pigs_to_remove:
-            self.level.space.remove(pig.shape, pig.shape.body)
-            pigs.remove(pig)
 
         self.level.draw_level(screen)
 

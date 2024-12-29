@@ -5,6 +5,7 @@ from pymunk import Vec2d
 class Bird():
     def __init__(self, distance, angle, x, y, space):
         self.life = 20
+        self.score = 0
         mass = 5
         radius = 12
         inertia = pm.moment_for_circle(mass, 0, radius, (0, 0))
