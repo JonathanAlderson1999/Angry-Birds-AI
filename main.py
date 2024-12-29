@@ -22,7 +22,7 @@ score_reset_threshold = 5000
 start_level = 0#8
 start_ai = 0
 generation = 0
-game_speed = 2000
+game_speed = 100
 
 use_ai = True
 render_game = True
@@ -42,8 +42,7 @@ while True:
     game.update_sling()
     game.update_physics()
 
-    population = make_new_population(generation, population_size, max_pigs)
-    generation += 1
+    population = load_population(generation, population_size, max_pigs)
 
     while ai_id <= population_size:
 
@@ -92,14 +91,14 @@ while True:
                 best_ai = ai_id
 
             if not continue_playing:
-                ai_id += 1
-                game.restart()
-                population_complete = (ai_id == population_size)
+                population_complete = (ai_id == population_size - 1)
                 if population_complete:
                     break
                 else:
                     ai_scores[ai_id] = game.level.score
 
+                ai_id += 1
+                game.restart()
                 network = population[ai_id]
 
         for event in (pygame.event.get()):
@@ -115,7 +114,9 @@ while True:
         if render_game:
             game.draw(use_ai)
             pygame.display.flip()
-            clock.tick(120)
-            pygame.display.set_caption("Angry Birds - Gen: " + str(generation - 1) + " AI: " + str(ai_id + 1))
+            clock.tick(int(60 * game_speed))
+            pygame.display.set_caption("Angry Birds - Gen: " + str(generation) + " AI: " + str(ai_id + 1))
 
-    pickle.dump([population, ai_scores], open("Saved_Networks/generation" + str(generation - 1) + ".pickle", "wb"))
+    
+    generation += 1
+    pickle.dump(make_new_population(population, ai_scores), open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
