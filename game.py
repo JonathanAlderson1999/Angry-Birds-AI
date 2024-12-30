@@ -213,6 +213,8 @@ class game:
         if ai_launch_bird:
             self.x_mouse, self.y_mouse = [float(ai_move[0]), float(ai_move[1])]
 
+        self.update_sling()
+
         if (ai_launch_bird or self.sling_released):
             self.release_bird()
 

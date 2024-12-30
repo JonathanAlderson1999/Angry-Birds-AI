@@ -12,7 +12,7 @@ from Game_Network import game_network
 from Genetic import *
 import numpy as np
 
-population_size = 5
+population_size = 15
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
@@ -25,7 +25,7 @@ generation = 0
 game_speed = 100
 
 use_ai = True
-render_game = True
+render_game = False
 
 game = game(start_level)
 
@@ -48,7 +48,6 @@ while True:
 
         frame_count += 1
 
-        game.update_sling()
         game.update_physics()
         game.process_game_state()
 

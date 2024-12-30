@@ -127,7 +127,7 @@ def select_parents(population, scores):
 def crossover_parents(parents):
     new_population = []
     num_parents = len(parents)
-    mutation = np.random.rand(num_parents) * 0.00 # not sure
+    mutation = np.random.rand(num_parents) * 0.01 # not sure
 
     for i in range(num_parents):
         parent = parents[i]
