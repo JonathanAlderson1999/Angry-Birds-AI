@@ -12,7 +12,7 @@ from Game_Network import game_network
 from Genetic import *
 import numpy as np
 
-population_size = 15
+population_size = 5
 ai_move_interval = 250
 frame_count = ai_move_interval - 2
 
