@@ -19,8 +19,8 @@ frame_count = -1
 max_pigs = 3
 
 start_level = 0
-start_ai = 3
-generation = 18
+start_ai = 0
+generation = 0
 game_speed = 1000
 
 use_ai = True
@@ -35,10 +35,10 @@ if not render_game:
 while True:
 
     ai_id = start_ai
-    best_ai = 0
     ai_scores = [0 for i in range(population_size)]
     game.hiscore = -9999
     game.update_sling()
+    game.level.number = start_level
 
     population = load_population(generation, population_size, max_pigs)
     network = population[ai_id]
@@ -52,17 +52,19 @@ while True:
         game.update_physics()
         game.process_game_state()
 
+        level_completed = (game.game_state != PLAY)
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
-        completed_level = (game.game_state != PLAY)
-        ai_completed = completed_level or should_early_reset(game, ai_launch_bird)
+        ai_completed = should_early_reset(game, ai_launch_bird)
 
-        if (ai_completed):
+        if level_completed:
+            frame_count = 0
+            ai_launch_bird = True
+            game.level.number += 1
+            game.restart()
+
+        if ai_completed:
 
             print(str(game.level.score).ljust(5), end = ", ")
-
-            if game.level.score > game.hiscore:
-                game.hiscore = game.level.score
-                best_ai = ai_id
 
             population_complete = (ai_id == population_size - 1)
             if population_complete:
@@ -71,9 +73,10 @@ while True:
                 ai_scores[ai_id] = game.level.score
 
             ai_id += 1
-            game.restart()
-            frame_count = 0
             network = population[ai_id]
+            frame_count = 0
+            game.level.number = start_level
+            game.restart()
 
         for event in (pygame.event.get()):
             if not use_ai:
@@ -89,7 +92,7 @@ while True:
             game.draw(use_ai)
             pygame.display.flip()
             clock.tick(int(60 * game_speed))
-            pygame.display.set_caption("Angry Birds - Gen: " + str(generation) + " AI: " + str(ai_id + 1))
+            pygame.display.set_caption("Angry Birds - Gen: " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
 
     
     generation += 1

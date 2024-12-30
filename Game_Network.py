@@ -68,12 +68,11 @@ def should_early_reset(game, ai_launch_bird):
     if not first_bird_launched:
         return False
 
-    completed_level = (game.game_state == COMPLETED)
     offscreen = (game.level.birds[0].body.position.x < 0)
     not_moving = (game.level.birds[-1].body.velocity.x < 2)
     not_scored = (game.level.birds[-1].score == 0)
     
-    if completed_level or offscreen or (not_moving and not_scored):
+    if offscreen or (not_moving and not_scored):
         return True
 
     pig_score = 5000

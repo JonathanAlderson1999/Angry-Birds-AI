@@ -220,6 +220,9 @@ class game:
 
     def process_game_state(self):
 
+        if self.level.score > self.hiscore:
+            self.hiscore = self.level.score
+
         if self.level.number_of_birds <= 0 and len(self.level.pigs) > 0:
             self.game_state = FAILED
 
