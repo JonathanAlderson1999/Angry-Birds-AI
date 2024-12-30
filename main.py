@@ -18,14 +18,13 @@ frame_count = -1
 
 max_pigs = 3
 
-start_level = 0#8
+start_level = 0
 start_ai = 3
-generation = 0
+generation = 18
 game_speed = 1000
 
 use_ai = True
 render_game = True
-debug_why_restarted = False
 
 game = game(start_level)
 
