@@ -8,24 +8,24 @@ current_path = os.getcwd()
 import pymunk as pm
 from characters import Bird
 from level import Level
-from Game_Network import game_network
+from Game_Network import *
 from Genetic import *
 import numpy as np
 
 population_size = 15
 ai_move_interval = 250
-frame_count = ai_move_interval - 2
+frame_count = -1
 
 max_pigs = 3
-score_reset_threshold = 5000
 
 start_level = 0#8
-start_ai = 0
-generation = 1
+start_ai = 3
+generation = 0
 game_speed = 1000
 
 use_ai = True
-render_game = False
+render_game = True
+debug_why_restarted = False
 
 game = game(start_level)
 
@@ -35,13 +35,16 @@ if not render_game:
 
 while True:
 
-    ai_id = -1 + start_ai
+    ai_id = start_ai
     best_ai = 0
     ai_scores = [0 for i in range(population_size)]
     game.hiscore = -9999
     game.update_sling()
 
     population = load_population(generation, population_size, max_pigs)
+    network = population[ai_id]
+
+    print("\nGen " + str(generation).ljust(5))
 
     while ai_id <= population_size:
 
@@ -50,54 +53,28 @@ while True:
         game.update_physics()
         game.process_game_state()
 
-        # Skip if offscreen to the left
-        early_reset = False
-        if (len(game.level.birds) > 0):
-            completed_level = (game.game_state == COMPLETED)
-            offscreen = (game.level.birds[0].body.position.x < 0)
-            not_moving = (game.level.birds[-1].body.velocity.x < 2)
-            not_scored = (game.level.birds[-1].score == 0)
-            early_reset = (completed_level or offscreen or (not_moving and not_scored))
-
-        if early_reset:
-            frame_count = ai_move_interval
-            #print("Early Reset")
-
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
-        if (ai_launch_bird):
+        completed_level = (game.game_state != PLAY)
+        ai_completed = completed_level or should_early_reset(game, ai_launch_bird)
 
-            first_time = (game.hiscore == -9999)
-            scored_enough = (len(game.level.birds) > 0) and (game.level.birds[-1].score >= score_reset_threshold)
-            has_remaining_birds = (game.level.number_of_birds > 0)
-            completed_level = (game.game_state != PLAY)
-            continue_playing = (scored_enough and has_remaining_birds and not completed_level)
+        if (ai_completed):
 
-            if completed_level:
-                ai_launch_bird = False
-
-            #if (len(game.level.birds) > 0):
-               # print("Bird Score: ", game.level.birds[-1].score)
-
-            if not first_time and not continue_playing:
-                print(str(game.level.score).ljust(5), end = ", ")
-
-            if ai_id == -1:
-                print("\nGen " + str(generation).ljust(5))
+            print(str(game.level.score).ljust(5), end = ", ")
 
             if game.level.score > game.hiscore:
                 game.hiscore = game.level.score
                 best_ai = ai_id
 
-            if not continue_playing:
-                population_complete = (ai_id == population_size - 1)
-                if population_complete:
-                    break
-                else:
-                    ai_scores[ai_id] = game.level.score
+            population_complete = (ai_id == population_size - 1)
+            if population_complete:
+                break
+            else:
+                ai_scores[ai_id] = game.level.score
 
-                ai_id += 1
-                game.restart()
-                network = population[ai_id]
+            ai_id += 1
+            game.restart()
+            frame_count = 0
+            network = population[ai_id]
 
         for event in (pygame.event.get()):
             if not use_ai:

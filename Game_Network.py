@@ -3,6 +3,7 @@ from Sequential_Network import sequential_network
 import numpy as np
 
 from Util import *
+from game import *
 
 class game_network:
 
@@ -52,12 +53,32 @@ class game_network:
         move = self.network.feed_forward(normalized, len(normalized), 1).activations
 
         # switch from -1, 1 to 0, 1
-        #move = (move + 1.0) / 2
+        move = (move + 1.0) / 2
 
-        x_range = [100, 250]
-        y_range = [370, 550]
+        x_range = [40, 100]
+        y_range = [400, 500]
+
         move = [x_range[0] + (move[0] * (x_range[1] - x_range[0])), y_range[0] + (move[1] * (y_range[1] - y_range[0]))]
 
         return move
 
+def should_early_reset(game, ai_launch_bird):
 
+    first_bird_launched = (len(game.level.birds) > 0)
+    if not first_bird_launched:
+        return False
+
+    completed_level = (game.game_state == COMPLETED)
+    offscreen = (game.level.birds[0].body.position.x < 0)
+    not_moving = (game.level.birds[-1].body.velocity.x < 2)
+    not_scored = (game.level.birds[-1].score == 0)
+    
+    if completed_level or offscreen or (not_moving and not_scored):
+        return True
+
+    pig_score = 5000
+    destoryed_pig = (game.level.birds[-1].score >= pig_score)
+    if ai_launch_bird and not destoryed_pig:
+        return True
+
+    return False

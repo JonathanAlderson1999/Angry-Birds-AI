@@ -220,7 +220,7 @@ class game:
 
     def process_game_state(self):
 
-        if self.level.number_of_birds <= 0 and time.time() - self.t2 > 5 and len(self.level.pigs) > 0:
+        if self.level.number_of_birds <= 0 and len(self.level.pigs) > 0:
             self.game_state = FAILED
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
