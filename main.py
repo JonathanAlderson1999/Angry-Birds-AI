@@ -21,8 +21,8 @@ score_reset_threshold = 5000
 
 start_level = 0#8
 start_ai = 0
-generation = 0
-game_speed = 100
+generation = 1
+game_speed = 1000
 
 use_ai = True
 render_game = False
@@ -40,7 +40,6 @@ while True:
     ai_scores = [0 for i in range(population_size)]
     game.hiscore = -9999
     game.update_sling()
-    game.update_physics()
 
     population = load_population(generation, population_size, max_pigs)
 
@@ -118,4 +117,6 @@ while True:
 
     
     generation += 1
-    pickle.dump(make_new_population(population, ai_scores), open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
+    population = make_new_population(population, ai_scores)
+    pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
+    ai_scores = [0 for i in range(population_size)]
