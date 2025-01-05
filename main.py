@@ -16,16 +16,17 @@ population_size = 14
 ai_move_interval = 250
 frame_count = 0
 
-max_pigs = 3
+max_pigs = 4
 
 start_level = 0
 start_ai = 0
 generation = 0
-game_speed = 6
+game_speed = 100
 
 use_ai = True
+use_random_network = True
 play_multiple_levels = True
-bail_on_failed_level = False
+bail_on_failed_level = True
 render_game = True
 
 game = game(start_level)
@@ -94,6 +95,7 @@ while True:
         if ai_launch_bird:
             pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
             ai_move = network.move(pig_positions)
+            print(ai_move)
             game.launch_bird(ai_launch_bird, ai_move)
 
         if render_game:
@@ -104,6 +106,11 @@ while True:
 
     
     generation += 1
-    population = make_new_population(generation, population, ai_scores)
+
+    if use_random_network:
+        population = [game_network(random.randint(1, 10000), max_pigs) for i in range(population_size)] 
+    else:
+        population = make_new_population(generation, population, ai_scores)
+
     pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
     ai_scores = [0 for i in range(population_size)]
