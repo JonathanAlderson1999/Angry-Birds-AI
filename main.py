@@ -18,12 +18,12 @@ frame_count = -1
 
 max_pigs = 3
 
-start_level = 0
+start_level = 8
 start_ai = 0
-generation = 0
+generation = 23
 game_speed = 1
 
-use_ai = True
+use_ai = False
 play_multiple_levels = False
 render_game = True
 
@@ -48,10 +48,13 @@ while True:
 
     while ai_id <= population_size:
 
+        print(game.x_mouse)
+
         frame_count += 1
 
         game.update_physics()
         game.process_game_state()
+        game.remove_offscreen_pigs()
 
         level_completed = (game.game_state != PLAY)
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)

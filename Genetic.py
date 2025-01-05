@@ -117,6 +117,7 @@ def select_parents(population, scores):
     
     global temperature
     temperature -= 0.01
+    temperature = max(temperature, 0)
 
     weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
 

@@ -60,7 +60,7 @@ class layer:
         num_dense_nodes = output_x * output_y
 
         self.weights   = ([network.initialize_weights(num_input_nodes) for j in range(num_dense_nodes)])
-        self.biases = (np.zeros(num_dense_nodes))
+        self.biases    = network.initialize_biases(num_dense_nodes)
         self.dimension = [output_x, output_y]
         self.use_relu = relu
 
@@ -192,11 +192,9 @@ class sequential_network:
         variance = 2 / self.num_input_neurons
         return np.array([-variance + random.random() * 2 * variance for value in range(num_values)])
 
-    def input(self, dimension):
-
-        new_layer = layer()
-        new_layer.input(dimension[0], dimension[1])
-        self.layers.append(new_layer)
+    def initialize_biases(self, num_values):
+        # let's use this distribution for now
+        return self.initialize_weights(num_values)
 
     def dense(self, input_x, input_y, output_x, output_y, relu = False):
 
@@ -231,7 +229,6 @@ class sequential_network:
 
         for i in range(len(self.layers)):
 
-
             self.layers[i].feed_forward(prev_activations, prev_dimension)
 
             prev_activations = self.layers[i].activations
@@ -242,5 +239,3 @@ class sequential_network:
             activation = tanh(activation)
 
         return (self.layers[-1])
-
-# https://medium.com/@sanjay_dutta/understanding-glorot-and-he-initialization-a-guide-for-college-students-00f3dfae0393

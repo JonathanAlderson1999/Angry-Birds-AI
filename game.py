@@ -376,3 +376,14 @@ class game:
         dt = 1.0 / 50.0 / 2.
         for x in range(2):
             self.level.space.step(dt) # make two updates per frame for better stability
+
+    def remove_offscreen_pigs(self):
+        pigs_to_remove = []
+        for pig in self.level.pigs:
+            offscreen = (pig.body.position.x > screen_x or pig.body.position.x < 0)
+            if offscreen:
+                pigs_to_remove.append(pig)
+
+        for pig in pigs_to_remove:
+            self.level.space.remove(pig.shape, pig.shape.body)
+            self.level.pigs.remove(pig)
