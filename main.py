@@ -12,21 +12,21 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 15
+population_size = 3
 ai_move_interval = 250
-frame_count = -1
+frame_count = 0
 
 max_pigs = 3
 
 start_level = 0
 end_level = 5
 start_ai = 0
-generation = 0
-game_speed = 1
+generation = 15
+game_speed = 100
 
 use_ai = True
 play_multiple_levels = True
-render_game = True
+render_game = False
 
 game = game(start_level)
 
@@ -39,7 +39,6 @@ while True:
     ai_id = start_ai
     ai_scores = [0 for i in range(population_size)]
     game.hiscore = -9999
-    game.update_sling()
     game.level.number = start_level
 
     population = load_population(generation, population_size, max_pigs)
@@ -105,6 +104,6 @@ while True:
 
     
     generation += 1
-    population = make_new_population(population, ai_scores)
+    population = make_new_population(generation, population, ai_scores)
     pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
     ai_scores = [0 for i in range(population_size)]
