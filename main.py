@@ -18,10 +18,10 @@ frame_count = 0
 
 max_pigs = 4
 
-start_level = 0
+start_level = 3
 start_ai = 0
 generation = 0
-game_speed = 100
+game_speed = 0.5
 
 use_ai = True
 use_random_network = True

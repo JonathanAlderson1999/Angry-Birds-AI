@@ -190,7 +190,7 @@ class sequential_network:
     # he method
     def initialize_weights(self, num_values):
         variance = 2 / self.num_input_neurons
-        return np.array([-variance + random.random() * 2 * variance for value in range(num_values)])
+        return np.random.normal(0.0, 2 * variance, num_values)
 
     def initialize_biases(self, num_values):
         # let's use this distribution for now
