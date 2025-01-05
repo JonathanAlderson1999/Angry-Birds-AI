@@ -12,7 +12,7 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 15
+population_size = 14
 ai_move_interval = 250
 frame_count = 0
 
@@ -21,11 +21,12 @@ max_pigs = 3
 start_level = 0
 start_ai = 0
 generation = 0
-game_speed = 1
+game_speed = 6
 
 use_ai = True
 play_multiple_levels = True
-render_game = False
+bail_on_failed_level = False
+render_game = True
 
 game = game(start_level)
 
@@ -55,7 +56,7 @@ while True:
 
         level_completed = (game.game_state != PLAY)
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
-        ai_completed = should_early_reset(game, ai_launch_bird)
+        ai_completed = should_early_reset(game, ai_launch_bird) and bail_on_failed_level
 
         if level_completed and play_multiple_levels:
             frame_count = 0

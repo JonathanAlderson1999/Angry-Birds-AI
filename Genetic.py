@@ -129,11 +129,19 @@ def crossover_parents(parents):
     new_population = []
     num_parents = len(parents)
     mutation = np.random.rand(num_parents) * 0.01 # not sure
+    other_parent = np.random.choice(parents, len(parents))
 
-    for i in range(num_parents):
-        parent = parents[i]
-        mutated_parent = mutate(parent, mutation[i])
-        new_population = new_population + [mutated_parent]
+    do_crossover = True
+
+    if do_crossover:
+        for i in range(0, num_parents - 1, 2):
+            new_parents = crossover(parents[i], parents[i + 1], mutation[i])
+            new_population = new_population + new_parents
+    else:
+        for i in range(num_parents):
+            parent = parents[i]
+            mutated_parent = mutate(parent, mutation[i])
+            new_population = new_population + [mutated_parent]
 
     return new_population
 
