@@ -20,10 +20,10 @@ max_pigs = 3
 
 start_level = 8
 start_ai = 0
-generation = 23
+generation = 12
 game_speed = 1
 
-use_ai = False
+use_ai = True
 play_multiple_levels = False
 render_game = True
 
@@ -47,8 +47,6 @@ while True:
     print("\nGen " + str(generation).ljust(5))
 
     while ai_id <= population_size:
-
-        print(game.x_mouse)
 
         frame_count += 1
 

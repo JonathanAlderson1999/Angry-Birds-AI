@@ -64,11 +64,6 @@ class Level():
     def post_solve_bird_wood(self, arbiter, space, _):
         poly_to_remove = []
 
-        # basic reward for AI
-        wood_score = round(max(0, 0.1 * (arbiter.total_impulse.length - 250)))
-        self.score += wood_score
-        self.birds[-1].score += wood_score
-
         if arbiter.total_impulse.length > 1100:
             a, b = arbiter.shapes
             for column in self.columns:
@@ -97,9 +92,9 @@ class Level():
             for pig in self.pigs:
                 if pig_shape == pig.shape:
                     pig.life -= 20
-                    self.score += 5000
-                    self.birds[-1].score += 5000
                     if pig.life <= 0:
+                        self.score += 5000
+                        self.birds[-1].score += 5000
                         pigs_to_remove.append(pig)
         for pig in pigs_to_remove:
             space.remove(pig.shape, pig.shape.body)
