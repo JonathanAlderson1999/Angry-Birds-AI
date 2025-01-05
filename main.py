@@ -18,9 +18,9 @@ frame_count = 0
 
 max_pigs = 4
 
-start_level = 4
+start_level = 5
 start_ai = 0
-generation = 0
+generation = 61
 game_speed = 1
 
 use_ai = False
@@ -101,7 +101,8 @@ while True:
             game.draw(use_ai)
             pygame.display.flip()
             clock.tick(int(120 * game_speed))
-            pygame.display.set_caption("Angry Birds - Gen: " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
+            owner = "Random: " if use_random_network else "Generation:"
+            pygame.display.set_caption("Angry Birds - " + owner + " " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
 
     
     generation += 1
@@ -113,3 +114,8 @@ while True:
 
     pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
     ai_scores = [0 for i in range(population_size)]
+
+
+# Random: 61
+# 0 700  , 0 0    , 1 32100, 2 63500, 5 150600
+# 5 Levels complete!
