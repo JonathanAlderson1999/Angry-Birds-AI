@@ -70,6 +70,7 @@
     <Content Include="estevaofon\resources\images\wood.png" />
     <Content Include="estevaofon\resources\images\wood2.png" />
     <Content Include="estevaofon\resources\sounds\angry-birds.ogg" />
+    <Content Include="Sources.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

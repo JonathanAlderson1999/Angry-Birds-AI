@@ -21,7 +21,7 @@ max_pigs = 3
 start_level = 0
 start_ai = 0
 generation = 0
-game_speed = 1000
+game_speed = 1
 
 use_ai = True
 play_multiple_levels = False
@@ -95,7 +95,7 @@ while True:
         if render_game:
             game.draw(use_ai)
             pygame.display.flip()
-            clock.tick(int(60 * game_speed))
+            clock.tick(int(120 * game_speed))
             pygame.display.set_caption("Angry Birds - Gen: " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
 
     

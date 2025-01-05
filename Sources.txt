@@ -1,0 +1,15 @@
+https://www.kaggle.com/datasets/jessicali9530/celeba-dataset?resource=download
+
+https://www.tensorflow.org/tutorials/generative/dcgan
+
+Sequential network
+https://www.researchgate.net/profile/Cristina-Pupaza/publication/342641657/figure/fig2/AS:908900312285187@1593710129510/Deep-Learning-Sequential-Neural-Network-with-two-hidden-layers.png
+
+Conv2D (not Conv2DTranspose) explanation
+https://miro.medium.com/v2/resize:fit:720/format:webp/1*DTTpGlhwkctlv9CYannVsw.gif
+
+Temperature
+https://medium.com/@harshit158/softmax-temperature-5492e4007f71
+
+He weighting 
+https://medium.com/@sanjay_dutta/understanding-glorot-and-he-initialization-a-guide-for-college-students-00f3dfae0393

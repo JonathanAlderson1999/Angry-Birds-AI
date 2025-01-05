@@ -14,14 +14,13 @@ class game_network:
         self.max_pigs = max_pigs
         self.num_pig_vars = 2 
 
-        hidden_layer_size = 2
+        hidden_layer_size = 10
 
         num_input_neurons = self.max_pigs * self.num_pig_vars
 
         network = sequential_network(num_input_neurons)
-        network.dense(num_input_neurons, 1, hidden_layer_size, 1, relu = False)
-        #network.dense(hidden_layer_size, 1, hidden_layer_size, 1)
-        #network.dense(hidden_layer_size, 1, 2, 1)
+        network.dense(num_input_neurons, 1, hidden_layer_size, 1)
+        network.dense(hidden_layer_size, 1, 2, 1)
 
         self.network = network
 
