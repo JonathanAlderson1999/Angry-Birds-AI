@@ -291,11 +291,11 @@ class Level():
 
     def build_4(self):
         """level 4"""
-        pig = Pig(900, 300, self.space)
+        pig = Pig(900, 60, self.space)
         self.pigs.append(pig)
-        pig = Pig(1000, 500, self.space)
+        pig = Pig(1000, 75, self.space)
         self.pigs.append(pig)
-        pig = Pig(1100, 400, self.space)
+        pig = Pig(1100, 80, self.space)
         self.pigs.append(pig)
         self.number_of_birds = 4
         if self.bool_space:

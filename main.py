@@ -18,12 +18,12 @@ frame_count = 0
 
 max_pigs = 4
 
-start_level = 3
+start_level = 4
 start_ai = 0
 generation = 0
-game_speed = 0.5
+game_speed = 1
 
-use_ai = True
+use_ai = False
 use_random_network = True
 play_multiple_levels = True
 bail_on_failed_level = True
@@ -95,7 +95,6 @@ while True:
         if ai_launch_bird:
             pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
             ai_move = network.move(pig_positions)
-            print(ai_move)
             game.launch_bird(ai_launch_bird, ai_move)
 
         if render_game:
