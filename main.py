@@ -24,6 +24,7 @@ generation = 0
 game_speed = 1000
 
 use_ai = True
+play_multiple_levels = False
 render_game = True
 
 game = game(start_level)
@@ -56,11 +57,14 @@ while True:
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         ai_completed = should_early_reset(game, ai_launch_bird)
 
-        if level_completed:
+        if level_completed and play_multiple_levels:
             frame_count = 0
             ai_launch_bird = True
             game.level.number += 1
             game.restart()
+
+        elif level_completed:
+            ai_completed = True
 
         if ai_completed:
 
