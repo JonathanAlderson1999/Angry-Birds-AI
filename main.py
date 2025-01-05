@@ -12,17 +12,16 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 3
+population_size = 15
 ai_move_interval = 250
 frame_count = 0
 
 max_pigs = 3
 
 start_level = 0
-end_level = 5
 start_ai = 0
-generation = 15
-game_speed = 100
+generation = 0
+game_speed = 1
 
 use_ai = True
 play_multiple_levels = True
