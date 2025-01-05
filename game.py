@@ -101,7 +101,7 @@ class game:
         self.counter = 0
         self.restart_counter = True
 
-    def restart(self):
+    def restart(self, start_score = 0):
         self.game_state = PLAY
         self.bonus_score_once = True
         self.bird_path = []
@@ -112,6 +112,7 @@ class game:
         beams_to_remove = []
 
         self.level.load_level()
+        self.level.score = start_score
 
     def update_sling(self):
         self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)

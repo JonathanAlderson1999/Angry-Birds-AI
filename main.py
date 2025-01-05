@@ -18,13 +18,14 @@ frame_count = -1
 
 max_pigs = 3
 
-start_level = 8
+start_level = 0
+end_level = 5
 start_ai = 0
-generation = 12
+generation = 0
 game_speed = 1
 
 use_ai = True
-play_multiple_levels = False
+play_multiple_levels = True
 render_game = True
 
 game = game(start_level)
@@ -62,26 +63,29 @@ while True:
             frame_count = 0
             ai_launch_bird = True
             game.level.number += 1
-            game.restart()
+            game.restart(game.level.score)
 
         elif level_completed:
             ai_completed = True
 
         if ai_completed:
 
-            print(str(game.level.score).ljust(5), end = ", ")
+            completed = "+" if level_completed else " "
+            status = str(game.level.number) if play_multiple_levels else completed
+            print((status + " " + str(game.level.score)).ljust(7), end = ", ")
+
+            ai_scores[ai_id] = game.level.score
+
+            frame_count = 0
+            game.level.number = start_level
+            game.restart()
 
             population_complete = (ai_id == population_size - 1)
             if population_complete:
                 break
             else:
-                ai_scores[ai_id] = game.level.score
-
-            ai_id += 1
-            network = population[ai_id]
-            frame_count = 0
-            game.level.number = start_level
-            game.restart()
+                ai_id += 1
+                network = population[ai_id]
 
         for event in (pygame.event.get()):
             if not use_ai:
