@@ -14,19 +14,20 @@ import numpy as np
 
 population_size = 14
 ai_move_interval = 250
-frame_count = 0
+frame_count = -1
 
 max_pigs = 4
 
-start_level = 5
+start_level = 0
+end_level = 11
 start_ai = 0
-generation = 61
-game_speed = 1
+generation = 0
+game_speed = 10000
 
-use_ai = False
+use_ai = True
 use_random_network = True
 play_multiple_levels = True
-bail_on_failed_level = True
+bail_on_failed_level = False
 render_game = True
 
 game = game(start_level)
@@ -44,6 +45,7 @@ while True:
 
     population = load_population(generation, population_size, max_pigs)
     network = population[ai_id]
+    levels_passed = 0
 
     print("\nGen " + str(generation).ljust(5))
 
@@ -56,13 +58,16 @@ while True:
         game.remove_offscreen_pigs()
 
         level_completed = (game.game_state != PLAY)
+        level_passed = (game.game_state == COMPLETED)
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
         ai_completed = should_early_reset(game, ai_launch_bird) and bail_on_failed_level
+        final_level = ai_completed or (game.level.number == end_level)
 
-        if level_completed and play_multiple_levels:
-            frame_count = 0
-            ai_launch_bird = True
+        if level_completed and play_multiple_levels and not final_level:
+            frame_count = -1
+            ai_launch_bird = False
             game.level.number += 1
+            levels_passed += level_passed
             game.restart(game.level.score)
 
         elif level_completed:
@@ -70,13 +75,16 @@ while True:
 
         if ai_completed:
 
-            completed = "+" if level_completed else " "
-            status = str(game.level.number) if play_multiple_levels else completed
-            print((status + " " + str(game.level.score)).ljust(7), end = ", ")
+            if play_multiple_levels:
+                print(str(levels_passed) +  " ", end = "")
+            else:
+                print("+" if level_passed else " ", end = "")
+            print(str(game.level.score).ljust(7), end = ", ")
 
             ai_scores[ai_id] = game.level.score
 
-            frame_count = 0
+            frame_count = -1
+            ai_launch_bird = False
             game.level.number = start_level
             game.restart()
 
@@ -108,14 +116,17 @@ while True:
     generation += 1
 
     if use_random_network:
-        population = [game_network(random.randint(1, 10000), max_pigs) for i in range(population_size)] 
+        population = [game_network(generation * population_size + i, max_pigs) for i in range(population_size)] 
     else:
         population = make_new_population(generation, population, ai_scores)
 
-    pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
+    #pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
     ai_scores = [0 for i in range(population_size)]
 
 
 # Random: 61
 # 0 700  , 0 0    , 1 32100, 2 63500, 5 150600
 # 5 Levels complete!
+
+# 11 235700
+# 11 Levels Complete!

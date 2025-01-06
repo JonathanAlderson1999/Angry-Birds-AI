@@ -74,7 +74,7 @@ def should_early_reset(game, ai_launch_bird):
     if offscreen or (not_moving and not_scored):
         return True
 
-    pig_score = 5000
+    pig_score = 700
     destoryed_pig = (game.level.birds[-1].score >= pig_score)
     if ai_launch_bird and not destoryed_pig:
         return True
