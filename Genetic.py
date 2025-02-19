@@ -1,3 +1,4 @@
+import os
 import copy
 import random
 import numpy as np
@@ -110,6 +111,10 @@ def select_parents(population, scores):
 
     new_parents = np.random.choice(population, population_count, p = weighted_chance)
     
+    print("\nSelected parents: ", end = "")
+    for parent in new_parents:
+        print(population.index(parent), end = ", ")
+
     return new_parents
 
 def crossover_parents(parents):
@@ -124,7 +129,7 @@ def crossover_parents(parents):
 
     return new_population
 
-def load_population(generation, population_size, num_pigs):
+def load_population(run_dir, generation, population_size, num_pigs):
 
     np.random.seed(generation)
     random.seed(generation)
@@ -133,10 +138,14 @@ def load_population(generation, population_size, num_pigs):
         initial_population = [game_network(random.randint(1, 10000), num_pigs) for i in range(population_size)]
         random.seed(generation)
         np.random.seed(generation)
-        pickle.dump(initial_population, open("Saved_Networks/generation0.pickle", "wb"))
+
+        if not os.path.exists(run_dir):
+            os.mkdir(run_dir)
+
+        pickle.dump(initial_population, open(run_dir + "generation0.pickle", "wb"))
         population = initial_population
     else:
-        with open("Saved_Networks/generation" + str(generation) + ".pickle", "rb") as f:
+        with open(run_dir + "generation" + str(generation) + ".pickle", "rb") as f:
             population = pickle.load(f)
 
     random.seed(generation)

@@ -3,6 +3,7 @@ import sys
 import math
 import time
 import pickle
+import datetime
 from game import *
 current_path = os.getcwd()
 import pymunk as pm
@@ -12,7 +13,7 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 3
+population_size = 2
 ai_move_interval = 250
 frame_count = -1
 
@@ -32,6 +33,10 @@ render_game = False
 
 game = game(start_level)
 
+date = datetime.datetime.now()
+run_id = str(date.year) + "_" + str(date.month) + "_" + str(date.day) + "-" + str(date.hour) + "-" + str(date.minute)
+run_dir = "Saved_Networks/" + run_id + "/"
+
 render_game = render_game or not use_ai
 if not render_game:
     pygame.display.iconify()
@@ -43,7 +48,7 @@ while True:
     game.hiscore = -9999
     game.level.number = start_level
 
-    population = load_population(generation, population_size, max_pigs)
+    population = load_population(run_dir, generation, population_size, max_pigs)
     network = population[ai_id]
     levels_passed = 0
 
@@ -121,7 +126,9 @@ while True:
     else:
         population = make_new_population(generation, population, ai_scores)
 
-    #pickle.dump(population, open("Saved_Networks/generation" + str(generation) + ".pickle", "wb"))
+    if not os.path.exists(run_dir):
+        os.mkdir(run_dir)
+    pickle.dump(population, open(run_dir + "generation" + str(generation) + ".pickle", "wb"))
     ai_scores = [0 for i in range(population_size)]
 
 
