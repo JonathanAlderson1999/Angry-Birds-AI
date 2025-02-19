@@ -12,7 +12,7 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 14
+population_size = 3
 ai_move_interval = 250
 frame_count = -1
 
@@ -22,13 +22,13 @@ start_level = 0
 end_level = 11
 start_ai = 0
 generation = 0
-game_speed = 10000
+game_speed = 1
 
 use_ai = True
-use_random_network = True
+use_random_network = False
 play_multiple_levels = True
 bail_on_failed_level = False
-render_game = True
+render_game = False
 
 game = game(start_level)
 
@@ -83,6 +83,7 @@ while True:
 
             ai_scores[ai_id] = game.level.score
 
+            levels_passed = 0
             frame_count = -1
             ai_launch_bird = False
             game.level.number = start_level
