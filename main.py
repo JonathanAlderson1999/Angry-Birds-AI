@@ -13,7 +13,7 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 2
+population_size = 20
 ai_move_interval = 250
 frame_count = -1
 
@@ -40,6 +40,10 @@ run_dir = "Saved_Networks/" + run_id + "/"
 render_game = render_game or not use_ai
 if not render_game:
     pygame.display.iconify()
+
+if (len(sys.argv) > 1):
+    print("Starting with population size ", sys.argv[1])
+    population_size = int(sys.argv[1])
 
 while True:
 
@@ -132,9 +136,8 @@ while True:
     ai_scores = [0 for i in range(population_size)]
 
 
-# Random: 61
-# 0 700  , 0 0    , 1 32100, 2 63500, 5 150600
-# 5 Levels complete!
+#Python Environments -> Open in powershell
 
-# 11 235700
-# 11 Levels Complete!
+#cd ../../../
+#cd 'Users\light\source\repos\Angry Birds AI\'
+#python main.py
