@@ -169,7 +169,7 @@ class Level():
 
     def build_0(self):
         """level 0"""
-        pig1 = Pig(980, 100, self.space)
+        pig1 = Pig(980, 75, self.space)
         pig2 = Pig(985, 182, self.space)
         self.pigs.append(pig1)
         self.pigs.append(pig2)
@@ -196,7 +196,7 @@ class Level():
 
     def build_1(self):
         """level 1"""
-        pig = Pig(1000, 100, self.space)
+        pig = Pig(1000, 75, self.space)
         self.pigs.append(pig)
         p = (900, 80)
         self.columns.append(Polygon(p, 20, 85, self.space))
@@ -303,7 +303,7 @@ class Level():
 
     def build_5(self):
         """level 5"""
-        pig = Pig(900, 70, self.space)
+        pig = Pig(900, 75, self.space)
         self.pigs.append(pig)
         pig = Pig(1000, 152, self.space)
         self.pigs.append(pig)
@@ -348,7 +348,7 @@ class Level():
         pig = Pig(978, 280, self.space)
         pig.life = 30
         self.pigs.append(pig)
-        pig = Pig(978, 80, self.space)
+        pig = Pig(978, 75, self.space)
         pig.life = 30
         self.pigs.append(pig)
         self.open_flat(950, 0, 3)
@@ -366,7 +366,7 @@ class Level():
         pig = Pig(1078, 280, self.space)
         pig.life = 30
         self.pigs.append(pig)
-        pig = Pig(900, 80, self.space)
+        pig = Pig(900, 75, self.space)
         pig.life = 30
         self.pigs.append(pig)
         self.open_flat(1050, 0, 3)
