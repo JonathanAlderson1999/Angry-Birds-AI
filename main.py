@@ -114,6 +114,43 @@ while True:
 
             if not game.pigs_moving():            
                 pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
+
+                for pig in game.level.pigs: 
+
+                    pig_x = pig.body.position.x
+                    pig_y = pig.body.position.y
+
+                    print("Pig is at: " + str(pig_x) + " " + str(pig_y))
+
+                    beam_width = 85
+                    column_height = 85
+
+                    for beam in game.level.beams:
+                        beam_x = beam.body.position.x
+                        beam_y = beam.body.position.y
+                        print("Beam is at: " + str(beam_x) + " " + str(beam_y))
+
+                        in_range_x = ((pig_x > beam_x)  and (pig_y < (beam_x + beam_width)))
+                        in_range_y = ((beam_y > pig_y) and (beam_y < (pig_y + column_height)))
+
+                        if in_range_x and in_range_y:
+                            print("Beam is in front of Pig")
+
+
+                    for column in game.level.columns:
+                        column_x = column.body.position.x
+                        column_y = column.body.position.y
+
+                        print("Column is at: " + str(column_x) + " " + str(column_y))
+
+                        in_range_x = (column_x < pig_x) and (column_x + (2 * beam_width) > pig_x)
+                        in_range_y = ((column_y >= pig_y) and (column_y + (column_height < pig_y)))
+
+                        if in_range_x and in_range_y:
+                            print("Column is in front of Pig")
+
+
+                            
                 ai_move = network.move(pig_positions)
                 game.launch_bird(ai_launch_bird, ai_move)
 
