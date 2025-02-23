@@ -19,7 +19,7 @@ frame_count = -1
 
 max_pigs = 4
 
-start_level = 0
+start_level = 10
 end_level = 11
 start_ai = 0
 generation = 0

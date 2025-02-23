@@ -394,7 +394,7 @@ class Level():
 
     def build_10(self):
         """level 10"""
-        pig = Pig(960, 250, self.space)
+        pig = Pig(960, 75, self.space)
         pig.life = 20
         self.pigs.append(pig)
         pig = Pig(820, 160, self.space)
@@ -406,8 +406,8 @@ class Level():
         self.vertical_pile(1000, 0, 3)
         self.vertical_pile(1030, 0, 3)
         self.horizontal_pile(970, 250, 2)
-        self.horizontal_pile(820, 0, 4)
-        self.horizontal_pile(1100, 0, 4)
+        self.horizontal_pile(820, 1, 4)
+        self.horizontal_pile(1100, 1, 4)
         self.number_of_birds = 4
         if self.bool_space:
             self.number_of_birds = 8
