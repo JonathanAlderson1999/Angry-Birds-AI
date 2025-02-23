@@ -114,6 +114,15 @@ class game:
         self.level.load_level()
         self.level.score = start_score
 
+    def pigs_moving(self):
+        eps = 1.0
+
+        for pig in self.level.pigs:
+            if abs(pig.body.velocity.x) > eps or abs(pig.body.velocity.y) > eps:
+                return True
+
+        return False
+
     def update_sling(self):
         self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)
 

@@ -29,7 +29,7 @@ use_ai = True
 use_random_network = False
 play_multiple_levels = True
 bail_on_failed_level = False
-render_game = False
+render_game = True
 
 game = game(start_level)
 
@@ -111,9 +111,14 @@ while True:
                 game.launch_bird(False, None)
 
         if ai_launch_bird:
-            pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
-            ai_move = network.move(pig_positions)
-            game.launch_bird(ai_launch_bird, ai_move)
+
+            if not game.pigs_moving():            
+                pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
+                ai_move = network.move(pig_positions)
+                game.launch_bird(ai_launch_bird, ai_move)
+
+            else:
+                frame_count -= 1
 
         if render_game:
             game.draw(use_ai)
