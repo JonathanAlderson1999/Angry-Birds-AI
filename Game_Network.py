@@ -12,7 +12,7 @@ class game_network:
         np.random.seed(seed)
 
         self.max_pigs = max_pigs
-        self.num_pig_vars = 2 
+        self.num_pig_vars = 3 
 
         hidden_layer_size = 10
 
@@ -26,28 +26,24 @@ class game_network:
 
     def __repr__(self):
         out = self.network.__repr__()
-
-        # todo: don't hard code
-        #show_activation = False
-        #if show_activation:
-        #    activations = self.move(np.array([980, 72, 974, 178]))
-        #    out += "   ".join([str(round(a)) for a in activations])
-
         return out
 
-    def move(self, pig_positions):        
+    def move(self, pig_positions, pig_obstacles):        
 
         [screen_x, screen_y] = screen.get_size()
 
-        padded_pig_positions = np.concatenate((np.array(pig_positions).flatten(), np.zeros((self.max_pigs - len(pig_positions)) * self.num_pig_vars)))
+        padded_pig_positions = np.concatenate((np.array(pig_positions).flatten(), np.zeros((self.max_pigs - len(pig_positions)) * 2)))
+
+        padded_pig_obstacles = pig_obstacles + [0] * (self.max_pigs - len(pig_obstacles))
 
         x_values = padded_pig_positions[::2]
         y_values = padded_pig_positions[1::2]
 
         normalized_x = ((x_values / screen_x) - 0.5) * 2
         normalized_y = ((y_values / screen_y) - 0.5) * 2
+        normalised_padded_pig_obstacles = [obstacle_count / 5 for obstacle_count in padded_pig_obstacles]
 
-        normalized = np.ravel(np.column_stack((normalized_x, normalized_y)))
+        normalized = np.ravel(np.column_stack((normalized_x, normalized_y, np.array(normalised_padded_pig_obstacles))))
 
         move = self.network.feed_forward(normalized, len(normalized), 1).activations
 

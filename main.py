@@ -114,40 +114,9 @@ while True:
 
             if not game.pigs_moving():            
                 pig_positions = [[pig.body.position.x, pig.body.position.y] for pig in game.level.pigs]
+                pig_obstacles = game.get_pig_obstacles()
 
-                eps = 1
-                half_beam_width = (85 / 2) + eps
-                half_column_height = (85 / 2) + eps
-
-                for pig in game.level.pigs: 
-
-                    obstacles_in_front_of_pig = 0
-
-                    pig_x = pig.body.position.x
-                    pig_y = pig.body.position.y
-
-                    for beam in game.level.beams:
-                        beam_x = beam.body.position.x
-                        beam_y = beam.body.position.y
-
-                        in_range_x = ((pig_x > beam_x)  and (pig_y < (beam_x + half_beam_width)))
-                        in_range_y = (((beam_y + half_beam_width) >+ pig_y) and ((beam_y - half_column_height) <= pig_y))
-
-                        if in_range_x and in_range_y:
-                            obstacles_in_front_of_pig += 1
-
-
-                    for column in game.level.columns:
-                        column_x = column.body.position.x
-                        column_y = column.body.position.y
-
-                        in_range_x = (column_x < pig_x) and (column_x + (2 * half_beam_width) > pig_x)
-                        in_range_y = (((column_y + half_column_height) >= pig_y) and ((column_y - half_column_height) <= pig_y))
-
-                        if in_range_x and in_range_y:
-                            obstacles_in_front_of_pig += 1
-                            
-                ai_move = network.move(pig_positions)
+                ai_move = network.move(pig_positions, pig_obstacles)
                 game.launch_bird(ai_launch_bird, ai_move)
 
             else:

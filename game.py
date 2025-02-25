@@ -123,6 +123,44 @@ class game:
 
         return False
 
+    def get_pig_obstacles(self):
+        eps = 1
+        half_beam_width = (85 / 2) + eps
+        half_column_height = (85 / 2) + eps
+
+        obstacles = []
+
+        for pig in self.level.pigs: 
+
+            obstacles_in_front_of_pig = 0
+
+            pig_x = pig.body.position.x
+            pig_y = pig.body.position.y
+
+            for beam in self.level.beams:
+                beam_x = beam.body.position.x
+                beam_y = beam.body.position.y
+
+                in_range_x = ((pig_x > beam_x)  and (pig_y < (beam_x + half_beam_width)))
+                in_range_y = (((beam_y + half_beam_width) >+ pig_y) and ((beam_y - half_column_height) <= pig_y))
+
+                if in_range_x and in_range_y:
+                    obstacles_in_front_of_pig += 1
+
+            for column in self.level.columns:
+                column_x = column.body.position.x
+                column_y = column.body.position.y
+
+                in_range_x = (column_x < pig_x) and (column_x + (2 * half_beam_width) > pig_x)
+                in_range_y = (((column_y + half_column_height) >= pig_y) and ((column_y - half_column_height) <= pig_y))
+
+                if in_range_x and in_range_y:
+                    obstacles_in_front_of_pig += 1
+
+            obstacles.append(obstacles_in_front_of_pig)
+
+        return obstacles
+
     def update_sling(self):
         self.mouse_distance = distance(sling_x, sling_y, self.x_mouse, self.y_mouse)
 
