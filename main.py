@@ -19,10 +19,10 @@ frame_count = -1
 
 max_pigs = 4
 
-start_level = 7
+start_level = 0
 end_level = 11
 start_ai = 0
-generation = 0
+generation = 75
 game_speed = 1
 
 use_ai = True
@@ -35,6 +35,9 @@ game = game(start_level)
 
 date = datetime.datetime.now()
 run_id = str(date.year) + "_" + str(date.month) + "_" + str(date.day) + "-" + str(date.hour) + "-" + str(date.minute)
+
+run_id = "2025_2_25-20-38"
+
 run_dir = "Saved_Networks/" + run_id + "/"
 
 render_game = render_game or not use_ai
@@ -145,6 +148,6 @@ while True:
 
 #Python Environments -> Open in powershell
 
-#cd ../../../
+#cd ../../../../
 #cd 'Users\light\source\repos\Angry Birds AI\'
 #python main.py
