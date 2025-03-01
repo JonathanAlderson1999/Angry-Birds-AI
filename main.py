@@ -19,15 +19,15 @@ frame_count = -1
 
 max_pigs = 4
 
-start_level = 0
+start_level = 00
 end_level = 11
 start_ai = 5
 generation = 53
 game_speed = 1
 
-use_ai = True
+use_ai = False
 use_random_network = False
-play_multiple_levels = False
+play_multiple_levels = True
 bail_on_failed_level = False
 render_game = True
 
@@ -67,6 +67,7 @@ while True:
 
         frame_count += 1
 
+        game.settle_pigs()
         game.update_physics()
         game.process_game_state()
         game.remove_offscreen_pigs()

@@ -420,6 +420,12 @@ class game:
 
         screen.blit(pause_button, (10, 90))
 
+    def settle_pigs(self):
+        eps = 5
+        for pig in self.level.pigs:
+            if abs(pig.body.velocity.x) < eps and abs(pig.body.velocity.y) < eps:
+                pig.body.velocity = (0, 0)
+
     def update_physics(self):
         dt = 1.0 / 50.0 / 2.
         for x in range(2):
