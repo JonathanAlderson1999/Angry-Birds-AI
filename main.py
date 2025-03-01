@@ -19,16 +19,16 @@ frame_count = -1
 
 max_pigs = 4
 
-start_level = 00
+start_level = 10
 end_level = 11
-start_ai = 5
-generation = 53
+start_ai = 6
+generation = 0
 game_speed = 1
 
-use_ai = False
+use_ai = True
 use_random_network = False
 play_multiple_levels = True
-bail_on_failed_level = False
+skip_after_failed_hit = True
 render_game = True
 
 game = game(start_level)
@@ -72,11 +72,12 @@ while True:
         game.process_game_state()
         game.remove_offscreen_pigs()
 
-        level_completed = (game.game_state != PLAY)
-        level_passed = (game.game_state == COMPLETED)
         ai_launch_bird = use_ai and (frame_count % ai_move_interval == 0)
-        ai_completed = should_early_reset(game, ai_launch_bird) and bail_on_failed_level
-        final_level = ai_completed or (game.level.number == end_level)
+        skip_to_next_level = should_early_reset(game, ai_launch_bird) and skip_after_failed_hit
+        level_completed = (game.game_state != PLAY) or skip_to_next_level
+        level_passed = (game.game_state == COMPLETED)
+        final_level = (game.level.number == end_level)
+        ai_completed = False
 
         if level_completed and play_multiple_levels and not final_level:
             frame_count = -1

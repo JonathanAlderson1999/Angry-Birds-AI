@@ -84,6 +84,8 @@ class Level():
             space.remove(b, b.body)
             self.score += 700
             self.birds[-1].score += 700
+        else:
+            self.birds[-1].score += 1
 
     def post_solve_pig_wood(self, arbiter, space, _):
         pigs_to_remove = []
