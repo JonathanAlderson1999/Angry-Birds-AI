@@ -88,10 +88,15 @@ def mutate(a, mutation):
 
 temperature = 0.2
 
-def select_parents(population, scores):
+def select_parents(population, scores, levels_complete):
 
     population_count = len(population)
     population = [population[i] for i in range(len(population)) if scores[i] >= 0]
+
+    # Favour AI's which have completed lots of levels
+    for i in range(len(levlevels_complete)):
+        scores[i] += 30000 * levels_complete[i]
+    
     scores = [score for score in scores if score >= 0]
 
     score_sum = sum(scores)
@@ -153,9 +158,9 @@ def load_population(run_dir, generation, population_size, num_pigs):
 
     return population
 
-def make_new_population(generation, population, scores):
+def make_new_population(generation, population, scores, levels_complete):
 
-    new_parents = select_parents(population, scores)
+    new_parents = select_parents(population, scores, levels_complete)
 
     new_population = crossover_parents(new_parents)
 

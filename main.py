@@ -13,23 +13,23 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 4
+population_size = 100
 ai_move_interval = 250
 frame_count = -1
 
 max_pigs = 4
 
 start_level = 0
-end_level = 10
-start_ai = 0
+end_level = 12
+start_ai =0
 generation = 0
 game_speed = 1
 
-use_ai = True
+use_ai = False
 use_random_network = False
 play_multiple_levels = True
 skip_after_failed_hit = True
-render_game = False
+render_game = True
 
 game = game(start_level)
 
@@ -50,10 +50,13 @@ if (len(sys.argv) > 1):
     print("Starting with population size ", sys.argv[1])
     population_size = int(sys.argv[1])
 
+ai_success_rate = 0
+
 while True:
 
     ai_id = start_ai
     ai_scores = [0 for i in range(population_size)]
+    ai_levels_complete = [0 for i in range(population_size)]
     game.hiscore = -9999
     game.level.number = start_level
 
@@ -80,6 +83,14 @@ while True:
         ai_completed = False
 
         if level_completed and play_multiple_levels and not final_level:
+
+            print("--- --- ---")
+            print(ai_launch_bird)
+            print(skip_to_next_level)
+            print(level_completed)
+            print(level_passed)
+            print(final_level)
+
             frame_count = -1
             ai_launch_bird = False
             game.level.number += 1
@@ -95,9 +106,14 @@ while True:
                 print(str(levels_passed) +  " ", end = "")
             else:
                 print("+" if level_passed else " ", end = "")
+
+            if (level_passed):
+                ai_success_rate += 1
+
             print(str(game.level.score).ljust(7), end = ", ")
 
             ai_scores[ai_id] = game.level.score
+            ai_levels_complete[ai_id] = levels_passed
 
             levels_passed = 0
             frame_count = -1
@@ -141,15 +157,37 @@ while True:
     if use_random_network:
         population = [game_network(generation * population_size + i, max_pigs) for i in range(population_size)] 
     else:
-        population = make_new_population(generation, population, ai_scores)
+        population = make_new_population(generation, population, ai_scores, ai_levels_complete)
 
     if not os.path.exists(run_dir):
         os.mkdir(run_dir)
     pickle.dump(population, open(run_dir + "generation" + str(generation) + ".pickle", "wb"))
     ai_scores = [0 for i in range(population_size)]
-
+    ai_levels_complete = [0 for i in range(population_size)]
 
 #Python Environments -> Open in powershell
 
 #cd "C:\Users\light\source\repos\Angry Birds AI"
 #python main.py
+
+# After giving each bird 100 attempts at a level
+
+# Success rate on random networks 
+# 11%
+# 16%
+# 12%
+#  4%
+#  3%
+#  0%
+# 14%
+#  8%
+#  4%
+#  0%
+#  3%
+#  6%
+
+# My scores from 3 full game runs 
+# 193k 
+
+#Gen 68
+#5 140200 , 5 171000 , 7 220800 , 6 185300 , 6 183900 , 5 155800 , 5 173800 , 6 183100 , 6 184600 , 5 171000 , 5 188900 , 5 192400 , 5 207400 , 5 187400 , 7 232400 , 6 197300 , 4 181700 , 6 195200 , 6 176700 , 5 173100 ,
