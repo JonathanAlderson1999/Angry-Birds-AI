@@ -13,15 +13,15 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 20
+population_size = 4
 ai_move_interval = 250
 frame_count = -1
 
 max_pigs = 4
 
-start_level = 10
-end_level = 11
-start_ai = 6
+start_level = 0
+end_level = 10
+start_ai = 0
 generation = 0
 game_speed = 1
 
@@ -29,14 +29,14 @@ use_ai = True
 use_random_network = False
 play_multiple_levels = True
 skip_after_failed_hit = True
-render_game = True
+render_game = False
 
 game = game(start_level)
 
 date = datetime.datetime.now()
 run_id = str(date.year) + "_" + str(date.month) + "_" + str(date.day) + "-" + str(date.hour) + "-" + str(date.minute)
 
-run_id = "2025_3_1-13-14"
+#run_id = "2025_3_1-14-1"
 
 print("Current Run: ", run_id)
 
@@ -151,6 +151,5 @@ while True:
 
 #Python Environments -> Open in powershell
 
-#cd ../../../../
-#cd 'Users\light\source\repos\Angry Birds AI\'
+#cd "C:\Users\light\source\repos\Angry Birds AI"
 #python main.py
