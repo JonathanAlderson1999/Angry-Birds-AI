@@ -63,22 +63,6 @@ class game_network:
         normalized = np.ravel(np.column_stack((normalized_x, normalized_y, np.array(normalised_padded_pig_obstacles))))
 
         move = self.network.feed_forward(normalized, len(normalized), 1).activations
-        
-        #print("move: " +  str(move))
-        #x_moves.append(move[0])
-        #y_moves.append(move[1])
-        #min_x = min(move[0], min_x)
-        #/max_x = max(move[0], max_x)
-        
-        #min_y = min(move[1], min_y)
-        #max_y = max(move[1], max_y)
-
-        #print(sum(x_moves) / len(x_moves))
-        #print(min_x, max_x)
-        #print(min_y, max_y)
-
-        #print(sum(y_moves) / len(y_moves))
-
 
         # switch from -1, 1 to 0, 1
         move = (move + 1.0) / 2
@@ -101,16 +85,11 @@ def should_early_reset(game, ai_launch_bird):
     not_scored = (game.level.birds[-1].score == 0)
     
     if offscreen or (not_moving and not_scored):
-        print("A")
-        print(offscreen)
-        print(not_moving)
-        print(not_scored)
         return True
 
     pig_score = 700
     destoryed_pig = (game.level.birds[-1].score >= pig_score)
     if ai_launch_bird and not destoryed_pig:
-        print("B")
         return True
 
     return False

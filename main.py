@@ -13,23 +13,23 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 100
+population_size = 4
 ai_move_interval = 250
 frame_count = -1
 
 max_pigs = 4
 
 start_level = 0
-end_level = 12
-start_ai =0
+end_level = 11
+start_ai = 0
 generation = 0
 game_speed = 1
 
-use_ai = False
+use_ai = True
 use_random_network = False
 play_multiple_levels = True
 skip_after_failed_hit = True
-render_game = True
+render_game = False
 
 game = game(start_level)
 
@@ -83,14 +83,6 @@ while True:
         ai_completed = False
 
         if level_completed and play_multiple_levels and not final_level:
-
-            print("--- --- ---")
-            print(ai_launch_bird)
-            print(skip_to_next_level)
-            print(level_completed)
-            print(level_passed)
-            print(final_level)
-
             frame_count = -1
             ai_launch_bird = False
             game.level.number += 1

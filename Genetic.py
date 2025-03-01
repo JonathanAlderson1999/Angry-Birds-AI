@@ -7,6 +7,8 @@ from Game_Network import game_network
 
 mutation_chance = 0.01
 
+all_time_best = 0
+
 def mutate_layer(layer, x, mutation):
 
     x_layer = x.network.layers[layer]
@@ -89,18 +91,18 @@ def mutate(a, mutation):
 temperature = 0.2
 
 def select_parents(population, scores, levels_complete):
+    global all_time_best
 
-    population_count = len(population)
-    population = [population[i] for i in range(len(population)) if scores[i] >= 0]
+    print("\nAverage population score: ", round(sum(scores) / len(scores), 2))
+    print("Average population level: ", round(sum(levels_complete) / len(levels_complete), 2))
+    print("Best: ", max(scores), "\t\tAll Time Best: ", str(all_time_best))
+    all_time_best = max(all_time_best, max(scores))
 
     # Favour AI's which have completed lots of levels
-    for i in range(len(levlevels_complete)):
-        scores[i] += 30000 * levels_complete[i]
-    
-    scores = [score for score in scores if score >= 0]
+    for i in range(len(levels_complete)):
+        scores[i] = max(scores[i] + 30000 * levels_complete[i], 0)
 
     score_sum = sum(scores)
-
     if (score_sum == 0):
         score_sum = len(scores)
         scores = [1 for score in scores]
@@ -113,12 +115,9 @@ def select_parents(population, scores, levels_complete):
     temperature = max(temperature, 0)
 
     weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
+    print(weighted_chance)
 
-    new_parents = np.random.choice(population, population_count, p = weighted_chance)
-    
-    print("\nSelected parents: ", end = "")
-    for parent in new_parents:
-        print(population.index(parent), end = ", ")
+    new_parents = np.random.choice(population, len(population), p = weighted_chance)
 
     return new_parents
 
