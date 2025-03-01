@@ -83,8 +83,6 @@ class game_network:
         # switch from -1, 1 to 0, 1
         move = (move + 1.0) / 2
 
-        move = [0.0, 1.]
-
         x_range = [40, 230]
         y_range = [400, 600]
 

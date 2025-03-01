@@ -21,13 +21,13 @@ max_pigs = 4
 
 start_level = 0
 end_level = 11
-start_ai = 0
-generation = 0
+start_ai = 5
+generation = 53
 game_speed = 1
 
 use_ai = True
 use_random_network = False
-play_multiple_levels = True
+play_multiple_levels = False
 bail_on_failed_level = False
 render_game = True
 
@@ -36,7 +36,9 @@ game = game(start_level)
 date = datetime.datetime.now()
 run_id = str(date.year) + "_" + str(date.month) + "_" + str(date.day) + "-" + str(date.hour) + "-" + str(date.minute)
 
-run_id = "2025_2_25-20-38"
+run_id = "2025_3_1-13-14"
+
+print("Current Run: ", run_id)
 
 run_dir = "Saved_Networks/" + run_id + "/"
 
@@ -131,9 +133,6 @@ while True:
             clock.tick(int(120 * game_speed))
             owner = "Random: " if use_random_network else "Generation:"
             pygame.display.set_caption("Angry Birds - " + owner + " " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
-
-    
-    game.done()
 
     generation += 1
 
