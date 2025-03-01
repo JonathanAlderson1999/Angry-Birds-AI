@@ -22,7 +22,7 @@ max_pigs = 4
 start_level = 0
 end_level = 11
 start_ai = 0
-generation = 75
+generation = 0
 game_speed = 1
 
 use_ai = True

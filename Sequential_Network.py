@@ -2,9 +2,6 @@ import math
 import random
 import numpy as np
 
-def relu(x):
-    return max(0, x)
-
 def tanh(x):
     return math.tanh(x)
 
@@ -15,8 +12,6 @@ class layer:
     activations = []
     dimension   = [0, 0]
 
-    use_relu = True
-
     # conv2DTranspose
     kernels = []
 
@@ -26,7 +21,6 @@ class layer:
         self.weights = []
         self.biases = []
         self.dimension = [input_x, input_y]
-        self.use_relu = relu
 
     def __repr__(self):
 
@@ -53,7 +47,7 @@ class layer:
 
         return out
 
-    def dense(self, network, input_x, input_y, output_x, output_y, relu = False):
+    def dense(self, network, input_x, input_y, output_x, output_y):
         
         self.type = "dense"
         num_input_nodes  = input_x  * input_y
@@ -62,7 +56,6 @@ class layer:
         self.weights   = ([network.initialize_weights(num_input_nodes) for j in range(num_dense_nodes)])
         self.biases    = network.initialize_biases(num_dense_nodes)
         self.dimension = [output_x, output_y]
-        self.use_relu = relu
 
     def conv2DTranspose(self, prev_layer, kernel_size, stride):
 
@@ -96,10 +89,7 @@ class layer:
 
         if (self.type == "dense"):
             weights = self.weights
-            if self.use_relu:  
-                self.activations = np.array([tanh(relu(np.sum(input * weights[j]) - biases[j])) for j in range(num_neurons)])
-            else:
-                self.activations = np.array([tanh((np.sum(input * weights[j]) - biases[j])) for j in range(num_neurons)])
+            self.activations = np.array([tanh((np.sum(input * weights[j]) - biases[j])) for j in range(num_neurons)])
 
         elif (self.type == "conv2DTranspose"):
             kernels = self.kernels
@@ -192,14 +182,15 @@ class sequential_network:
         variance = 2 / self.num_input_neurons
         return np.random.normal(0.0, 2 * variance, num_values)
 
+
     def initialize_biases(self, num_values):
         # let's use this distribution for now
         return self.initialize_weights(num_values)
 
-    def dense(self, input_x, input_y, output_x, output_y, relu = False):
+    def dense(self, input_x, input_y, output_x, output_y):
 
         new_layer = layer()
-        new_layer.dense(self, input_x, input_y, output_x, output_y, relu)
+        new_layer.dense(self, input_x, input_y, output_x, output_y)
         self.layers.append(new_layer)
 
     def conv2DTranspose(self, kernel_size, stride):
@@ -222,7 +213,6 @@ class sequential_network:
         #   for each neuron in the 'current' layer
         #       multiply the neuron by the nth weight of the 'next' neuron
         #   subract the 'next' neurons bias
-        #   run through relu activation function
 
         prev_activations = input
         prev_dimension = [dim_x, dim_y]
