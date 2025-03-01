@@ -6,12 +6,12 @@ from Util import *
 from game import *
 
 
-x_moves = []
-y_moves = []
-min_x = 0
-max_x = 0
-min_y = 0
-max_y = 0
+#x_moves = []
+#y_moves = []
+#min_x = 0
+#max_x = 0
+#min_y = 0
+#max_y = 0
 
 class game_network:
 
@@ -44,7 +44,7 @@ class game_network:
 
     def move(self, pig_positions, pig_obstacles):        
 
-        global min_x, max_x, min_y, max_y
+        #global min_x, max_x, min_y, max_y
 
         [screen_x, screen_y] = screen.get_size()
 
@@ -65,17 +65,17 @@ class game_network:
         move = self.network.feed_forward(normalized, len(normalized), 1).activations
         
         #print("move: " +  str(move))
-        x_moves.append(move[0])
-        y_moves.append(move[1])
-        min_x = min(move[0], min_x)
-        max_x = max(move[0], max_x)
+        #x_moves.append(move[0])
+        #y_moves.append(move[1])
+        #min_x = min(move[0], min_x)
+        #/max_x = max(move[0], max_x)
         
-        min_y = min(move[1], min_y)
-        max_y = max(move[1], max_y)
+        #min_y = min(move[1], min_y)
+        #max_y = max(move[1], max_y)
 
         #print(sum(x_moves) / len(x_moves))
-        print(min_x, max_x)
-        print(min_y, max_y)
+        #print(min_x, max_x)
+        #print(min_y, max_y)
 
         #print(sum(y_moves) / len(y_moves))
 
@@ -83,9 +83,10 @@ class game_network:
         # switch from -1, 1 to 0, 1
         move = (move + 1.0) / 2
 
+        move = [0.0, 1.]
 
-        x_range = [40, 100]
-        y_range = [400, 500]
+        x_range = [40, 230]
+        y_range = [400, 600]
 
         move = [x_range[0] + (move[0] * (x_range[1] - x_range[0])), y_range[0] + (move[1] * (y_range[1] - y_range[0]))]
 

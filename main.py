@@ -29,7 +29,7 @@ use_ai = True
 use_random_network = False
 play_multiple_levels = True
 bail_on_failed_level = False
-render_game = False
+render_game = True
 
 game = game(start_level)
 
