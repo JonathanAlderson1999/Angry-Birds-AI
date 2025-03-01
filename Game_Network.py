@@ -5,6 +5,14 @@ import numpy as np
 from Util import *
 from game import *
 
+
+x_moves = []
+y_moves = []
+min_x = 0
+max_x = 0
+min_y = 0
+max_y = 0
+
 class game_network:
 
     def __init__(self, seed, max_pigs):
@@ -24,6 +32,8 @@ class game_network:
 
         network.dense(hidden_layer_size, 1, hidden_layer_size, 1)
 
+        network.dense(hidden_layer_size, 1, hidden_layer_size, 1)
+
         network.dense(hidden_layer_size, 1, 2, 1)
 
         self.network = network
@@ -33,6 +43,8 @@ class game_network:
         return out
 
     def move(self, pig_positions, pig_obstacles):        
+
+        global min_x, max_x, min_y, max_y
 
         [screen_x, screen_y] = screen.get_size()
 
@@ -51,10 +63,27 @@ class game_network:
         normalized = np.ravel(np.column_stack((normalized_x, normalized_y, np.array(normalised_padded_pig_obstacles))))
 
         move = self.network.feed_forward(normalized, len(normalized), 1).activations
+        
+        #print("move: " +  str(move))
+        x_moves.append(move[0])
+        y_moves.append(move[1])
+        min_x = min(move[0], min_x)
+        max_x = max(move[0], max_x)
+        
+        min_y = min(move[1], min_y)
+        max_y = max(move[1], max_y)
+
+        #print(sum(x_moves) / len(x_moves))
+        print(min_x, max_x)
+        print(min_y, max_y)
+
+        #print(sum(y_moves) / len(y_moves))
+
 
         # switch from -1, 1 to 0, 1
         move = (move + 1.0) / 2
-     
+
+
         x_range = [40, 100]
         y_range = [400, 500]
 

@@ -222,10 +222,15 @@ class sequential_network:
             self.layers[i].feed_forward(prev_activations, prev_dimension)
 
             prev_activations = self.layers[i].activations
+
+            #print("Layer: " + str(i) + " Avg Activation Mag: " + str(sum([abs(a) for a in prev_activations]) / len(prev_activations)))
+
             prev_dimension = self.layers[i - 1].dimension
 
         # final tanh
         for activation in self.layers[-1].activations:
             activation = tanh(activation)
+
+        #print("Layer: F" + " Avg Activation Mag: " + str(sum([abs(a) for a in self.layers[-1].activations]) / len(self.layers[-1].activations)))
 
         return (self.layers[-1])

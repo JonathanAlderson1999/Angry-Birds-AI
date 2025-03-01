@@ -29,7 +29,7 @@ use_ai = True
 use_random_network = False
 play_multiple_levels = True
 bail_on_failed_level = False
-render_game = True
+render_game = False
 
 game = game(start_level)
 
@@ -133,6 +133,8 @@ while True:
             pygame.display.set_caption("Angry Birds - " + owner + " " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
 
     
+    game.done()
+
     generation += 1
 
     if use_random_network:
