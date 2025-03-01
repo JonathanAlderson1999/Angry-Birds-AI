@@ -38,14 +38,15 @@ class game_network:
 
         padded_pig_positions = np.concatenate((np.array(pig_positions).flatten(), np.zeros((self.max_pigs - len(pig_positions)) * 2)))
 
-        padded_pig_obstacles = pig_obstacles + [0] * (self.max_pigs - len(pig_obstacles))
+        max_obstables = 5
+        padded_pig_obstacles = pig_obstacles + [-max_obstables] * (self.max_pigs - len(pig_obstacles))
 
         x_values = padded_pig_positions[::2]
         y_values = padded_pig_positions[1::2]
 
         normalized_x = ((x_values / screen_x) - 0.5) * 2
         normalized_y = ((y_values / screen_y) - 0.5) * 2
-        normalised_padded_pig_obstacles = [obstacle_count / 5 for obstacle_count in padded_pig_obstacles]
+        normalised_padded_pig_obstacles = [obstacle_count / max_obstables for obstacle_count in padded_pig_obstacles]
 
         normalized = np.ravel(np.column_stack((normalized_x, normalized_y, np.array(normalised_padded_pig_obstacles))))
 
