@@ -13,30 +13,28 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 50
+population_size = 10
 ai_move_interval = 250
 frame_count = -1
 
 max_pigs = 4
 
-start_level = 9
+start_level = 0
 end_level = 11
-start_ai = 7
-generation = 24
+start_ai = 0
+generation = 0
 game_speed = 2
 
 use_ai = True
 use_random_network = False
-play_multiple_levels = False
+play_multiple_levels = True
 skip_after_failed_hit = True
-render_game = True
+render_game = False
 
 game = game(start_level)
 
 date = datetime.datetime.now()
 run_id = str(date.year) + "_" + str(date.month) + "_" + str(date.day) + "-" + str(date.hour) + "-" + str(date.minute)
-
-run_id = "2025_3_1-21-43"
 
 print("Current Run: ", run_id)
 
@@ -62,8 +60,7 @@ while True:
 
     population = load_population(run_dir, generation, population_size, max_pigs)
     network = population[ai_id]
-    levels_passed = 0
-    levels_failed = []
+    levels_passed = []
 
     print("\nGen " + str(generation).ljust(5))
 
@@ -86,10 +83,9 @@ while True:
         if level_completed and play_multiple_levels and not final_level:
             frame_count = -1
             ai_launch_bird = False
+            if (level_passed):
+                levels_passed.append(game.level.number)
             game.level.number += 1
-            levels_passed += level_passed
-            if (not level_passed):
-                levels_failed.append(str(game.level.number - 1))
             game.restart(game.level.score)
 
         elif level_completed:
@@ -98,10 +94,7 @@ while True:
         if ai_completed:
 
             if play_multiple_levels:
-                print(str(levels_passed) +  " ", end = "")
-                if (levels_passed > 8):
-                    print("\n" + str(levels_failed))
-                levels_failed = []
+                print(str(len(levels_passed)) +  " ", end = "")
             else:
                 print("+" if level_passed else " ", end = "")
 
@@ -113,7 +106,7 @@ while True:
             ai_scores[ai_id] = game.level.score
             ai_levels_complete[ai_id] = levels_passed
 
-            levels_passed = 0
+            levels_passed = []
             frame_count = -1
             ai_launch_bird = False
             game.level.number = start_level

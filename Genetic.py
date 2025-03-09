@@ -94,13 +94,20 @@ def select_parents(population, scores, levels_complete):
     global all_time_best
 
     print("\nAverage population score: ", round(sum(scores) / len(scores), 2))
-    print("Average population level: ", round(sum(levels_complete) / len(levels_complete), 2))
+    print("Average population level: ",  round(sum([len(i) for i in levels_complete]) / len(levels_complete), 2))
     print("Best: ", max(scores), "\t\tAll Time Best: ", str(all_time_best))
     all_time_best = max(all_time_best, max(scores))
 
-    # Favour AI's which have completed lots of levels
+    # Favour AI's which have completed levels other AI's have not
+    all_completed_levels = sum(levels_complete, [])
+    for i in range(len(scores)):
+        for completed_level in levels_complete[i]:
+            level_pass_rate = all_completed_levels.count(completed_level) / len(scores)
+            bonus = 100000 * (1.0 - level_pass_rate)
+            scores[i] += bonus
+
     for i in range(len(levels_complete)):
-        scores[i] = max(scores[i] + 30000 * levels_complete[i], 0)
+        scores[i] = max(scores[i], 0)
 
     score_sum = sum(scores)
     if (score_sum == 0):
