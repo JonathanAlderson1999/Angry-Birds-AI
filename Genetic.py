@@ -103,7 +103,7 @@ def select_parents(population, scores, levels_complete):
     for i in range(len(scores)):
         for completed_level in levels_complete[i]:
             level_pass_rate = all_completed_levels.count(completed_level) / len(scores)
-            bonus = 100000 * (1.0 - level_pass_rate)
+            bonus = 200000 * (1.0 - level_pass_rate) * (1.0 - level_pass_rate)
             scores[i] += bonus
 
     for i in range(len(levels_complete)):
