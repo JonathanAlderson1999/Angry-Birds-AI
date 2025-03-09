@@ -255,6 +255,9 @@ class game:
 
     def launch_bird(self, ai_launch_bird, ai_move):
 
+        if self.level.number_of_birds <= 0 and len(self.level.pigs) > 0:
+            self.game_state = FAILED
+
         if self.game_state != PLAY:
             return
 
@@ -270,9 +273,6 @@ class game:
 
         if self.level.score > self.hiscore:
             self.hiscore = self.level.score
-
-        if self.level.number_of_birds <= 0 and len(self.level.pigs) > 0:
-            self.game_state = FAILED
 
         if self.level.number_of_birds >= 0 and len(self.level.pigs) == 0:
             self.game_state = COMPLETED

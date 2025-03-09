@@ -13,30 +13,30 @@ from Game_Network import *
 from Genetic import *
 import numpy as np
 
-population_size = 4
+population_size = 50
 ai_move_interval = 250
 frame_count = -1
 
 max_pigs = 4
 
-start_level = 0
+start_level = 9
 end_level = 11
-start_ai = 0
-generation = 0
-game_speed = 1
+start_ai = 7
+generation = 24
+game_speed = 2
 
 use_ai = True
 use_random_network = False
-play_multiple_levels = True
+play_multiple_levels = False
 skip_after_failed_hit = True
-render_game = False
+render_game = True
 
 game = game(start_level)
 
 date = datetime.datetime.now()
 run_id = str(date.year) + "_" + str(date.month) + "_" + str(date.day) + "-" + str(date.hour) + "-" + str(date.minute)
 
-#run_id = "2025_3_1-14-1"
+run_id = "2025_3_1-21-43"
 
 print("Current Run: ", run_id)
 
@@ -63,6 +63,7 @@ while True:
     population = load_population(run_dir, generation, population_size, max_pigs)
     network = population[ai_id]
     levels_passed = 0
+    levels_failed = []
 
     print("\nGen " + str(generation).ljust(5))
 
@@ -87,6 +88,8 @@ while True:
             ai_launch_bird = False
             game.level.number += 1
             levels_passed += level_passed
+            if (not level_passed):
+                levels_failed.append(str(game.level.number - 1))
             game.restart(game.level.score)
 
         elif level_completed:
@@ -96,6 +99,9 @@ while True:
 
             if play_multiple_levels:
                 print(str(levels_passed) +  " ", end = "")
+                if (levels_passed > 8):
+                    print("\n" + str(levels_failed))
+                levels_failed = []
             else:
                 print("+" if level_passed else " ", end = "")
 
@@ -145,11 +151,9 @@ while True:
             pygame.display.set_caption("Angry Birds - " + owner + " " + str(generation) + " AI: " + str(ai_id + 1) + " Level: " + str(game.level.number))
 
     generation += 1
-
+    population = make_new_population(generation, population, ai_scores, ai_levels_complete)
     if use_random_network:
         population = [game_network(generation * population_size + i, max_pigs) for i in range(population_size)] 
-    else:
-        population = make_new_population(generation, population, ai_scores, ai_levels_complete)
 
     if not os.path.exists(run_dir):
         os.mkdir(run_dir)

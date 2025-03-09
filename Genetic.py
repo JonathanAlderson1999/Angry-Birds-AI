@@ -115,7 +115,6 @@ def select_parents(population, scores, levels_complete):
     temperature = max(temperature, 0)
 
     weighted_chance = unbiased_weighted_chance * temperature + biased_weighted_chance * ( 1. - temperature)
-    print(weighted_chance)
 
     new_parents = np.random.choice(population, len(population), p = weighted_chance)
 
